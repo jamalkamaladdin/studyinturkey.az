@@ -97,7 +97,7 @@ if ( function_exists( 'sit_theme_university_sub_url' ) ) {
 			<a href="#programs" class="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-brand-500">
 				<?php esc_html_e( 'Proqramlar', 'studyinturkey' ); ?>
 			</a>
-			<button type="button" data-sit-consult-open class="inline-flex items-center gap-1.5 rounded-lg border-2 border-brand-600 bg-white px-5 py-2 text-sm font-bold text-brand-700 shadow-sm transition hover:bg-brand-50 dark:border-brand-400 dark:bg-slate-800 dark:text-brand-300 dark:hover:bg-slate-700">
+			<button type="button" data-sit-consult-open class="inline-flex items-center gap-1.5 rounded-lg border-2 border-slate-900 bg-white px-5 py-2 text-sm font-bold text-slate-900 shadow-sm transition hover:bg-slate-900 hover:text-white dark:border-white dark:bg-transparent dark:text-white dark:hover:bg-white dark:hover:text-slate-900">
 				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></svg>
 				<?php esc_html_e( 'Konsultasiya al', 'studyinturkey' ); ?>
 			</button>
@@ -115,93 +115,70 @@ if ( function_exists( 'sit_theme_university_sub_url' ) ) {
 	</div>
 </section>
 
-<!-- Konsultasiya popup -->
-<div id="sit-consult-modal" style="display:none;" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="sit-consult-title">
-	<div class="relative mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl sm:p-8 dark:bg-slate-900">
-		<button type="button" data-sit-consult-close class="absolute end-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200" aria-label="Bağla">
-			<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+<?php
+/* Modal HTML-ı wp_footer-da render olunur ki, <body>-nin birbaşa child-ı olsun */
+add_action( 'wp_footer', function () use ( $title ) {
+	if ( did_action( 'sit_consult_modal_rendered' ) ) { return; }
+	do_action( 'sit_consult_modal_rendered' );
+	$ajax_url = admin_url( 'admin-ajax.php' );
+?>
+<div id="sit-consult-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);" role="dialog" aria-modal="true">
+	<div style="position:relative;width:100%;max-width:28rem;margin:1rem;background:#fff;border-radius:1rem;padding:1.5rem;box-shadow:0 25px 50px rgba(0,0,0,0.25);">
+		<button type="button" data-sit-consult-close style="position:absolute;right:1rem;top:1rem;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;border:none;background:transparent;cursor:pointer;border-radius:50%;color:#94a3b8;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
+			<svg style="width:1.25rem;height:1.25rem;" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
 		</button>
-
-		<h2 id="sit-consult-title" class="text-xl font-bold text-slate-900 dark:text-white"><?php esc_html_e( 'Konsultasiya al', 'studyinturkey' ); ?></h2>
-		<p class="mt-1.5 text-sm text-slate-500 dark:text-slate-400"><?php esc_html_e( 'Məlumatlarınızı yazın, komandamız sizinlə əlaqə saxlayacaq.', 'studyinturkey' ); ?></p>
-
-		<form id="sit-consult-form" class="mt-5 space-y-4" novalidate>
-			<input type="hidden" name="action" value="sit_consultation_request" />
-			<input type="hidden" name="sit_consult_university" value="<?php echo esc_attr( $title ); ?>" />
+		<h2 style="font-size:1.25rem;font-weight:700;color:#0f172a;margin:0;"><?php esc_html_e( 'Konsultasiya al', 'studyinturkey' ); ?></h2>
+		<p style="margin-top:0.375rem;font-size:0.875rem;color:#64748b;"><?php esc_html_e( 'Məlumatlarınızı yazın, komandamız sizinlə əlaqə saxlayacaq.', 'studyinturkey' ); ?></p>
+		<form id="sit-consult-form" style="margin-top:1.25rem;" novalidate>
+			<input type="hidden" name="action" value="sit_consultation_request"/>
+			<input type="hidden" name="sit_consult_university" value="<?php echo esc_attr( $title ); ?>"/>
 			<?php wp_nonce_field( 'sit_consultation_request', 'sit_consult_nonce', false ); ?>
-
-			<div>
-				<label for="sit_consult_name" class="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300"><?php esc_html_e( 'Ad, soyad', 'studyinturkey' ); ?> <span class="text-red-500">*</span></label>
-				<input type="text" id="sit_consult_name" name="sit_consult_name" required maxlength="120" autocomplete="name"
-					class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
+			<div style="margin-bottom:1rem;">
+				<label for="sit_consult_name" style="display:block;font-size:0.875rem;font-weight:600;color:#334155;margin-bottom:0.375rem;"><?php esc_html_e( 'Ad, soyad', 'studyinturkey' ); ?> <span style="color:#ef4444;">*</span></label>
+				<input type="text" id="sit_consult_name" name="sit_consult_name" required maxlength="120" style="width:100%;padding:0.625rem 0.875rem;border:1.5px solid #e2e8f0;border-radius:0.5rem;font:inherit;font-size:0.9375rem;box-sizing:border-box;outline:none;" onfocus="this.style.borderColor='#0d9488'" onblur="this.style.borderColor='#e2e8f0'"/>
 			</div>
-
-			<div>
-				<label for="sit_consult_phone" class="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300"><?php esc_html_e( 'Telefon', 'studyinturkey' ); ?> <span class="text-red-500">*</span></label>
-				<div class="flex gap-2">
-					<select id="sit_consult_phone_code" name="sit_consult_phone_code" class="w-32 shrink-0 rounded-lg border border-slate-300 bg-white px-2 py-2.5 text-sm text-slate-700 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white">
+			<div style="margin-bottom:1rem;">
+				<label for="sit_consult_phone" style="display:block;font-size:0.875rem;font-weight:600;color:#334155;margin-bottom:0.375rem;"><?php esc_html_e( 'Telefon', 'studyinturkey' ); ?> <span style="color:#ef4444;">*</span></label>
+				<div style="display:flex;gap:0.5rem;">
+					<select id="sit_consult_phone_code" name="sit_consult_phone_code" style="width:8rem;flex-shrink:0;padding:0.625rem 0.5rem;border:1.5px solid #e2e8f0;border-radius:0.5rem;font:inherit;font-size:0.8125rem;box-sizing:border-box;outline:none;background:#fff;" onfocus="this.style.borderColor='#0d9488'" onblur="this.style.borderColor='#e2e8f0'">
 						<?php sit_theme_phone_code_options(); ?>
 					</select>
-					<input type="tel" id="sit_consult_phone" name="sit_consult_phone" required maxlength="20" autocomplete="tel" placeholder="50 123 45 67"
-						class="w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
+					<input type="tel" id="sit_consult_phone" name="sit_consult_phone" required maxlength="20" placeholder="50 123 45 67" style="flex:1;min-width:0;padding:0.625rem 0.875rem;border:1.5px solid #e2e8f0;border-radius:0.5rem;font:inherit;font-size:0.9375rem;box-sizing:border-box;outline:none;" onfocus="this.style.borderColor='#0d9488'" onblur="this.style.borderColor='#e2e8f0'"/>
 				</div>
 			</div>
-
-			<div>
-				<label for="sit_consult_email" class="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300"><?php esc_html_e( 'E-poçt', 'studyinturkey' ); ?> <span class="text-red-500">*</span></label>
-				<input type="email" id="sit_consult_email" name="sit_consult_email" required maxlength="191" autocomplete="email"
-					class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
+			<div style="margin-bottom:1.25rem;">
+				<label for="sit_consult_email" style="display:block;font-size:0.875rem;font-weight:600;color:#334155;margin-bottom:0.375rem;"><?php esc_html_e( 'E-poçt', 'studyinturkey' ); ?> <span style="color:#ef4444;">*</span></label>
+				<input type="email" id="sit_consult_email" name="sit_consult_email" required maxlength="191" style="width:100%;padding:0.625rem 0.875rem;border:1.5px solid #e2e8f0;border-radius:0.5rem;font:inherit;font-size:0.9375rem;box-sizing:border-box;outline:none;" onfocus="this.style.borderColor='#0d9488'" onblur="this.style.borderColor='#e2e8f0'"/>
 			</div>
-
-			<button type="submit" class="w-full rounded-lg bg-brand-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-brand-500 disabled:opacity-50">
-				<?php esc_html_e( 'Göndər', 'studyinturkey' ); ?>
-			</button>
-
-			<div id="sit-consult-result" style="display:none;" class="rounded-lg p-3 text-center text-sm font-medium"></div>
+			<button type="submit" style="width:100%;padding:0.75rem;background:#0d9488;color:#fff;border:none;border-radius:0.5rem;font:inherit;font-size:1rem;font-weight:700;cursor:pointer;"><?php esc_html_e( 'Göndər', 'studyinturkey' ); ?></button>
+			<div id="sit-consult-result" style="display:none;margin-top:0.75rem;padding:0.75rem;border-radius:0.5rem;text-align:center;font-size:0.875rem;font-weight:500;"></div>
 		</form>
 	</div>
 </div>
 <script>
 (function(){
-	var modal=document.getElementById('sit-consult-modal');
-	if(!modal)return;
-	function open(){modal.style.display='flex';document.body.style.overflow='hidden';}
-	function close(){modal.style.display='none';document.body.style.overflow='';}
-	document.querySelectorAll('[data-sit-consult-open]').forEach(function(b){b.addEventListener('click',open);});
-	document.querySelectorAll('[data-sit-consult-close]').forEach(function(b){b.addEventListener('click',close);});
-	modal.addEventListener('click',function(e){if(e.target===modal)close();});
-	document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.style.display!=='none')close();});
-
-	var form=document.getElementById('sit-consult-form');
-	var result=document.getElementById('sit-consult-result');
-	if(!form)return;
-	form.addEventListener('submit',function(e){
-		e.preventDefault();
-		var btn=form.querySelector('button[type="submit"]');
-		btn.disabled=true;
-		result.style.display='none';
-		var fd=new FormData(form);
-		fd.set('sit_consult_phone',fd.get('sit_consult_phone_code')+' '+fd.get('sit_consult_phone'));
-		fetch('<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',{method:'POST',body:fd,credentials:'same-origin'})
-		.then(function(r){return r.json();})
-		.then(function(d){
-			result.style.display='block';
-			if(d.success){
-				result.className='rounded-lg bg-emerald-50 p-3 text-center text-sm font-medium text-emerald-700';
-				result.textContent=d.data||'OK';
-				form.reset();
-			}else{
-				result.className='rounded-lg bg-red-50 p-3 text-center text-sm font-medium text-red-700';
-				result.textContent=d.data||'Error';
-			}
+	var m=document.getElementById('sit-consult-modal');if(!m)return;
+	function show(){m.style.display='flex';document.body.style.overflow='hidden';}
+	function hide(){m.style.display='none';document.body.style.overflow='';}
+	document.querySelectorAll('[data-sit-consult-open]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();show();});});
+	document.querySelectorAll('[data-sit-consult-close]').forEach(function(b){b.addEventListener('click',hide);});
+	m.addEventListener('click',function(e){if(e.target===m)hide();});
+	document.addEventListener('keydown',function(e){if(e.key==='Escape'&&m.style.display==='flex')hide();});
+	var f=document.getElementById('sit-consult-form'),r=document.getElementById('sit-consult-result');
+	if(!f)return;
+	f.addEventListener('submit',function(e){
+		e.preventDefault();var btn=f.querySelector('button[type="submit"]');btn.disabled=true;r.style.display='none';
+		var fd=new FormData(f);fd.set('sit_consult_phone',fd.get('sit_consult_phone_code')+' '+fd.get('sit_consult_phone'));
+		fetch('<?php echo esc_url( $ajax_url ); ?>',{method:'POST',body:fd,credentials:'same-origin'})
+		.then(function(x){return x.json();}).then(function(d){
+			r.style.display='block';
+			if(d.success){r.style.background='#ecfdf5';r.style.color='#065f46';r.textContent=d.data||'OK';f.reset();}
+			else{r.style.background='#fef2f2';r.style.color='#991b1b';r.textContent=d.data||'Xəta';}
 			btn.disabled=false;
-		})
-		.catch(function(){
-			result.style.display='block';
-			result.className='rounded-lg bg-red-50 p-3 text-center text-sm font-medium text-red-700';
-			result.textContent='Xəta baş verdi.';
-			btn.disabled=false;
-		});
+		}).catch(function(){r.style.display='block';r.style.background='#fef2f2';r.style.color='#991b1b';r.textContent='Xəta baş verdi.';btn.disabled=false;});
 	});
 })();
 </script>
+<?php
+} );
+?>
