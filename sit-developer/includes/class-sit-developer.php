@@ -17,6 +17,7 @@ final class SIT_Developer {
     }
 
     private function __construct() {
+        SIT_REST_API::register();
         add_action( 'init', [ $this, 'load_textdomain' ], 0 );
         add_action( 'init', [ 'SIT_University_CPT', 'register' ], 5 );
         add_action( 'init', [ 'SIT_University_Meta', 'register' ], 6 );
