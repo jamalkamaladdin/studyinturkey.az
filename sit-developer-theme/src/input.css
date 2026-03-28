@@ -39,8 +39,12 @@
 		@apply max-w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-700 shadow-sm dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200;
 	}
 
+	.custom-logo-link {
+		@apply flex items-center;
+	}
+
 	.custom-logo-link img {
-		@apply max-h-9 w-auto;
+		@apply h-9 max-h-9 w-auto object-contain;
 	}
 
 	.sit-uni-slider {
