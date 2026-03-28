@@ -101,12 +101,12 @@ Hər mərhələ aşağıdakı formatda icra olunur:
 - **Commit:** `[2.3] Multilang plugin: Tərcümə UI tab sistemi`
 
 #### Mərhələ 2.4 — URL routing
-- [ ] Rewrite rules: `/{lang}/` prefix
-- [ ] `init` hook-da dili URL-dən müəyyən etmək
-- [ ] `$current_lang` global dəyişən
-- [ ] Permalink filter: postların URL-lərinə dil prefix əlavə etmək
-- [ ] Hreflang meta tag-ları
-- [ ] 301 redirect: `/` → `/az/` (default dilə)
+- [x] Rewrite rules: `/{lang}/` prefix
+- [x] `init` hook-da dili URL-dən müəyyən etmək
+- [x] `$current_lang` global dəyişən
+- [x] Permalink filter: postların URL-lərinə dil prefix əlavə etmək
+- [x] Hreflang meta tag-ları
+- [x] 301 redirect: `/` → `/az/` (default dilə)
 - **Commit:** `[2.4] Multilang plugin: URL routing və rewrite rules`
 
 #### Mərhələ 2.5 — Language switcher və UI strings

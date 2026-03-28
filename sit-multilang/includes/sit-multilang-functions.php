@@ -6,6 +6,28 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Cari sorğu dili (URL prefiksi). Admin və bypass kontekstdə əsas dil.
+ */
+function sit_get_current_lang(): string {
+    if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+        $code = SIT_Languages::get_default_language_code();
+        return $code ?: 'az';
+    }
+    if ( is_admin() && ! wp_doing_ajax() ) {
+        $code = SIT_Languages::get_default_language_code();
+        return $code ?: 'az';
+    }
+    if ( ! empty( $GLOBALS['sit_current_lang'] ) && is_string( $GLOBALS['sit_current_lang'] ) ) {
+        $g = sanitize_key( $GLOBALS['sit_current_lang'] );
+        if ( SIT_Languages::is_valid_code( $g ) ) {
+            return $g;
+        }
+    }
+    $code = SIT_Languages::get_default_language_code();
+    return $code ?: 'az';
+}
+
+/**
  * Get translated field for a post or term.
  * Default dil üçün dəyər WordPress obyektindən oxunur; digər dillər üçün wp_sit_translations.
  *

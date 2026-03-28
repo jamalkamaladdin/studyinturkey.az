@@ -3,7 +3,7 @@
  * Plugin Name: SIT Multilang
  * Plugin URI:  https://studyinturkey.az
  * Description: Custom multilingual system for StudyInTurkey.az — 6 languages with RTL support.
- * Version:     1.2.0
+ * Version:     1.3.0
  * Author:      StudyInTurkey
  * Author URI:  https://studyinturkey.az
  * Text Domain: studyinturkey
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIT_MULTILANG_VERSION', '1.2.0' );
+define( 'SIT_MULTILANG_VERSION', '1.3.0' );
 define( 'SIT_MULTILANG_FILE', __FILE__ );
 define( 'SIT_MULTILANG_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SIT_MULTILANG_URL', plugin_dir_url( __FILE__ ) );
@@ -23,6 +23,7 @@ define( 'SIT_MULTILANG_BASENAME', plugin_basename( __FILE__ ) );
 require_once SIT_MULTILANG_DIR . 'includes/class-sit-db.php';
 require_once SIT_MULTILANG_DIR . 'includes/class-sit-languages.php';
 require_once SIT_MULTILANG_DIR . 'includes/class-sit-translations.php';
+require_once SIT_MULTILANG_DIR . 'includes/class-sit-rewrite.php';
 require_once SIT_MULTILANG_DIR . 'includes/class-sit-activator.php';
 require_once SIT_MULTILANG_DIR . 'includes/sit-multilang-functions.php';
 
@@ -48,6 +49,7 @@ final class SIT_Multilang {
     }
 
     private function init_hooks(): void {
+        add_action( 'plugins_loaded', [ 'SIT_Rewrite', 'init' ], 3 );
         add_action( 'init', [ $this, 'load_textdomain' ] );
         add_action( 'init', [ $this, 'detect_language' ], 1 );
         add_action( 'plugins_loaded', [ $this, 'check_db_version' ] );
@@ -74,13 +76,11 @@ final class SIT_Multilang {
     }
 
     /**
-     * Detect current language from URL or fallback to default.
-     * Full routing will be implemented in Mərhələ 2.4.
+     * SIT_CURRENT_LANG sabiti: init:1 — sit_get_current_lang() (URL + qlobal $sit_current_lang).
      */
     public function detect_language(): void {
         if ( ! defined( 'SIT_CURRENT_LANG' ) ) {
-            $default = SIT_Languages::get_default_language_code();
-            define( 'SIT_CURRENT_LANG', $default ?: 'az' );
+            define( 'SIT_CURRENT_LANG', sit_get_current_lang() );
         }
     }
 

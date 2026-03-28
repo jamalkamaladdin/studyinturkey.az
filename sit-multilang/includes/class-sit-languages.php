@@ -417,4 +417,15 @@ class SIT_Languages {
         $lang = self::get_language( $code );
         return $lang->direction ?? 'ltr';
     }
+
+    /**
+     * WordPress locale string for gettext / language_attributes.
+     */
+    public static function get_locale_for_code( string $code ): string {
+        $lang = self::get_language( $code );
+        if ( $lang && ! empty( $lang->locale ) ) {
+            return (string) $lang->locale;
+        }
+        return 'en_US';
+    }
 }
