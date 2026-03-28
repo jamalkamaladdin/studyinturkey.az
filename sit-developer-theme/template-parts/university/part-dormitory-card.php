@@ -5,7 +5,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$pid = isset( $dormitory_id ) ? absint( $dormitory_id ) : 0;
+$pid = isset( $args['dormitory_id'] ) ? absint( $args['dormitory_id'] ) : ( isset( $dormitory_id ) ? absint( $dormitory_id ) : 0 );
 if ( $pid < 1 ) {
 	return;
 }

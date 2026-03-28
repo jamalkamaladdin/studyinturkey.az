@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
 get_header();
 ?>
 <main id="main-content" class="flex-1 py-12 lg:py-16">
-	<div class="sit-container max-w-3xl">
+	<div class="sit-container">
 		<?php
 		while ( have_posts() ) :
 			the_post();
