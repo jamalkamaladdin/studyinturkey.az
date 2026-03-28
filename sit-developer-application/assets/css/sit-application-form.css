@@ -215,6 +215,37 @@
 	transform: translateY(0);
 }
 
+/* Phone with country code */
+.sit-app-phone-wrap {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.sit-app-phone-code {
+	width: 7.5rem;
+	flex-shrink: 0;
+	padding: 0.75rem 0.5rem;
+	border: 1.5px solid #e2e8f0;
+	border-radius: 10px;
+	font: inherit;
+	font-size: 0.875rem;
+	background: #f8fafc;
+	color: #1e293b;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sit-app-phone-code:focus {
+	outline: none;
+	border-color: #0d9488;
+	background: #fff;
+	box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+.sit-app-phone-wrap input[type="tel"] {
+	flex: 1;
+	min-width: 0;
+}
+
 /* Degree-level conditional sections */
 .sit-app-form-section--levels {
 	animation: sit-form-fade-in 0.25s ease-out;

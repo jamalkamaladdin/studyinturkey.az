@@ -77,3 +77,36 @@ function sit_theme_contact_redirect( string $status ): void {
 
 add_action( 'admin_post_nopriv_' . SIT_THEME_CONTACT_ACTION, 'sit_theme_handle_contact_form' );
 add_action( 'admin_post_' . SIT_THEME_CONTACT_ACTION, 'sit_theme_handle_contact_form' );
+
+/* ── Konsultasiya popup (AJAX) ── */
+function sit_theme_handle_consultation_ajax(): void {
+	if ( ! isset( $_POST['sit_consult_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['sit_consult_nonce'] ) ), 'sit_consultation_request' ) ) {
+		wp_send_json_error( 'Təhlükəsizlik xətası.' );
+	}
+
+	$name  = isset( $_POST['sit_consult_name'] ) ? sanitize_text_field( wp_unslash( $_POST['sit_consult_name'] ) ) : '';
+	$phone = isset( $_POST['sit_consult_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['sit_consult_phone'] ) ) : '';
+	$email = isset( $_POST['sit_consult_email'] ) ? sanitize_email( wp_unslash( $_POST['sit_consult_email'] ) ) : '';
+	$univ  = isset( $_POST['sit_consult_university'] ) ? sanitize_text_field( wp_unslash( $_POST['sit_consult_university'] ) ) : '';
+
+	if ( mb_strlen( $name ) < 2 || ! is_email( $email ) || mb_strlen( $phone ) < 5 ) {
+		wp_send_json_error( 'Bütün sahələri düzgün doldurun.' );
+	}
+
+	$to   = get_option( 'admin_email' );
+	$subj = sprintf( '[%s] Konsultasiya sorğusu — %s', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $univ );
+	$body = sprintf(
+		"Ad: %s\nTelefon: %s\nE-poçt: %s\nUniversitet: %s",
+		$name,
+		$phone,
+		$email,
+		$univ ? $univ : '—'
+	);
+	$headers = [ 'Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $name . ' <' . $email . '>' ];
+
+	wp_mail( $to, $subj, $body, $headers );
+
+	wp_send_json_success( 'Sorğunuz qəbul edildi. Tezliklə sizinlə əlaqə saxlanılacaq.' );
+}
+add_action( 'wp_ajax_sit_consultation_request', 'sit_theme_handle_consultation_ajax' );
+add_action( 'wp_ajax_nopriv_sit_consultation_request', 'sit_theme_handle_consultation_ajax' );

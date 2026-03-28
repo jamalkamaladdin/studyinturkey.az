@@ -94,10 +94,12 @@ if ( function_exists( 'sit_theme_university_sub_url' ) ) {
 
 		<!-- Keçid düymələri -->
 		<nav class="mt-6 flex flex-wrap items-center gap-2" aria-label="<?php esc_attr_e( 'Səhifə bölmələri', 'studyinturkey' ); ?>">
-			<a href="<?php echo esc_url( $apply_url ); ?>" class="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-brand-500">
-				<?php esc_html_e( 'Müraciət et', 'studyinturkey' ); ?>
+			<a href="#programs" class="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-brand-500">
+				<?php esc_html_e( 'Proqramlar', 'studyinturkey' ); ?>
 			</a>
-			<a href="#programs" class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"><?php esc_html_e( 'Proqramlar', 'studyinturkey' ); ?></a>
+			<button type="button" data-sit-consult-open class="rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-amber-400">
+				<?php esc_html_e( 'Konsultasiya al', 'studyinturkey' ); ?>
+			</button>
 			<a href="#admission-requirements" class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"><?php esc_html_e( 'Qəbul', 'studyinturkey' ); ?></a>
 			<a href="<?php echo esc_url( $dorms_sub ); ?>" class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"><?php esc_html_e( 'Yataqxanalar', 'studyinturkey' ); ?></a>
 			<a href="#campus" class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"><?php esc_html_e( 'Kampus', 'studyinturkey' ); ?></a>
@@ -111,3 +113,116 @@ if ( function_exists( 'sit_theme_university_sub_url' ) ) {
 
 	</div>
 </section>
+
+<!-- Konsultasiya popup -->
+<div id="sit-consult-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="sit-consult-title">
+	<div class="relative mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl sm:p-8 dark:bg-slate-900">
+		<button type="button" data-sit-consult-close class="absolute end-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200" aria-label="<?php esc_attr_e( 'Bağla', 'studyinturkey' ); ?>">
+			<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+		</button>
+
+		<h2 id="sit-consult-title" class="text-xl font-bold text-slate-900 dark:text-white"><?php esc_html_e( 'Konsultasiya al', 'studyinturkey' ); ?></h2>
+		<p class="mt-1.5 text-sm text-slate-500 dark:text-slate-400"><?php esc_html_e( 'Məlumatlarınızı yazın, komandamız sizinlə əlaqə saxlayacaq.', 'studyinturkey' ); ?></p>
+
+		<form id="sit-consult-form" class="mt-5 space-y-4" novalidate>
+			<input type="hidden" name="action" value="sit_consultation_request" />
+			<input type="hidden" name="sit_consult_university" value="<?php echo esc_attr( $title ); ?>" />
+			<?php wp_nonce_field( 'sit_consultation_request', 'sit_consult_nonce', false ); ?>
+
+			<div>
+				<label for="sit_consult_name" class="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300"><?php esc_html_e( 'Ad, soyad', 'studyinturkey' ); ?> <span class="text-red-500">*</span></label>
+				<input type="text" id="sit_consult_name" name="sit_consult_name" required maxlength="120" autocomplete="name"
+					class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
+			</div>
+
+			<div>
+				<label for="sit_consult_phone" class="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300"><?php esc_html_e( 'Telefon', 'studyinturkey' ); ?> <span class="text-red-500">*</span></label>
+				<div class="flex gap-2">
+					<select id="sit_consult_phone_code" name="sit_consult_phone_code" class="w-28 shrink-0 rounded-lg border border-slate-300 bg-white px-2 py-2.5 text-sm text-slate-700 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white">
+						<option value="+994">🇦🇿 +994</option>
+						<option value="+90">🇹🇷 +90</option>
+						<option value="+7">🇷🇺 +7</option>
+						<option value="+98">🇮🇷 +98</option>
+						<option value="+966">🇸🇦 +966</option>
+						<option value="+971">🇦🇪 +971</option>
+						<option value="+962">🇯🇴 +962</option>
+						<option value="+964">🇮🇶 +964</option>
+						<option value="+993">🇹🇲 +993</option>
+						<option value="+996">🇰🇬 +996</option>
+						<option value="+998">🇺🇿 +998</option>
+						<option value="+992">🇹🇯 +992</option>
+						<option value="+995">🇬🇪 +995</option>
+						<option value="+380">🇺🇦 +380</option>
+						<option value="+49">🇩🇪 +49</option>
+						<option value="+44">🇬🇧 +44</option>
+						<option value="+1">🇺🇸 +1</option>
+						<option value="+33">🇫🇷 +33</option>
+						<option value="+92">🇵🇰 +92</option>
+						<option value="+20">🇪🇬 +20</option>
+						<option value="+212">🇲🇦 +212</option>
+						<option value="+213">🇩🇿 +213</option>
+						<option value="+234">🇳🇬 +234</option>
+					</select>
+					<input type="tel" id="sit_consult_phone" name="sit_consult_phone" required maxlength="20" autocomplete="tel" placeholder="50 123 45 67"
+						class="w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
+				</div>
+			</div>
+
+			<div>
+				<label for="sit_consult_email" class="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300"><?php esc_html_e( 'E-poçt', 'studyinturkey' ); ?> <span class="text-red-500">*</span></label>
+				<input type="email" id="sit_consult_email" name="sit_consult_email" required maxlength="191" autocomplete="email"
+					class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
+			</div>
+
+			<button type="submit" class="w-full rounded-lg bg-brand-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-brand-500 disabled:opacity-50">
+				<?php esc_html_e( 'Göndər', 'studyinturkey' ); ?>
+			</button>
+
+			<div id="sit-consult-result" class="hidden rounded-lg p-3 text-center text-sm font-medium"></div>
+		</form>
+	</div>
+</div>
+<script>
+(function(){
+	var modal=document.getElementById('sit-consult-modal');
+	if(!modal)return;
+	function open(){modal.classList.remove('hidden');modal.classList.add('flex');document.body.style.overflow='hidden';}
+	function close(){modal.classList.add('hidden');modal.classList.remove('flex');document.body.style.overflow='';}
+	document.querySelectorAll('[data-sit-consult-open]').forEach(function(b){b.addEventListener('click',open);});
+	document.querySelectorAll('[data-sit-consult-close]').forEach(function(b){b.addEventListener('click',close);});
+	modal.addEventListener('click',function(e){if(e.target===modal)close();});
+	document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.classList.contains('hidden'))close();});
+
+	var form=document.getElementById('sit-consult-form');
+	var result=document.getElementById('sit-consult-result');
+	if(!form)return;
+	form.addEventListener('submit',function(e){
+		e.preventDefault();
+		var btn=form.querySelector('button[type="submit"]');
+		btn.disabled=true;
+		result.className='hidden';
+		var fd=new FormData(form);
+		fd.set('sit_consult_phone',fd.get('sit_consult_phone_code')+' '+fd.get('sit_consult_phone'));
+		fetch('<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',{method:'POST',body:fd,credentials:'same-origin'})
+		.then(function(r){return r.json();})
+		.then(function(d){
+			result.classList.remove('hidden');
+			if(d.success){
+				result.className='rounded-lg bg-emerald-50 p-3 text-center text-sm font-medium text-emerald-700';
+				result.textContent=d.data||'OK';
+				form.reset();
+			}else{
+				result.className='rounded-lg bg-red-50 p-3 text-center text-sm font-medium text-red-700';
+				result.textContent=d.data||'Error';
+			}
+			btn.disabled=false;
+		})
+		.catch(function(){
+			result.classList.remove('hidden');
+			result.className='rounded-lg bg-red-50 p-3 text-center text-sm font-medium text-red-700';
+			result.textContent='Xəta baş verdi.';
+			btn.disabled=false;
+		});
+	});
+})();
+</script>
