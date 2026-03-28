@@ -1,13 +1,13 @@
 <?php
 /**
- * Yataqxanalar.
+ * Yataqxanalar (qısa siyahı + alt səhifə keçidi).
  *
  * @var int $university_id
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$university_id = isset( $university_id ) ? absint( $university_id ) : 0;
+$university_id = sit_theme_resolve_university_id( isset( $university_id ) ? $university_id : null );
 if ( $university_id < 1 || ! post_type_exists( 'dormitory' ) ) {
 	return;
 }
@@ -16,42 +16,29 @@ $q = sit_theme_query_posts_by_university( 'dormitory', $university_id );
 if ( ! $q->have_posts() ) {
 	return;
 }
+
+$dorms_url   = sit_theme_university_sub_url( $university_id, 'dormitories' );
+$total_dorms = (int) $q->found_posts;
 ?>
 <section class="scroll-mt-24" id="dormitories" aria-labelledby="sit-dorm-title">
-	<h2 id="sit-dorm-title" class="text-2xl font-bold text-slate-900"><?php esc_html_e( 'Yataqxanalar', 'studyinturkey' ); ?></h2>
-	<ul class="mt-6 grid gap-4 sm:grid-cols-2">
+	<div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+		<h2 id="sit-dorm-title" class="text-2xl font-bold text-slate-900 dark:text-white"><?php esc_html_e( 'Yataqxanalar', 'studyinturkey' ); ?></h2>
+		<a href="<?php echo esc_url( $dorms_url ); ?>" class="text-sm font-semibold text-brand-700 hover:text-brand-600 dark:text-brand-400"><?php esc_html_e( 'Bütün yataqxanalar', 'studyinturkey' ); ?> →</a>
+	</div>
+	<div class="mt-6 grid gap-4 sm:grid-cols-2">
 		<?php
-		while ( $q->have_posts() ) :
+		$n = 0;
+		while ( $q->have_posts() && $n < 4 ) :
 			$q->the_post();
-			$pid        = get_the_ID();
-			$name       = sit_theme_get_post_title( $pid );
-			$price      = get_post_meta( $pid, 'sit_price', true );
-			$distance   = (string) get_post_meta( $pid, 'sit_distance', true );
-			$facilities = (string) get_post_meta( $pid, 'sit_facilities', true );
-			?>
-			<li class="rounded-2xl border border-slate-200 bg-slate-50/80 p-5">
-				<h3 class="font-semibold text-slate-900"><?php echo esc_html( $name ); ?></h3>
-				<?php if ( is_numeric( $price ) && (float) $price > 0 ) : ?>
-					<p class="mt-2 text-sm text-slate-600">
-						<?php
-						printf(
-							/* translators: %s: price */
-							esc_html__( 'Qiymət: %s', 'studyinturkey' ),
-							esc_html( number_format_i18n( (float) $price, 0 ) )
-						);
-						?>
-					</p>
-				<?php endif; ?>
-				<?php if ( '' !== $distance ) : ?>
-					<p class="mt-1 text-sm text-slate-600"><?php echo esc_html( $distance ); ?></p>
-				<?php endif; ?>
-				<?php if ( '' !== $facilities ) : ?>
-					<p class="mt-2 text-sm text-slate-600 leading-relaxed"><?php echo esc_html( wp_strip_all_tags( $facilities ) ); ?></p>
-				<?php endif; ?>
-			</li>
-			<?php
+			get_template_part( 'template-parts/university/part', 'dormitory-card', [ 'dormitory_id' => get_the_ID() ] );
+			++$n;
 		endwhile;
 		wp_reset_postdata();
 		?>
-	</ul>
+	</div>
+	<?php if ( $total_dorms > 4 ) : ?>
+		<p class="mt-6">
+			<a href="<?php echo esc_url( $dorms_url ); ?>" class="font-semibold text-brand-700 hover:text-brand-600 dark:text-brand-400"><?php esc_html_e( 'Hamısına bax', 'studyinturkey' ); ?> →</a>
+		</p>
+	<?php endif; ?>
 </section>

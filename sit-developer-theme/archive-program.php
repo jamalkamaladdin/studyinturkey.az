@@ -39,24 +39,40 @@ $total_pages = (int) $wp_query->max_num_pages;
 		<div class="flex flex-col gap-10 lg:flex-row lg:items-start">
 			<?php get_template_part( 'template-parts/program/archive-filters' ); ?>
 
-			<div class="min-w-0 flex-1">
+			<div class="min-w-0 flex-1 lg:w-4/5">
 				<div class="relative" data-sit-prog-table-wrap>
 					<div class="pointer-events-none absolute inset-0 z-10 hidden items-center justify-center rounded-2xl bg-white/70 dark:bg-slate-900/70" data-sit-prog-loading aria-hidden="true">
 						<span class="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow dark:bg-slate-800 dark:text-slate-200"><?php esc_html_e( 'Yüklənir…', 'studyinturkey' ); ?></span>
 					</div>
-					<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" data-sit-prog-grid>
-						<?php if ( have_posts() ) : ?>
-							<?php
-							while ( have_posts() ) :
-								the_post();
-								get_template_part( 'template-parts/program/archive-card' );
-							endwhile;
-							?>
-						<?php else : ?>
-							<div class="col-span-full rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-6 py-12 text-center text-slate-600 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-400">
-								<?php esc_html_e( 'Filtrlərə uyğun proqram tapılmadı.', 'studyinturkey' ); ?>
-							</div>
-						<?php endif; ?>
+					<div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+						<table class="w-full min-w-[720px] border-collapse text-left text-sm">
+							<thead class="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-400">
+								<tr>
+									<th class="px-4 py-3 pe-6"><?php esc_html_e( 'Universitet', 'studyinturkey' ); ?></th>
+									<th class="px-4 py-3 pe-6"><?php esc_html_e( 'Proqram', 'studyinturkey' ); ?></th>
+									<th class="px-4 py-3 pe-6"><?php esc_html_e( 'Dərəcə', 'studyinturkey' ); ?></th>
+									<th class="px-4 py-3 pe-6"><?php esc_html_e( 'Ödəniş', 'studyinturkey' ); ?></th>
+									<th class="px-4 py-3 pe-6"><?php esc_html_e( 'Dillər', 'studyinturkey' ); ?></th>
+									<th class="px-4 py-3 text-end" aria-hidden="true"><span class="sr-only"><?php esc_html_e( 'Müraciət', 'studyinturkey' ); ?></span></th>
+								</tr>
+							</thead>
+							<tbody data-sit-prog-list>
+								<?php if ( have_posts() ) : ?>
+									<?php
+									while ( have_posts() ) :
+										the_post();
+										get_template_part( 'template-parts/program/archive-program-row' );
+									endwhile;
+									?>
+								<?php else : ?>
+									<tr>
+										<td colspan="6" class="px-6 py-12 text-center text-slate-600 dark:text-slate-400">
+											<?php esc_html_e( 'Filtrlərə uyğun proqram tapılmadı.', 'studyinturkey' ); ?>
+										</td>
+									</tr>
+								<?php endif; ?>
+							</tbody>
+						</table>
 					</div>
 				</div>
 

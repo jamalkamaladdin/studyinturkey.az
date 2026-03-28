@@ -12,14 +12,14 @@
 	}
 
 	var form = root.querySelector('[data-sit-prog-form]');
-	var grid = root.querySelector('[data-sit-prog-grid]');
+	var list = root.querySelector('[data-sit-prog-list]');
 	var pag = root.querySelector('[data-sit-prog-pagination]');
 	var summary = root.querySelector('[data-sit-prog-summary]');
 	var countEl = root.querySelector('[data-sit-prog-count]');
 	var loading = root.querySelector('[data-sit-prog-loading]');
 	var wrap = root.querySelector('[data-sit-prog-table-wrap]');
 
-	if (!form || !grid) {
+	if (!form || !list) {
 		return;
 	}
 
@@ -65,7 +65,7 @@
 		}
 	}
 
-	function cardHtml(it) {
+	function rowHtml(it) {
 		var logoUrl = it.university_logo_url || '';
 		var uniHref = it.university_link || it.link;
 		var uniTitle = it.university_title || '';
@@ -79,15 +79,15 @@
 			logoBlock =
 				'<a href="' +
 				esc(uniHref) +
-				'" class="h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-white p-1 dark:border-slate-700">' +
+				'" class="h-12 w-12 shrink-0 overflow-hidden rounded-full border border-slate-100 bg-white p-0.5 dark:border-slate-600">' +
 				'<img src="' +
 				esc(logoUrl) +
-				'" alt="" class="h-full w-full object-contain" loading="lazy" width="56" height="56" />' +
+				'" alt="" class="h-full w-full rounded-full object-contain" loading="lazy" width="48" height="48" />' +
 				'</a>';
 		} else {
 			var letter = uniTitle ? String(uniTitle).charAt(0) : '★';
 			logoBlock =
-				'<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-lg font-bold text-brand-600 dark:bg-brand-950/80 dark:text-brand-300" aria-hidden="true">' +
+				'<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-50 text-sm font-bold text-brand-600 dark:bg-brand-950/80 dark:text-brand-300" aria-hidden="true">' +
 				esc(letter) +
 				'</div>';
 		}
@@ -96,7 +96,7 @@
 			it.university_link && it.university_title
 				? '<a href="' +
 				  esc(it.university_link) +
-				  '" class="text-sm font-semibold text-slate-900 hover:text-brand-700 dark:text-white dark:hover:text-brand-300">' +
+				  '" class="block text-sm font-semibold text-slate-900 hover:text-brand-700 dark:text-white dark:hover:text-brand-300">' +
 				  esc(it.university_title) +
 				  '</a>'
 				: '<span class="text-sm font-semibold text-slate-500">—</span>';
@@ -105,21 +105,11 @@
 			? '<p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">' + esc(fieldLine) + '</p>'
 			: '';
 
-		var degLine = deg
-			? '<div class="flex gap-2"><dt class="shrink-0 font-medium text-slate-500 dark:text-slate-500">' +
-			  esc(cfg.strings.degree) +
-			  '</dt><dd>' +
-			  esc(dur ? deg + ' (' + dur + ')' : deg) +
-			  '</dd></div>'
-			: '';
+		var degCell = deg
+			? esc(dur ? deg + ' (' + dur + ')' : deg)
+			: '<span class="text-slate-400">—</span>';
 
-		var langLine = langs
-			? '<div class="flex gap-2"><dt class="shrink-0 font-medium text-slate-500 dark:text-slate-500">' +
-			  esc(cfg.strings.languages) +
-			  '</dt><dd>' +
-			  esc(langs) +
-			  '</dd></div>'
-			: '';
+		var langCell = langs ? esc(langs) : '<span class="text-slate-400">—</span>';
 
 		var fee = it.tuition_fee;
 		var ref = it.tuition_fee_reference;
@@ -128,51 +118,55 @@
 			var main = fmtMoney(fee);
 			if (ref !== null && ref !== undefined && !isNaN(ref) && Number(ref) > Number(fee)) {
 				feeBlock =
-					'<span class="text-brand-600 dark:text-brand-400">' +
+					'<div class="text-sm font-semibold">' +
+					'<span class="text-emerald-600 dark:text-emerald-400">' +
 					esc(main) +
-					'$</span><span class="ms-1 text-slate-400 line-through dark:text-slate-500">' +
+					'$</span>' +
+					'<span class="ms-1 text-xs font-normal text-slate-400 line-through dark:text-slate-500">' +
 					esc(fmtMoney(ref)) +
-					'$</span>';
+					'$</span>' +
+					'<span class="ms-1 text-xs font-normal text-slate-500">' +
+					esc(cfg.strings.perYear) +
+					'</span></div>';
 			} else {
-				feeBlock = '<span>' + esc(main) + '$</span>';
+				feeBlock =
+					'<div class="text-sm font-semibold text-slate-900 dark:text-white">' +
+					esc(main) +
+					'$<span class="ms-1 text-xs font-normal text-slate-500">' +
+					esc(cfg.strings.perYear) +
+					'</span></div>';
 			}
-			feeBlock +=
-				'<span class="ms-1 text-xs font-normal text-slate-500">' + esc(cfg.strings.perYear) + '</span>';
 		} else {
 			feeBlock = '<span class="text-slate-400">—</span>';
 		}
 
 		return (
-			'<article class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-brand-200 hover:shadow-md dark:border-slate-700 dark:bg-slate-900">' +
-			'<div class="flex gap-3 border-b border-slate-100 p-4 dark:border-slate-800">' +
+			'<tr class="border-b border-slate-200 bg-white transition-colors hover:bg-slate-50/80 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800/60">' +
+			'<td class="py-4 pe-4 align-top"><div class="flex gap-3">' +
 			logoBlock +
-			'<div class="min-w-0 flex-1">' +
+			'<div class="min-w-0">' +
 			uniName +
 			fieldSub +
-			'</div></div>' +
-			'<div class="flex flex-1 flex-col gap-2 px-4 py-3">' +
-			'<p class="text-[0.65rem] font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">' +
-			esc(cfg.strings.program) +
-			'</p>' +
-			'<h2 class="text-base font-semibold leading-snug text-slate-900 dark:text-white">' +
-			'<a href="' +
+			'</div></div></td>' +
+			'<td class="py-4 pe-4 align-top"><a href="' +
 			esc(it.link) +
-			'" class="text-inherit hover:text-brand-600 dark:hover:text-brand-400">' +
+			'" class="text-sm font-semibold text-slate-900 hover:text-brand-600 dark:text-white dark:hover:text-brand-400">' +
 			esc(it.title) +
-			'</a></h2>' +
-			'<dl class="mt-1 grid gap-1.5 text-xs text-slate-600 dark:text-slate-400">' +
-			degLine +
-			langLine +
-			'</dl></div>' +
-			'<div class="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-4 py-3 dark:border-slate-800">' +
-			'<div class="text-sm font-semibold text-slate-900 dark:text-white">' +
+			'</a></td>' +
+			'<td class="py-4 pe-4 align-top text-sm text-slate-700 dark:text-slate-300">' +
+			degCell +
+			'</td>' +
+			'<td class="py-4 pe-4 align-top">' +
 			feeBlock +
-			'</div>' +
-			'<a href="' +
+			'</td>' +
+			'<td class="py-4 pe-4 align-top text-sm text-slate-700 dark:text-slate-300">' +
+			langCell +
+			'</td>' +
+			'<td class="py-4 align-top text-end"><a href="' +
 			esc(it.link) +
 			'" class="inline-flex min-h-[2.5rem] items-center justify-center rounded-lg bg-brand-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-brand-700 dark:hover:bg-brand-500">' +
 			esc(cfg.strings.apply) +
-			'</a></div></article>'
+			'</a></td></tr>'
 		);
 	}
 
@@ -344,12 +338,12 @@
 			.then(function (data) {
 				var items = data.items || [];
 				if (!items.length) {
-					grid.innerHTML =
-						'<div class="col-span-full rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-6 py-12 text-center text-slate-600 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-400">' +
+					list.innerHTML =
+						'<tr><td colspan="6" class="px-6 py-12 text-center text-slate-600 dark:text-slate-400">' +
 						esc(cfg.strings.empty) +
-						'</div>';
+						'</td></tr>';
 				} else {
-					grid.innerHTML = items.map(cardHtml).join('');
+					list.innerHTML = items.map(rowHtml).join('');
 				}
 				var total = typeof data.total === 'number' ? data.total : 0;
 				var totalPages = typeof data.total_pages === 'number' ? data.total_pages : 0;
@@ -360,10 +354,10 @@
 				}
 			})
 			.catch(function () {
-				grid.innerHTML =
-					'<div class="col-span-full rounded-2xl border border-dashed border-red-200 bg-red-50 px-6 py-12 text-center text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">' +
+				list.innerHTML =
+					'<tr><td colspan="6" class="px-6 py-12 text-center text-red-700 dark:text-red-300">' +
 					esc(cfg.strings.error) +
-					'</div>';
+					'</td></tr>';
 				if (pag) {
 					pag.innerHTML = '';
 				}

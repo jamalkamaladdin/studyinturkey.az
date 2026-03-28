@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$university_id = isset( $university_id ) ? absint( $university_id ) : 0;
+$university_id = sit_theme_resolve_university_id( isset( $university_id ) ? $university_id : null );
 if ( $university_id < 1 ) {
 	return;
 }
@@ -22,6 +22,16 @@ $ranking  = (int) get_post_meta( $university_id, 'sit_global_ranking', true );
 $tuition  = get_post_meta( $university_id, 'sit_tuition_fee_min', true );
 $cities   = get_the_terms( $university_id, 'city' );
 $types    = get_the_terms( $university_id, 'university_type' );
+
+$uni_base = sit_theme_localize_url( get_permalink( $university_id ) );
+if ( function_exists( 'sit_theme_university_sub_url' ) ) {
+	$dorms_sub  = sit_theme_university_sub_url( $university_id, 'dormitories' );
+	$admit_sub  = sit_theme_university_sub_url( $university_id, 'admission' );
+} else {
+	$dorms_sub = $uni_base ? $uni_base . '#dormitories' : '#dormitories';
+	$admit_sub = $uni_base ? $uni_base . '#admission-requirements' : '#admission-requirements';
+}
+$programs_a  = sit_theme_programs_archive_url();
 ?>
 <section class="relative border-b border-slate-200 bg-slate-900 text-white" aria-labelledby="sit-univ-hero-title">
 	<div class="absolute inset-0 overflow-hidden">
@@ -76,6 +86,14 @@ $types    = get_the_terms( $university_id, 'university_type' );
 						<?php echo esc_html( number_format_i18n( $rating, 1 ) ); ?> / 5 ★
 					</p>
 				<?php endif; ?>
+				<nav class="mt-6 flex flex-wrap gap-2 text-sm" aria-label="<?php esc_attr_e( 'Səhifə bölmələri', 'studyinturkey' ); ?>">
+					<a href="#programs" class="rounded-full bg-white/10 px-3 py-1.5 font-medium hover:bg-white/20"><?php esc_html_e( 'Proqramlar', 'studyinturkey' ); ?></a>
+					<a href="#admission-requirements" class="rounded-full bg-white/10 px-3 py-1.5 font-medium hover:bg-white/20"><?php esc_html_e( 'Qəbul', 'studyinturkey' ); ?></a>
+					<a href="<?php echo esc_url( $dorms_sub ); ?>" class="rounded-full bg-white/10 px-3 py-1.5 font-medium hover:bg-white/20"><?php esc_html_e( 'Yataqxanalar', 'studyinturkey' ); ?></a>
+					<a href="#campus" class="rounded-full bg-white/10 px-3 py-1.5 font-medium hover:bg-white/20"><?php esc_html_e( 'Kampus', 'studyinturkey' ); ?></a>
+					<a href="<?php echo esc_url( $programs_a ); ?>" class="rounded-full bg-brand-500/90 px-3 py-1.5 font-semibold text-white hover:bg-brand-400"><?php esc_html_e( 'Müraciət et', 'studyinturkey' ); ?></a>
+					<a href="<?php echo esc_url( $admit_sub ); ?>" class="rounded-full bg-white/10 px-3 py-1.5 font-medium hover:bg-white/20"><?php esc_html_e( 'Qəbul tələbləri (tam)', 'studyinturkey' ); ?></a>
+				</nav>
 			</div>
 			<dl class="grid grid-cols-2 gap-4 rounded-2xl bg-white/10 p-4 text-sm backdrop-blur sm:grid-cols-4 lg:max-w-xl lg:grid-cols-2">
 				<?php if ( $students > 0 ) : ?>

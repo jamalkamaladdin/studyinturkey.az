@@ -84,6 +84,11 @@
 		@apply m-0 flex list-none flex-wrap items-center justify-center gap-2 p-0;
 	}
 
+	/* WP paginate_links: <li> əks halda şaquli düzülür */
+	.page-numbers > li {
+		@apply m-0 inline-flex list-none p-0;
+	}
+
 	.page-numbers a,
 	.page-numbers span {
 		@apply inline-flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200;

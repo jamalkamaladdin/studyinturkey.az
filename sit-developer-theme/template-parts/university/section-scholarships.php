@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$university_id = isset( $university_id ) ? absint( $university_id ) : 0;
+$university_id = sit_theme_resolve_university_id( isset( $university_id ) ? $university_id : null );
 if ( $university_id < 1 || ! post_type_exists( 'scholarship' ) ) {
 	return;
 }

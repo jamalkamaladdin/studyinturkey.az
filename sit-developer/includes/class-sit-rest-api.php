@@ -677,7 +677,24 @@ final class SIT_REST_API {
         $fee_raw = get_post_meta( $id, 'sit_tuition_fee', true );
         $fee     = ( '' !== $fee_raw && null !== $fee_raw && is_numeric( $fee_raw ) ) ? (float) $fee_raw : null;
 
-        $univ_id    = (int) get_post_meta( $id, 'sit_university_id', true );
+        $univ_id = (int) get_post_meta( $id, 'sit_university_id', true );
+        // İdxal sonrası və ya admin saxlamasında meta silinibsə, FBU proqramlarını slug ilə tanı.
+        if ( $univ_id <= 0 && is_string( $post->post_name ) && str_ends_with( $post->post_name, '-fbu' ) ) {
+            $fbu_univ = get_posts(
+                [
+                    'post_type'              => SIT_University_CPT::POST_TYPE,
+                    'post_status'            => 'publish',
+                    'name'                   => 'fenerbahce-universitesi',
+                    'posts_per_page'         => 1,
+                    'fields'                 => 'ids',
+                    'update_post_meta_cache' => false,
+                ]
+            );
+            if ( $fbu_univ ) {
+                $univ_id = (int) $fbu_univ[0];
+            }
+        }
+
         $univ_title = '';
         $univ_link  = '';
         $univ_logo_url = '';

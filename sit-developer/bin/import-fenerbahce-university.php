@@ -77,6 +77,61 @@ function sit_fbu_degree_id( string $needle ): int {
 }
 
 /**
+ * degree_type term slug (JSON açarı üçün).
+ *
+ * @param string $logical associate|bachelor|master|phd.
+ */
+function sit_fbu_degree_slug( string $logical ): string {
+	$id = sit_fbu_degree_id( $logical );
+	if ( ! $id ) {
+		return sanitize_title( $logical );
+	}
+	$t = get_term( $id, 'degree_type' );
+	return ( $t && ! is_wp_error( $t ) && $t->slug ) ? (string) $t->slug : sanitize_title( $logical );
+}
+
+/**
+ * CPT yazısı: eyni slug ilə yenilə/yarat.
+ *
+ * @param array<string, mixed> $post_fields post_title, post_content və s.
+ * @param array<string, mixed> $meta_map    Meta açar => dəyər.
+ */
+function sit_fbu_upsert_child( string $post_type, string $slug, array $post_fields, array $meta_map ): int {
+	$found = get_posts(
+		[
+			'post_type'      => $post_type,
+			'post_status'    => 'any',
+			'name'           => $slug,
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+		]
+	);
+	$data = array_merge(
+		[
+			'post_type'   => $post_type,
+			'post_status' => 'publish',
+			'post_name'   => $slug,
+		],
+		$post_fields
+	);
+	if ( $found ) {
+		$pid = (int) $found[0];
+		$data['ID'] = $pid;
+		wp_update_post( wp_slash( $data ), true );
+	} else {
+		$pid = wp_insert_post( wp_slash( $data ), true );
+		if ( is_wp_error( $pid ) ) {
+			fwrite( STDERR, $pid->get_error_message() . "\n" );
+			return 0;
+		}
+	}
+	foreach ( $meta_map as $k => $v ) {
+		update_post_meta( $pid, $k, $v );
+	}
+	return (int) $pid;
+}
+
+/**
  * @param string $en English / Turkish.
  */
 function sit_fbu_lang_id( string $en ): int {
@@ -114,6 +169,10 @@ function sit_fbu_field_id( string $key ): int {
 }
 
 function sit_fbu_map_field( string $title ): string {
+	// Tərcümə olunmuş başlıqlar (AZ/TR) — idman sətirləri business-dan əvvəl yoxlanılmalıdır.
+	if ( preg_match( '/\b(idman|idman\s+elmləri|spor|sport)\b/ui', $title ) ) {
+		return 'sport';
+	}
 	if ( preg_match( '/\b(engineering|software|computer|electrical|industrial)\b/i', $title ) ) {
 		return 'engineering';
 	}
@@ -129,7 +188,7 @@ function sit_fbu_map_field( string $title ): string {
 	if ( preg_match( '/\b(new media|public relations|radio|television|cinema|advertising)\b/i', $title ) ) {
 		return 'communication';
 	}
-	if ( preg_match( '/\b(sport|coaching|exercise|physical education)\b/i', $title ) ) {
+	if ( preg_match( '/\b(sports?\s+sciences?|coaching|exercise|physical education)\b/i', $title ) ) {
 		return 'sport';
 	}
 	if ( preg_match( '/\b(psychology|political science|international relations)\b/i', $title ) ) {
@@ -246,7 +305,8 @@ if ( $existing_u ) {
 }
 
 update_post_meta( $univ_id, 'sit_tuition_fee_min', 1800 );
-update_post_meta( $univ_id, 'sit_student_count', 6000 );
+// Rəsmi ana səhifə: təxminən 9500+ tələbə (mənbə: fbu.edu.tr).
+update_post_meta( $univ_id, 'sit_student_count', 9500 );
 update_post_meta( $univ_id, 'sit_founded_year', 2016 );
 update_post_meta( $univ_id, 'sit_global_ranking', 0 );
 update_post_meta( $univ_id, 'sit_rating', 4.5 );
@@ -330,5 +390,186 @@ foreach ( $programs as $row ) {
 	}
 }
 
+// --- Qəbul tələbləri (dərəcə slug-ları proqramlardakı degree_type ilə uyğun), kampus, yataqxana, təqaüd, FAQ ---
+if ( class_exists( 'SIT_University_Admission_Meta', false ) ) {
+	$apply_pdf   = 'https://international.fbu.edu.tr/bilgi/79/how-to-apply';
+	$criteria    = 'https://international.fbu.edu.tr/bilgi/1/kabul-kriterleri';
+	$apply_port  = 'https://apply.fbu.edu.tr';
+	$intl_home   = 'https://international.fbu.edu.tr/?hl=en';
+	$master_info = 'https://international.fbu.edu.tr/bilgi/83/yuksek-lisans';
+	$phd_info    = 'https://international.fbu.edu.tr/bilgi/84/doktora';
+
+	$slug_b = sit_fbu_degree_slug( 'bachelor' );
+	$slug_a = sit_fbu_degree_slug( 'associate' );
+	$slug_m = sit_fbu_degree_slug( 'master' );
+	$slug_p = sit_fbu_degree_slug( 'phd' );
+
+	$requirements = [];
+
+	$requirements[ $slug_b ] = [
+		'steps'           => [
+			'<a href="' . esc_url( $apply_port ) . '" rel="noopener noreferrer" target="_blank">apply.fbu.edu.tr</a> üzərindən onlayn müraciəti tamamlayın.',
+			'Beynəlxalq tələbə addımları və sənədlər siyahısı üçün: <a href="' . esc_url( $apply_pdf ) . '" rel="noopener noreferrer" target="_blank">How to apply (PDF / məlumat səhifəsi)</a>.',
+			'Qəbul kriteriyaları və rəsmi yönerge: <a href="' . esc_url( $criteria ) . '" rel="noopener noreferrer" target="_blank">Kabul kriterleri</a>.',
+			'Əlavə suallar üçün beynəlxalq ofis: <a href="' . esc_url( $intl_home ) . '" rel="noopener noreferrer" target="_blank">international.fbu.edu.tr</a>.',
+		],
+		'documents'       => [
+			'Attestat / diplom və transkript (tərcümə notarial/təsdiq — tələblərə görə)',
+			'Pasport surəti',
+			'Dil səviyyəsi (proqram dili ingiliscədirsə — məs. IELTS/TOEFL və ya universitetin qəbul etdiyi ekvivalent, dəqiq tələb üçün PDF-ə baxın)',
+			'Ölkəyə görə imtahan / qəbul şərtləri (SAT və s. — kriterlər səhifəsində göstərilir)',
+		],
+		'intake_title'    => 'Akademik il və müraciət',
+		'intake_start'    => '',
+		'intake_deadline' => 'Dəqiq tarixlər hər il yenilənir; PDF və beynəlxalq ofislə təsdiqləyin.',
+	];
+
+	$requirements[ $slug_a ] = [
+		'steps'           => [
+			'Öncül (associate) proqramları üçün müraciət axını bakalavr ilə eyni portal üzərindən idarə olunur: <a href="' . esc_url( $apply_port ) . '" rel="noopener noreferrer" target="_blank">apply.fbu.edu.tr</a>.',
+			'<a href="' . esc_url( $apply_pdf ) . '" rel="noopener noreferrer" target="_blank">How to apply</a> və <a href="' . esc_url( $criteria ) . '" rel="noopener noreferrer" target="_blank">kabul kriterleri</a> sənədlərini oxuyun.',
+		],
+		'documents'       => [
+			'Orta təhsil haqqında sənəd və transkript',
+			'Pasport surəti',
+			'Dil/təhsil şərtləri — proqram dili türkcədirsə tələblərə uyğun hazırlıq',
+		],
+		'intake_title'    => 'Qəbul pəncərəsi',
+		'intake_start'    => '',
+		'intake_deadline' => 'İl üzrə yenilənir — rəsmi PDF.',
+	];
+
+	$requirements[ $slug_m ] = [
+		'steps'           => [
+			'Magistratura üçün rəsmi məlumat: <a href="' . esc_url( $master_info ) . '" rel="noopener noreferrer" target="_blank">Yüksek lisans</a>.',
+			'Müraciət portalı: <a href="' . esc_url( $apply_port ) . '" rel="noopener noreferrer" target="_blank">apply.fbu.edu.tr</a>.',
+			'Ümumi beynəlxalq addımlar: <a href="' . esc_url( $apply_pdf ) . '" rel="noopener noreferrer" target="_blank">How to apply</a>.',
+		],
+		'documents'       => [
+			'Bakalavr diplomu və transkript',
+			'Pasport',
+			'Referat məktublar / CV (proqrama görə)',
+			'Dil səviyyəsi (ingilis proqramları üçün)',
+		],
+		'intake_title'    => 'Magistr qəbulu',
+		'intake_start'    => '',
+		'intake_deadline' => '',
+	];
+
+	$requirements[ $slug_p ] = [
+		'steps'           => [
+			'Doktorantura üçün rəsmi məlumat: <a href="' . esc_url( $phd_info ) . '" rel="noopener noreferrer" target="_blank">Doktora</a>.',
+			'Müraciət: <a href="' . esc_url( $apply_port ) . '" rel="noopener noreferrer" target="_blank">apply.fbu.edu.tr</a> və beynəlxalq ofis ilə əlaqə.',
+		],
+		'documents'       => [
+			'Magistr diplomi, transkript, tədqiqat planı / motivasiya',
+			'Pasport',
+			'Dil və qəbul imtahanları — proqram təsvirində göstərilir',
+		],
+		'intake_title'    => 'PhD qəbulu',
+		'intake_start'    => '',
+		'intake_deadline' => '',
+	];
+
+	$json_req = wp_json_encode( $requirements );
+	update_post_meta(
+		$univ_id,
+		SIT_University_Admission_Meta::META_REQUIREMENTS,
+		SIT_University_Admission_Meta::sanitize_requirements_json( $json_req )
+	);
+
+	update_post_meta( $univ_id, SIT_University_Admission_Meta::META_INTL_TOTAL, '9 500+' );
+	update_post_meta( $univ_id, SIT_University_Admission_Meta::META_INTL_FOREIGN, 'Beynəlxalq tələbələr: international.fbu.edu.tr' );
+	update_post_meta( $univ_id, SIT_University_Admission_Meta::META_INTL_ACCEPT, '—' );
+
+	echo "Qəbul tələbləri və beynəlxalq meta yeniləndi.\n";
+} else {
+	fwrite( STDERR, "Xəbərdarlıq: SIT_University_Admission_Meta yüklənməyib — sit-developer aktiv olsun.\n" );
+}
+
+// Metropol İstanbul kampusu (Ataşehir — rəsmi ünvanla yaxınlaşdırılmış koordinat).
+sit_fbu_upsert_child(
+	'campus',
+	'fbu-metropol-istanbul',
+	[
+		'post_title'   => 'Metropol İstanbul (Ataşehir)',
+		'post_content' => '<p>Fenerbahçe Universitetinin əsas kampusu İstanbul Ataşehirdə, Metropol İstanbul kompleksində yerləşir. Ünvan və xəritə üçün rəsmi sayt: <a href="' . esc_url( 'https://www.fbu.edu.tr/en' ) . '">fbu.edu.tr</a></p>',
+		'post_excerpt' => 'Əsas tədris kampusu — Ataşehir.',
+	],
+	[
+		'sit_university_id' => $univ_id,
+		'sit_address'       => 'Metropol İstanbul, Ataşehir, İstanbul, Türkiyə',
+		'sit_latitude'      => '40.9877',
+		'sit_longitude'     => '29.1245',
+	]
+);
+
+// Kampus yataqxanası rəsmi siyahıda tez-tez ayrıca göstərilmir — şəffaf məsləhət mətni.
+sit_fbu_upsert_child(
+	'dormitory',
+	'fbu-yasayis-meslehet',
+	[
+		'post_title'   => 'Yaşayış (kampus ətrafı)',
+		'post_content' => '<p>FBU üçün rəsmi saytda kampus daxili yataqxana ayrıca siyahıda olmaya bilər. Çox beynəlxalq tələbə Ataşehir və ətrafında kirayə mənzil seçir. Yenilənmiş məlumat üçün universitetin tələbə səhifələrinə baxın.</p>',
+		'post_excerpt' => 'Kirayə və yaşayış planlaması.',
+	],
+	[
+		'sit_university_id' => $univ_id,
+		'sit_price'         => '',
+		'sit_distance'      => 'Kampus ətrafı (Ataşehir)',
+		'sit_facilities'    => 'Özəl mənzil / paylaşımlı mənzil — tələbənin seçiminə görə',
+	]
+);
+
+sit_fbu_upsert_child(
+	'scholarship',
+	'fbu-tesvik-ve-burs',
+	[
+		'post_title'   => 'Təqaüd və endirimlər (ÖSYM və digər)',
+		'post_content' => '<p>FBU tələbələri üçün təqaüd, təşviq və endirim modelləri (məs. ÖSYM) rəsmi səhifədə izah olunur. <a href="' . esc_url( 'https://www.fbu.edu.tr/en/student/scholarships-and-discounts' ) . '" rel="noopener noreferrer" target="_blank">Scholarships and discounts</a>.</p>',
+		'post_excerpt' => 'Rəsmi təqaüd və endirim siyasəti.',
+	],
+	[
+		'sit_university_id' => $univ_id,
+		'sit_percentage'    => 0,
+		'sit_eligibility'   => 'ÖSYM balları və universitetin elan etdiyi kateqoriyalar üzrə; tam şərtlər üçün rəsmi səhifəni yoxlayın.',
+	]
+);
+
+$faq_items = [
+	[
+		'q' => 'Beynəlxalq tələbə kimi necə müraciət edirəm?',
+		'a' => '<p>Əvvəlcə <a href="' . esc_url( 'https://apply.fbu.edu.tr' ) . '">apply.fbu.edu.tr</a> portalına daxil olun və <a href="' . esc_url( 'https://international.fbu.edu.tr/bilgi/79/how-to-apply' ) . '">How to apply</a> səhifəsindəki addımları izləyin.</p>',
+	],
+	[
+		'q' => 'Hansı proqramlar ingilis dilindədir?',
+		'a' => '<p>Proqram siyahısında dil sütununa baxın; FBU-də bir çox bakalavr və magistr proqramları ingilis və ya türk dilində təklif olunur. Dəqiq dil tələbi üçün proqram təsvirinə və qəbul kriterlərinə baxın.</p>',
+	],
+	[
+		'q' => 'Təqaüd almaq mümkündürmü?',
+		'a' => '<p>Bəli, ÖSYM və digər təşviq mexanizmləri mövcuddur. Ətraflı: <a href="' . esc_url( 'https://www.fbu.edu.tr/en/student/scholarships-and-discounts' ) . '">Scholarships and discounts</a>.</p>',
+	],
+];
+
+$n = 0;
+foreach ( $faq_items as $item ) {
+	++$n;
+	$slug_f = 'fbu-faq-' . $n;
+	sit_fbu_upsert_child(
+		'faq',
+		$slug_f,
+		[
+			'post_title'   => $item['q'],
+			'post_content' => $item['a'],
+			'post_excerpt' => wp_strip_all_tags( $item['q'] ),
+		],
+		[
+			'sit_university_id' => $univ_id,
+			'sit_sort_order'      => $n,
+		]
+	);
+}
+
+echo "Kampus, yataqxana, təqaüd, FAQ yeniləndi/yaradıldı.\n";
 echo "Proqramlar: {$created} yaradıldı, {$updated} yeniləndi.\n";
 echo "Bitdi.\n";

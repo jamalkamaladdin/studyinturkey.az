@@ -11,6 +11,7 @@ final class SIT_Developer_Activator {
         SIT_University_CPT::register();
         SIT_Program_CPT::register();
         SIT_Extra_Cpts::register();
+        SIT_University_Rewrites::add_rules();
         self::seed_default_terms();
         flush_rewrite_rules();
         update_option( 'sit_developer_version', SIT_DEVELOPER_VERSION );

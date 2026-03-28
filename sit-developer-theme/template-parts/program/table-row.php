@@ -11,7 +11,7 @@ $link    = sit_theme_localize_url( get_permalink( $post_id ) );
 $fee     = get_post_meta( $post_id, 'sit_tuition_fee', true );
 $dur     = (string) get_post_meta( $post_id, 'sit_duration', true );
 $sch     = (bool) get_post_meta( $post_id, 'sit_scholarship_available', true );
-$uid     = (int) get_post_meta( $post_id, 'sit_university_id', true );
+$uid     = sit_theme_get_program_university_id( $post_id );
 
 $univ_title = '';
 $univ_link  = '';

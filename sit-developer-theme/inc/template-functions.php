@@ -55,6 +55,133 @@ function sit_theme_programs_archive_url(): string {
 }
 
 /**
+ * Proqram üçün universitet ID-si (meta boşdursa FBU slug ehtiyatı).
+ *
+ * @param int $program_id Proqram post ID.
+ */
+function sit_theme_get_program_university_id( int $program_id ): int {
+	$uid = (int) get_post_meta( $program_id, 'sit_university_id', true );
+	if ( $uid > 0 ) {
+		return $uid;
+	}
+	$post = get_post( $program_id );
+	if ( ! $post instanceof WP_Post || 'program' !== $post->post_type ) {
+		return 0;
+	}
+	if ( ! is_string( $post->post_name ) || ! str_ends_with( $post->post_name, '-fbu' ) ) {
+		return 0;
+	}
+	$fbu = get_posts(
+		[
+			'post_type'              => 'university',
+			'post_status'            => 'publish',
+			'name'                   => 'fenerbahce-universitesi',
+			'posts_per_page'         => 1,
+			'fields'                 => 'ids',
+			'update_post_meta_cache' => false,
+		]
+	);
+	return $fbu ? (int) $fbu[0] : 0;
+}
+
+/**
+ * Proqram üçün sahə (field_of_study) göstərim sətri — başlıqla uyğunsuz term təyin olunubsa düzəldir.
+ *
+ * @param int $program_id Proqram post ID.
+ */
+function sit_theme_get_program_field_display_line( int $program_id ): string {
+	if ( ! taxonomy_exists( 'field_of_study' ) ) {
+		return '';
+	}
+	$terms = get_the_terms( $program_id, 'field_of_study' );
+	if ( ! is_array( $terms ) || is_wp_error( $terms ) || ! $terms ) {
+		return '';
+	}
+	$title   = sit_theme_get_post_title( $program_id );
+	$inferred = sit_theme_infer_field_category_from_title( $title );
+
+	foreach ( $terms as $t ) {
+		$name = strtolower( (string) $t->name );
+		$slug = strtolower( (string) $t->slug );
+		if ( 'sport' === $inferred && ( str_contains( $name, 'sport' ) || str_contains( $name, 'idman' ) || str_contains( $slug, 'sport' ) || str_contains( $slug, 'idman' ) ) ) {
+			return sit_theme_get_term_name( (int) $t->term_id, 'field_of_study' );
+		}
+	}
+
+	if ( 'sport' === $inferred ) {
+		$fix = get_term_by( 'slug', 'sport-sciences', 'field_of_study' );
+		if ( ! $fix instanceof WP_Term ) {
+			$fix = get_term_by( 'name', 'Sport Sciences', 'field_of_study' );
+		}
+		if ( $fix instanceof WP_Term ) {
+			return sit_theme_get_term_name( (int) $fix->term_id, 'field_of_study' );
+		}
+	}
+
+	$prefer_slugs = [
+		'engineering'   => [ 'engineering', 'muhendislik', 'mühəndislik' ],
+		'business'      => [ 'business', 'biznes' ],
+		'medicine'      => [ 'medicine', 'tibb', 'health' ],
+		'architecture'  => [ 'architecture', 'memarliq' ],
+		'communication' => [ 'communication', 'media', 'ictima' ],
+		'social'        => [ 'social', 'psychology', 'political' ],
+		'humanities'    => [ 'humanities', 'english', 'dil' ],
+	];
+
+	if ( isset( $prefer_slugs[ $inferred ] ) ) {
+		foreach ( $prefer_slugs[ $inferred ] as $frag ) {
+			foreach ( $terms as $t ) {
+				if ( str_contains( strtolower( (string) $t->slug ), $frag ) || str_contains( strtolower( (string) $t->name ), $frag ) ) {
+					return sit_theme_get_term_name( (int) $t->term_id, 'field_of_study' );
+				}
+			}
+		}
+	}
+
+	$names = [];
+	foreach ( $terms as $t ) {
+		$names[] = sit_theme_get_term_name( (int) $t->term_id, 'field_of_study' );
+	}
+	return implode( ', ', array_filter( $names ) );
+}
+
+/**
+ * Başlıqdan sahə kateqoriyası (import xəritəsi ilə uyğunlaşdırılmış).
+ *
+ * @param string $title Başlıq mətni.
+ */
+function sit_theme_infer_field_category_from_title( string $title ): string {
+	if ( preg_match( '/\b(idman|idman\s+elmləri|spor|sport)\b/ui', $title ) ) {
+		return 'sport';
+	}
+	if ( preg_match( '/\b(engineering|software|computer|electrical|industrial)\b/i', $title ) ) {
+		return 'engineering';
+	}
+	if ( preg_match( '/\b(mba|business|economics|finance|management information|organizational behavior)\b/i', $title ) ) {
+		return 'business';
+	}
+	if ( preg_match( '/\b(pharmacy|nursing|physiotherapy|midwifery|nutrition|speech|ergotherapy|clinical pharmacy|internal diseases nursing|anesthesia|dental|dialysis|emergency aid|medical imaging|laboratory|operating room|oral and dental|radiation|pathology|pharmacy services|orthopedic|dietetics)\b/i', $title ) ) {
+		return 'medicine';
+	}
+	if ( preg_match( '/\b(architecture|interior architecture)\b/i', $title ) ) {
+		return 'architecture';
+	}
+	if ( preg_match( '/\b(new media|public relations|radio|television|cinema|advertising)\b/i', $title ) ) {
+		return 'communication';
+	}
+	if ( preg_match( '/\b(sports?\s+sciences?|coaching|exercise|physical education)\b/i', $title ) ) {
+		return 'sport';
+	}
+	if ( preg_match( '/\b(psychology|political science|international relations)\b/i', $title ) ) {
+		return 'social';
+	}
+	if ( preg_match( '/\benglish language and literature\b/i', $title ) ) {
+		return 'humanities';
+	}
+	return 'business';
+}
+
+/**
  * Bloq siyahısı URL-i (statik yazılar səhifəsi və ya post arxivi).
  */
 function sit_theme_blog_index_url(): string {
@@ -124,6 +251,12 @@ function sit_theme_get_post_content_filtered( int $post_id ): string {
 	$html = '';
 	if ( function_exists( 'sit_get_translation' ) && class_exists( 'SIT_Translations' ) && function_exists( 'sit_get_current_lang' ) ) {
 		$lang = sit_get_current_lang();
+		if ( '' === (string) $lang && class_exists( 'SIT_Languages' ) ) {
+			$lang = (string) SIT_Languages::get_default_language_code();
+		}
+		if ( '' === $lang ) {
+			$lang = 'az';
+		}
 		$html = sit_get_translation( $post_id, SIT_Translations::OBJECT_POST, $lang, SIT_Translations::FIELD_CONTENT, '' );
 	}
 	if ( '' === $html ) {
@@ -214,6 +347,24 @@ function sit_theme_query_posts_by_university( string $post_type, int $university
 	}
 
 	return new WP_Query( wp_parse_args( $override_query, $args ) );
+}
+
+/**
+ * Universitet şablonunda ID: get_template_part() arqumenti bəzən şablona çatmayanda (köhnə WP və s.) sorğudan götürülür.
+ *
+ * @param mixed $from_args Şablonda gözlənilən university_id dəyəri.
+ */
+function sit_theme_resolve_university_id( $from_args = null ): int {
+	if ( is_numeric( $from_args ) && (int) $from_args > 0 ) {
+		return (int) $from_args;
+	}
+	if ( is_singular( 'university' ) ) {
+		$qid = (int) get_queried_object_id();
+		if ( $qid > 0 ) {
+			return $qid;
+		}
+	}
+	return 0;
 }
 
 /**

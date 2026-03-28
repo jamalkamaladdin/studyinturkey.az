@@ -277,7 +277,7 @@ function sit_theme_seo_schema_course( int $post_id ): void {
 		'url'         => $url,
 	];
 
-	$uid = (int) get_post_meta( $post_id, 'sit_university_id', true );
+	$uid = function_exists( 'sit_theme_get_program_university_id' ) ? sit_theme_get_program_university_id( $post_id ) : (int) get_post_meta( $post_id, 'sit_university_id', true );
 	if ( $uid > 0 ) {
 		$org_name = function_exists( 'sit_theme_get_post_title' ) ? sit_theme_get_post_title( $uid ) : get_the_title( $uid );
 		$org_url  = get_permalink( $uid );

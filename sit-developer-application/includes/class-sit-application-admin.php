@@ -370,6 +370,35 @@ final class SIT_Application_Admin {
                                 <?php endif; ?>
                             </td></tr>
                             <tr><th><?php esc_html_e( 'Qeyd', 'studyinturkey' ); ?></th><td><?php echo isset( $app['applicant_message'] ) && '' !== (string) $app['applicant_message'] ? esc_html( (string) $app['applicant_message'] ) : '—'; ?></td></tr>
+                            <?php
+                            $prof = [];
+                            if ( ! empty( $app['applicant_profile_json'] ) && is_string( $app['applicant_profile_json'] ) ) {
+                                $decoded = json_decode( $app['applicant_profile_json'], true );
+                                if ( is_array( $decoded ) ) {
+                                    $prof = $decoded;
+                                }
+                            }
+                            $prof_labels = [
+                                'date_of_birth'         => __( 'Doğum tarixi', 'studyinturkey' ),
+                                'nationality'           => __( 'Vətəndaşlıq', 'studyinturkey' ),
+                                'passport_number'       => __( 'Pasport nömrəsi', 'studyinturkey' ),
+                                'address'               => __( 'Ünvan', 'studyinturkey' ),
+                                'education_institution' => __( 'Təhsil müəssisəsi', 'studyinturkey' ),
+                                'education_country'     => __( 'Təhsil ölkəsi', 'studyinturkey' ),
+                                'graduation_year'       => __( 'Bitirmə ili', 'studyinturkey' ),
+                                'intake_period'         => __( 'Qəbul dövrü', 'studyinturkey' ),
+                                'research_interest'     => __( 'Tədqiqat mövzusu', 'studyinturkey' ),
+                                'work_experience'       => __( 'İş / təcrübə', 'studyinturkey' ),
+                            ];
+                            foreach ( $prof_labels as $pk => $plab ) :
+                                if ( empty( $prof[ $pk ] ) ) {
+                                    continue;
+                                }
+                                ?>
+                            <tr><th><?php echo esc_html( $plab ); ?></th><td><?php echo esc_html( (string) $prof[ $pk ] ); ?></td></tr>
+                                <?php
+                            endforeach;
+                            ?>
                             <tr><th><?php esc_html_e( 'İstifadəçi ID', 'studyinturkey' ); ?></th><td><?php echo isset( $app['user_id'] ) && (int) $app['user_id'] > 0 ? (int) $app['user_id'] : '—'; ?></td></tr>
                             <tr><th><?php esc_html_e( 'IP', 'studyinturkey' ); ?></th><td><?php echo esc_html( isset( $app['ip_address'] ) ? (string) $app['ip_address'] : '—' ); ?></td></tr>
                             <tr><th><?php esc_html_e( 'Yaradılıb', 'studyinturkey' ); ?></th><td><?php echo esc_html( isset( $app['created_at'] ) ? (string) $app['created_at'] : '—' ); ?></td></tr>

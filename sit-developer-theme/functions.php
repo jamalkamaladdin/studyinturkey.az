@@ -5,7 +5,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIT_THEME_VERSION', '1.2.0' );
+define( 'SIT_THEME_VERSION', '1.3.1' );
 define( 'SIT_THEME_DIR', get_template_directory() );
 define( 'SIT_THEME_URI', get_template_directory_uri() );
 
@@ -23,6 +23,7 @@ add_action( 'wp_head', 'sit_theme_dark_mode_boot_script', -99 );
 
 require_once SIT_THEME_DIR . '/inc/setup.php';
 require_once SIT_THEME_DIR . '/inc/template-functions.php';
+require_once SIT_THEME_DIR . '/inc/university-subpages.php';
 require_once SIT_THEME_DIR . '/inc/query-filters.php';
 require_once SIT_THEME_DIR . '/inc/contact-form.php';
 require_once SIT_THEME_DIR . '/inc/seo-sitemap.php';

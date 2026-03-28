@@ -1,6 +1,37 @@
-/* SIT Application form — minimal, theme-friendly */
+/* SIT Application form — theme-friendly, çoxsütunlu */
 .sit-app-form-wrapper {
-	max-width: 36rem;
+	width: 100%;
+	max-width: 42rem;
+	margin-inline: auto;
+}
+
+.sit-app-form-section {
+	margin-bottom: 1.5rem;
+	padding: 1rem 1.25rem 1.25rem;
+	border: 1px solid #e5e7eb;
+	border-radius: 10px;
+	background: #fafafa;
+}
+
+.sit-app-form-section legend {
+	font-weight: 700;
+	padding: 0 0.35rem;
+}
+
+.sit-app-form-grid {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+	.sit-app-form-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.sit-app-form-field--full {
+		grid-column: 1 / -1;
+	}
 }
 
 .sit-app-form-notice {

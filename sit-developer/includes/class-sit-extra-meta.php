@@ -22,10 +22,16 @@ final class SIT_Extra_Meta {
     private static function register_post_meta_all(): void {
         $defs = [
             SIT_Extra_Cpts::DORMITORY   => [
-                'sit_university_id' => 'integer',
-                'sit_price'         => 'number',
-                'sit_distance'      => 'string',
-                'sit_facilities'    => 'string',
+                'sit_university_id'     => 'integer',
+                'sit_price'             => 'number',
+                'sit_price_max'         => 'number',
+                'sit_distance'          => 'string',
+                'sit_facilities'        => 'string',
+                'sit_dorm_room_types'   => 'string',
+                'sit_dorm_capacity'     => 'integer',
+                'sit_dorm_gender'       => 'string',
+                'sit_dorm_location_type' => 'string',
+                'sit_dorm_contact_url'  => 'string',
             ],
             SIT_Extra_Cpts::CAMPUS      => [
                 'sit_university_id' => 'integer',
@@ -81,6 +87,7 @@ final class SIT_Extra_Meta {
                 }
                 return $id;
             case 'sit_price':
+            case 'sit_price_max':
             case 'sit_percentage':
                 $f = is_numeric( $value ) ? (float) $value : 0.0;
                 if ( 'sit_percentage' === $key ) {
@@ -108,6 +115,20 @@ final class SIT_Extra_Meta {
             case 'sit_student_name':
             case 'sit_student_country':
                 return sanitize_text_field( (string) $value );
+            case 'sit_dorm_room_types':
+                return sanitize_textarea_field( (string) $value );
+            case 'sit_dorm_capacity':
+                return absint( $value );
+            case 'sit_dorm_gender':
+                $g = sanitize_key( (string) $value );
+                $ok = [ 'female', 'male', 'mixed', '' ];
+                return in_array( $g, $ok, true ) ? $g : '';
+            case 'sit_dorm_location_type':
+                $t = sanitize_key( (string) $value );
+                $ok = [ 'on_campus', 'off_campus', '' ];
+                return in_array( $t, $ok, true ) ? $t : '';
+            case 'sit_dorm_contact_url':
+                return esc_url_raw( (string) $value );
             default:
                 return $value;
         }
@@ -198,18 +219,58 @@ final class SIT_Extra_Meta {
     private static function render_dormitory( WP_Post $post ): void {
         self::render_university_select( $post );
         $price      = get_post_meta( $post->ID, 'sit_price', true );
+        $price_max  = get_post_meta( $post->ID, 'sit_price_max', true );
         $distance   = get_post_meta( $post->ID, 'sit_distance', true );
         $facilities = get_post_meta( $post->ID, 'sit_facilities', true );
+        $rooms      = (string) get_post_meta( $post->ID, 'sit_dorm_room_types', true );
+        $capacity   = (int) get_post_meta( $post->ID, 'sit_dorm_capacity', true );
+        $gender     = (string) get_post_meta( $post->ID, 'sit_dorm_gender', true );
+        $loc_type   = (string) get_post_meta( $post->ID, 'sit_dorm_location_type', true );
+        $contact    = (string) get_post_meta( $post->ID, 'sit_dorm_contact_url', true );
         $price      = ( '' !== $price && null !== $price && is_numeric( $price ) ) ? esc_attr( (string) $price ) : '';
+        $price_max  = ( '' !== $price_max && null !== $price_max && is_numeric( $price_max ) ) ? esc_attr( (string) $price_max ) : '';
         $distance   = $distance ? esc_attr( (string) $distance ) : '';
         ?>
         <p>
-            <label for="sit_price"><strong><?php esc_html_e( 'Qiymət (USD / ay)', 'studyinturkey' ); ?></strong></label><br />
+            <label for="sit_price"><strong><?php esc_html_e( 'Qiymət min (USD / ay)', 'studyinturkey' ); ?></strong></label><br />
             <input type="number" step="0.01" min="0" class="small-text" id="sit_price" name="sit_price" value="<?php echo esc_attr( $price ); ?>" />
+        </p>
+        <p>
+            <label for="sit_price_max"><strong><?php esc_html_e( 'Qiymət max (USD / ay)', 'studyinturkey' ); ?></strong></label><br />
+            <input type="number" step="0.01" min="0" class="small-text" id="sit_price_max" name="sit_price_max" value="<?php echo esc_attr( $price_max ); ?>" />
         </p>
         <p>
             <label for="sit_distance"><strong><?php esc_html_e( 'Məsafə', 'studyinturkey' ); ?></strong></label><br />
             <input type="text" class="regular-text" id="sit_distance" name="sit_distance" value="<?php echo esc_attr( $distance ); ?>" placeholder="<?php esc_attr_e( 'Məs: 500 m, 2 km', 'studyinturkey' ); ?>" />
+        </p>
+        <p>
+            <label for="sit_dorm_room_types"><strong><?php esc_html_e( 'Otaq tipləri (vergüllə və ya sətir-sətir)', 'studyinturkey' ); ?></strong></label><br />
+            <textarea class="large-text" rows="3" id="sit_dorm_room_types" name="sit_dorm_room_types"><?php echo esc_textarea( $rooms ); ?></textarea>
+        </p>
+        <p>
+            <label for="sit_dorm_capacity"><strong><?php esc_html_e( 'Tutum (yer sayı)', 'studyinturkey' ); ?></strong></label><br />
+            <input type="number" min="0" class="small-text" id="sit_dorm_capacity" name="sit_dorm_capacity" value="<?php echo esc_attr( $capacity ? (string) $capacity : '' ); ?>" />
+        </p>
+        <p>
+            <label for="sit_dorm_gender"><strong><?php esc_html_e( 'Cinsiyyət', 'studyinturkey' ); ?></strong></label><br />
+            <select name="sit_dorm_gender" id="sit_dorm_gender">
+                <option value=""><?php esc_html_e( '—', 'studyinturkey' ); ?></option>
+                <option value="female" <?php selected( $gender, 'female' ); ?>><?php esc_html_e( 'Qadın', 'studyinturkey' ); ?></option>
+                <option value="male" <?php selected( $gender, 'male' ); ?>><?php esc_html_e( 'Kişi', 'studyinturkey' ); ?></option>
+                <option value="mixed" <?php selected( $gender, 'mixed' ); ?>><?php esc_html_e( 'Qarışıq', 'studyinturkey' ); ?></option>
+            </select>
+        </p>
+        <p>
+            <label for="sit_dorm_location_type"><strong><?php esc_html_e( 'Yerləşmə', 'studyinturkey' ); ?></strong></label><br />
+            <select name="sit_dorm_location_type" id="sit_dorm_location_type">
+                <option value=""><?php esc_html_e( '—', 'studyinturkey' ); ?></option>
+                <option value="off_campus" <?php selected( $loc_type, 'off_campus' ); ?>><?php esc_html_e( 'Kampusdan kənar', 'studyinturkey' ); ?></option>
+                <option value="on_campus" <?php selected( $loc_type, 'on_campus' ); ?>><?php esc_html_e( 'Kampusda', 'studyinturkey' ); ?></option>
+            </select>
+        </p>
+        <p>
+            <label for="sit_dorm_contact_url"><strong><?php esc_html_e( 'Əlaqə linki (veb / WhatsApp)', 'studyinturkey' ); ?></strong></label><br />
+            <input type="url" class="large-text" id="sit_dorm_contact_url" name="sit_dorm_contact_url" value="<?php echo esc_attr( $contact ); ?>" placeholder="https://" />
         </p>
         <p>
             <label for="sit_facilities"><strong><?php esc_html_e( 'İmkanlar', 'studyinturkey' ); ?></strong></label><br />
@@ -328,8 +389,14 @@ final class SIT_Extra_Meta {
                     [
                         'sit_university_id',
                         'sit_price',
+                        'sit_price_max',
                         'sit_distance',
                         'sit_facilities',
+                        'sit_dorm_room_types',
+                        'sit_dorm_capacity',
+                        'sit_dorm_gender',
+                        'sit_dorm_location_type',
+                        'sit_dorm_contact_url',
                     ]
                 );
                 break;

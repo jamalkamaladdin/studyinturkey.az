@@ -726,9 +726,14 @@ final class SIT_Application_Account {
 
     public static function document_type_label( string $type ): string {
         $map = [
-            'passport'   => __( 'Pasport', 'studyinturkey' ),
-            'transcript' => __( 'Transkript', 'studyinturkey' ),
-            'photo'      => __( 'Şəkil', 'studyinturkey' ),
+            'passport'           => __( 'Pasport', 'studyinturkey' ),
+            'transcript'         => __( 'Transkript', 'studyinturkey' ),
+            'photo'              => __( 'Pasport formatlı foto', 'studyinturkey' ),
+            'secondary_diploma'  => __( 'Orta təhsil diplomu / şəhadətnamə', 'studyinturkey' ),
+            'diploma_prior'      => __( 'Əvvəlki dərəcə diplomu', 'studyinturkey' ),
+            'cv'                 => __( 'CV', 'studyinturkey' ),
+            'motivation_letter'  => __( 'Motivasiya məktubu', 'studyinturkey' ),
+            'language_cert'      => __( 'Dil sertifikatı', 'studyinturkey' ),
         ];
 
         return $map[ $type ] ?? $type;

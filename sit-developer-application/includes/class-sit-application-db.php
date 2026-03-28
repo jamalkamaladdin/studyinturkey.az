@@ -32,6 +32,7 @@ final class SIT_Application_Db {
             program_id bigint(20) unsigned NOT NULL,
             status varchar(20) NOT NULL DEFAULT 'pending',
             applicant_message text DEFAULT NULL,
+            applicant_profile_json longtext DEFAULT NULL,
             user_id bigint(20) unsigned DEFAULT NULL,
             ip_address varchar(45) DEFAULT NULL,
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,

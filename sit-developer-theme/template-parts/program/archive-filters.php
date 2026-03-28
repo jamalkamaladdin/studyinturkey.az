@@ -46,7 +46,7 @@ $universities = get_posts(
 	]
 );
 ?>
-<aside class="lg:sticky lg:top-24 lg:self-start" aria-labelledby="sit-prog-filters-title">
+<aside class="w-full shrink-0 lg:sticky lg:top-24 lg:w-1/5 lg:self-start lg:max-w-none" aria-labelledby="sit-prog-filters-title">
 	<div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800/80">
 		<h2 id="sit-prog-filters-title" class="text-base font-semibold text-slate-900 dark:text-white"><?php esc_html_e( 'Filtrlər', 'studyinturkey' ); ?></h2>
 		<form id="sit-prog-filters" class="mt-4 space-y-4" method="get" action="<?php echo esc_url( $action ); ?>" data-sit-prog-form>

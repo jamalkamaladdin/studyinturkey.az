@@ -48,39 +48,53 @@ final class SIT_Application_Handler {
             $errors[] = __( 'Seçilmiş proqram mövcud deyil.', 'studyinturkey' );
         }
 
-        $file_errors = self::validate_files_array();
+        $profile = self::profile_build_from_post();
+
+        if ( $program > 0 && self::is_valid_program( $program ) ) {
+            $profile_errors = self::profile_validate( $program, $profile );
+            if ( ! empty( $profile_errors ) ) {
+                $errors = array_merge( $errors, $profile_errors );
+            }
+        }
+
+        $file_errors = self::validate_files_array( $program );
         if ( ! empty( $file_errors ) ) {
             $errors = array_merge( $errors, $file_errors );
         }
 
+        $flash_old = self::profile_old_for_flash( $profile );
+        $flash_old = array_merge(
+            [
+                'sit_app_name'         => $name,
+                'sit_app_email'        => $email,
+                'sit_app_phone'        => $phone,
+                'sit_app_program_id'   => $program,
+                'sit_app_message'      => $message,
+            ],
+            $flash_old
+        );
+
         if ( ! empty( $errors ) ) {
-            self::redirect_with_error(
-                $redirect,
-                $errors,
-                [
-                    'sit_app_name'    => $name,
-                    'sit_app_email'   => $email,
-                    'sit_app_phone'   => $phone,
-                    'sit_app_program_id' => $program,
-                    'sit_app_message' => $message,
-                ]
-            );
+            self::redirect_with_error( $redirect, $errors, $flash_old );
         }
 
         global $wpdb;
 
         $ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 
+        $profile_json = wp_json_encode( $profile, JSON_UNESCAPED_UNICODE );
+
         $row = [
-            'applicant_name'    => $name,
-            'applicant_email'   => $email,
-            'applicant_phone'   => $phone,
-            'program_id'        => $program,
-            'status'            => 'pending',
-            'applicant_message' => $message ? $message : null,
-            'ip_address'        => $ip ? $ip : null,
+            'applicant_name'         => $name,
+            'applicant_email'        => $email,
+            'applicant_phone'        => $phone,
+            'program_id'             => $program,
+            'status'                 => 'pending',
+            'applicant_message'      => $message ? $message : null,
+            'ip_address'             => $ip ? $ip : null,
+            'applicant_profile_json'   => $profile_json ? $profile_json : null,
         ];
-        $row_format = [ '%s', '%s', '%s', '%d', '%s', '%s', '%s' ];
+        $row_format = [ '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s' ];
 
         if ( is_user_logged_in() ) {
             $row['user_id'] = get_current_user_id();
@@ -101,7 +115,7 @@ final class SIT_Application_Handler {
 
         $application_id = (int) $wpdb->insert_id;
 
-        $upload_result = self::save_application_files( $application_id );
+        $upload_result = self::save_application_files( $application_id, $program );
         if ( is_wp_error( $upload_result ) ) {
             self::rollback_application( $application_id );
             self::redirect_with_error( $redirect, [ $upload_result->get_error_message() ] );
@@ -118,48 +132,41 @@ final class SIT_Application_Handler {
     /**
      * @return string[] Xəta mesajları.
      */
-    private static function validate_files_array(): array {
+    private static function validate_files_array( int $program_id ): array {
         if ( ! function_exists( 'wp_check_filetype_and_ext' ) ) {
             require_once ABSPATH . 'wp-admin/includes/file.php';
         }
 
-        $errors  = [];
-        $max     = (int) apply_filters( 'sit_application_max_upload_bytes', 5 * MB_IN_BYTES );
-        $fields = [
-            'sit_app_passport'   => [
-                'label' => __( 'Pasport faylı', 'studyinturkey' ),
-                'type'  => 'passport',
-            ],
-            'sit_app_transcript' => [
-                'label' => __( 'Transkript faylı', 'studyinturkey' ),
-                'type'  => 'transcript',
-            ],
-            'sit_app_photo'      => [
-                'label' => __( 'Şəkil', 'studyinturkey' ),
-                'type'  => 'photo',
-            ],
-        ];
+        $errors = [];
+        $max    = (int) apply_filters( 'sit_application_max_upload_bytes', 5 * MB_IN_BYTES );
+        $fields = self::get_file_fields_for_program( $program_id );
 
-        foreach ( $fields as $field => $meta ) {
-            $label = $meta['label'];
-            $dtype = $meta['type'];
+        foreach ( $fields as $meta ) {
+            $field    = $meta[0];
+            $label    = $meta[1];
+            $dtype    = $meta[2];
+            $required = $meta[3];
 
             if ( empty( $_FILES[ $field ] ) || ! isset( $_FILES[ $field ]['error'] ) ) {
-                $errors[] = sprintf(
-                    /* translators: %s: field label */
-                    __( '%s tələb olunur.', 'studyinturkey' ),
-                    $label
-                );
+                if ( $required ) {
+                    $errors[] = sprintf(
+                        /* translators: %s: field label */
+                        __( '%s tələb olunur.', 'studyinturkey' ),
+                        $label
+                    );
+                }
                 continue;
             }
 
             $file = $_FILES[ $field ]; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
             if ( UPLOAD_ERR_NO_FILE === (int) $file['error'] ) {
-                $errors[] = sprintf(
-                    /* translators: %s: field label */
-                    __( '%s tələb olunur.', 'studyinturkey' ),
-                    $label
-                );
+                if ( $required ) {
+                    $errors[] = sprintf(
+                        /* translators: %s: field label */
+                        __( '%s tələb olunur.', 'studyinturkey' ),
+                        $label
+                    );
+                }
                 continue;
             }
 
@@ -181,8 +188,8 @@ final class SIT_Application_Handler {
                 continue;
             }
 
-            $name = isset( $file['name'] ) ? $file['name'] : '';
-            $check = wp_check_filetype_and_ext( $file['tmp_name'], $name, self::mimes_for_document_type( $dtype ) );
+            $fname = isset( $file['name'] ) ? $file['name'] : '';
+            $check = wp_check_filetype_and_ext( $file['tmp_name'], $fname, self::mimes_for_document_type( $dtype ) );
             if ( empty( $check['ext'] ) || empty( $check['type'] ) ) {
                 $errors[] = sprintf(
                     /* translators: %s: field label */
@@ -196,25 +203,203 @@ final class SIT_Application_Handler {
     }
 
     /**
-     * @return true|WP_Error
+     * @return array<int, array{0: string, 1: string, 2: string, 3: bool}>
      */
-    private static function save_application_files( int $application_id ) {
-        require_once ABSPATH . 'wp-admin/includes/file.php';
+    private static function get_file_fields_for_program( int $program_id ): array {
+        $level = SIT_Application_Degree::level_for_program( $program_id );
 
-        $map = [
-            'sit_app_passport'   => 'passport',
-            'sit_app_transcript' => 'transcript',
-            'sit_app_photo'      => 'photo',
+        $rows = [
+            [
+                'sit_app_passport',
+                __( 'Pasport (bütün məlumatlı səhifə)', 'studyinturkey' ),
+                'passport',
+                true,
+            ],
+            [
+                'sit_app_transcript',
+                __( 'Transkript / attestat', 'studyinturkey' ),
+                'transcript',
+                true,
+            ],
+            [
+                'sit_app_photo',
+                __( 'Pasport formatlı foto (ağ fon, üz aydın görünsün)', 'studyinturkey' ),
+                'photo',
+                true,
+            ],
         ];
 
-        foreach ( $map as $field => $doc_type ) {
-            if ( empty( $_FILES[ $field ] ) || UPLOAD_ERR_OK !== (int) $_FILES[ $field ]['error'] ) {
-                return new WP_Error( 'sit_app_file', __( 'Fayl yükləmə uğursuz oldu.', 'studyinturkey' ) );
+        if ( SIT_Application_Degree::LEVEL_UNDERGRADUATE === $level ) {
+            $rows[] = [
+                'sit_app_secondary_diploma',
+                __( 'Orta təhsil haqqında şəhadətnamə və ya diplom', 'studyinturkey' ),
+                'secondary_diploma',
+                true,
+            ];
+        }
+
+        if ( SIT_Application_Degree::LEVEL_GRADUATE === $level || SIT_Application_Degree::LEVEL_DOCTORAL === $level ) {
+            $rows[] = [
+                'sit_app_diploma_prior',
+                __( 'Əvvəlki dərəcə diplomu (bakalavr və ya magistr)', 'studyinturkey' ),
+                'diploma_prior',
+                true,
+            ];
+            $rows[] = [
+                'sit_app_cv',
+                __( 'CV (təhsil və iş təcrübəsi)', 'studyinturkey' ),
+                'cv',
+                true,
+            ];
+            $rows[] = [
+                'sit_app_motivation',
+                __( 'Motivasiya məktubu', 'studyinturkey' ),
+                'motivation_letter',
+                true,
+            ];
+        }
+
+        $rows[] = [
+            'sit_app_language_cert',
+            __( 'Dil sertifikatı (IELTS / TOEFL və s., istəyə bağlı)', 'studyinturkey' ),
+            'language_cert',
+            false,
+        ];
+
+        return $rows;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private static function profile_build_from_post(): array {
+        $t = static function ( string $key ): string {
+            return isset( $_POST[ $key ] ) && is_string( $_POST[ $key ] )
+                ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) )
+                : '';
+        };
+
+        $ta = static function ( string $key ): string {
+            return isset( $_POST[ $key ] ) && is_string( $_POST[ $key ] )
+                ? sanitize_textarea_field( wp_unslash( $_POST[ $key ] ) )
+                : '';
+        };
+
+        return [
+            'date_of_birth'           => $t( 'sit_app_dob' ),
+            'nationality'             => $t( 'sit_app_nationality' ),
+            'passport_number'         => $t( 'sit_app_passport_no' ),
+            'address'                 => $ta( 'sit_app_address' ),
+            'education_institution'   => $t( 'sit_app_edu_institution' ),
+            'education_country'       => $t( 'sit_app_edu_country' ),
+            'graduation_year'         => $t( 'sit_app_grad_year' ),
+            'intake_period'           => $t( 'sit_app_intake' ),
+            'research_interest'       => $ta( 'sit_app_research' ),
+            'work_experience'         => $ta( 'sit_app_work_exp' ),
+        ];
+    }
+
+    /**
+     * @param array<string, string> $p Profil massivi.
+     * @return string[]
+     */
+    private static function profile_validate( int $program_id, array $p ): array {
+        $errors = [];
+        $level  = SIT_Application_Degree::level_for_program( $program_id );
+
+        if ( '' === $p['date_of_birth'] ) {
+            $errors[] = __( 'Doğum tarixini daxil edin.', 'studyinturkey' );
+        }
+        if ( '' === $p['nationality'] || strlen( $p['nationality'] ) < 2 ) {
+            $errors[] = __( 'Vətəndaşlığı / milliyyəti daxil edin.', 'studyinturkey' );
+        }
+        if ( '' === $p['passport_number'] || strlen( $p['passport_number'] ) < 4 ) {
+            $errors[] = __( 'Pasport və ya şəxsiyyət nömrəsini daxil edin.', 'studyinturkey' );
+        }
+        if ( '' === $p['address'] || strlen( $p['address'] ) < 10 ) {
+            $errors[] = __( 'Yaşayış ünvanınızı tam daxil edin.', 'studyinturkey' );
+        }
+        if ( '' === $p['education_institution'] || strlen( $p['education_institution'] ) < 2 ) {
+            $errors[] = __( 'Son təhsil müəssisəsinin adını daxil edin.', 'studyinturkey' );
+        }
+        if ( '' === $p['education_country'] || strlen( $p['education_country'] ) < 2 ) {
+            $errors[] = __( 'Təhsil aldığınız ölkəni daxil edin.', 'studyinturkey' );
+        }
+        if ( '' === $p['graduation_year'] || ! preg_match( '/^\d{4}$/', $p['graduation_year'] ) ) {
+            $errors[] = __( 'Bitirmə ilini 4 rəqəmlə daxil edin (məs. 2024).', 'studyinturkey' );
+        }
+        if ( '' === $p['intake_period'] || strlen( $p['intake_period'] ) < 3 ) {
+            $errors[] = __( 'Planlaşdırdığınız qəbul dövrünü daxil edin (məs. Payız 2026).', 'studyinturkey' );
+        }
+
+        if ( SIT_Application_Degree::LEVEL_GRADUATE === $level || SIT_Application_Degree::LEVEL_DOCTORAL === $level ) {
+            if ( strlen( $p['work_experience'] ) < 10 ) {
+                $errors[] = __( 'Magistr / doktorantura üçün qısa iş və ya təcrübə təsviri əlavə edin (ən azı 10 simvol).', 'studyinturkey' );
+            }
+        }
+
+        if ( SIT_Application_Degree::LEVEL_DOCTORAL === $level ) {
+            if ( strlen( $p['research_interest'] ) < 40 ) {
+                $errors[] = __( 'Doktorantura üçün tədqiqat mövzusu və ya planınızı ətraflı yazın (ən azı 40 simvol).', 'studyinturkey' );
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param array<string, string> $profile profile_build_from_post nəticəsi.
+     * @return array<string, string>
+     */
+    private static function profile_old_for_flash( array $profile ): array {
+        return [
+            'sit_app_dob'             => $profile['date_of_birth'],
+            'sit_app_nationality'     => $profile['nationality'],
+            'sit_app_passport_no'     => $profile['passport_number'],
+            'sit_app_address'         => $profile['address'],
+            'sit_app_edu_institution' => $profile['education_institution'],
+            'sit_app_edu_country'     => $profile['education_country'],
+            'sit_app_grad_year'       => $profile['graduation_year'],
+            'sit_app_intake'          => $profile['intake_period'],
+            'sit_app_research'        => $profile['research_interest'],
+            'sit_app_work_exp'        => $profile['work_experience'],
+        ];
+    }
+
+    /**
+     * @return true|WP_Error
+     */
+    private static function save_application_files( int $application_id, int $program_id ) {
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+
+        $fields = self::get_file_fields_for_program( $program_id );
+
+        foreach ( $fields as $meta ) {
+            $field    = $meta[0];
+            $dtype    = $meta[2];
+            $required = $meta[3];
+
+            if ( empty( $_FILES[ $field ] ) || ! isset( $_FILES[ $field ]['error'] ) ) {
+                if ( $required ) {
+                    return new WP_Error( 'sit_app_file', __( 'Fayl yükləmə uğursuz oldu.', 'studyinturkey' ) );
+                }
+                continue;
             }
 
             $file = $_FILES[ $field ]; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 
-            $mimes = self::mimes_for_document_type( $doc_type );
+            if ( UPLOAD_ERR_NO_FILE === (int) $file['error'] ) {
+                if ( $required ) {
+                    return new WP_Error( 'sit_app_file', __( 'Fayl yükləmə uğursuz oldu.', 'studyinturkey' ) );
+                }
+                continue;
+            }
+
+            if ( UPLOAD_ERR_OK !== (int) $file['error'] ) {
+                return new WP_Error( 'sit_app_upload', __( 'Fayl yüklənərkən xəta baş verdi.', 'studyinturkey' ) );
+            }
+
+            $mimes = self::mimes_for_document_type( $dtype );
             add_filter( 'upload_dir', [ __CLASS__, 'filter_upload_dir' ] );
 
             $overrides = [
@@ -248,11 +433,11 @@ final class SIT_Application_Handler {
                 SIT_Application_Db::documents_table(),
                 [
                     'application_id' => $application_id,
-                    'document_type'    => $doc_type,
-                    'file_path'        => $relative,
-                    'file_name'        => isset( $file['name'] ) ? sanitize_file_name( $file['name'] ) : basename( $full_path ),
-                    'mime_type'        => $result['type'],
-                    'file_size'        => (int) @filesize( $full_path ),
+                    'document_type'  => $dtype,
+                    'file_path'      => $relative,
+                    'file_name'      => isset( $file['name'] ) ? sanitize_file_name( $file['name'] ) : basename( $full_path ),
+                    'mime_type'      => $result['type'],
+                    'file_size'      => (int) @filesize( $full_path ),
                 ],
                 [ '%d', '%s', '%s', '%s', '%s', '%d' ]
             );
@@ -268,8 +453,12 @@ final class SIT_Application_Handler {
     private static function mimes_for_document_type( string $doc_type ): array {
         $full = wp_get_mime_types();
 
-        if ( 'transcript' === $doc_type ) {
+        $doc_like = [ 'transcript', 'secondary_diploma', 'diploma_prior', 'cv', 'motivation_letter', 'language_cert' ];
+
+        if ( in_array( $doc_type, $doc_like, true ) ) {
             $keys = [ 'pdf', 'doc', 'docx', 'jpg|jpeg|jpe', 'png' ];
+        } elseif ( 'photo' === $doc_type ) {
+            $keys = [ 'jpg|jpeg|jpe', 'png', 'webp' ];
         } else {
             $keys = [ 'pdf', 'jpg|jpeg|jpe', 'png', 'webp' ];
         }
