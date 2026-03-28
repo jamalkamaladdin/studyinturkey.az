@@ -39,13 +39,7 @@
 		@apply max-w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-700 shadow-sm dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200;
 	}
 
-	.custom-logo-link {
-		@apply flex items-center;
-	}
-
-	.custom-logo-link img {
-		@apply h-9 max-h-9 w-auto object-contain;
-	}
+	/* custom-logo styles moved outside @layer — see below */
 
 	.sit-uni-slider {
 		scroll-snap-type: x mandatory;
@@ -90,6 +84,20 @@
 	.sit-form-input {
 		@apply rounded-lg border border-slate-200 bg-white text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500;
 	}
+}
+
+/* ── Custom logo (outside @layer to prevent Tailwind purge) ── */
+.custom-logo-link {
+	display: flex;
+	align-items: center;
+}
+
+.custom-logo-link img,
+.custom-logo-link svg {
+	height: 2.25rem;
+	max-height: 2.25rem;
+	width: auto;
+	object-fit: contain;
 }
 
 /* ── Pagination (outside @layer to prevent Tailwind purge) ── */
