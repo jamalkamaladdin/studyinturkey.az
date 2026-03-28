@@ -20,7 +20,8 @@ final class SIT_Developer_Application {
         add_action( 'init', [ $this, 'load_textdomain' ], 0 );
         add_action( 'init', [ $this, 'maybe_upgrade_db' ], 5 );
         add_action( 'init', [ 'SIT_Application_Handler', 'register' ], 9 );
-        add_action( 'init', [ 'SIT_Application_Form', 'register' ], 10 );
+        add_action( 'init', [ 'SIT_Application_Account', 'register' ], 10 );
+        add_action( 'init', [ 'SIT_Application_Form', 'register' ], 11 );
     }
 
     public function load_textdomain(): void {

@@ -40,6 +40,7 @@ final class SIT_Application_Db {
             KEY program_id (program_id),
             KEY status (status),
             KEY applicant_email (applicant_email),
+            KEY user_id (user_id),
             KEY created_at (created_at)
         ) $charset_collate;";
 

@@ -56,6 +56,22 @@ final class SIT_Application_Form {
         $old     = $flash['old'];
         $success = SIT_Application_Handler::has_success_flag();
 
+        if ( is_user_logged_in() ) {
+            $u = wp_get_current_user();
+            if ( empty( $old['sit_app_name'] ) ) {
+                $old['sit_app_name'] = $u->display_name;
+            }
+            if ( empty( $old['sit_app_email'] ) ) {
+                $old['sit_app_email'] = $u->user_email;
+            }
+            if ( empty( $old['sit_app_phone'] ) ) {
+                $phone_meta = get_user_meta( $u->ID, SIT_Application_Account::META_PHONE, true );
+                if ( is_string( $phone_meta ) && '' !== $phone_meta ) {
+                    $old['sit_app_phone'] = $phone_meta;
+                }
+            }
+        }
+
         $programs = get_posts(
             [
                 'post_type'      => 'program',
