@@ -25,6 +25,7 @@ class SIT_Activator {
 
         SIT_DB::create_tables();
         SIT_Languages::seed_defaults();
+        SIT_Strings::seed_defaults();
 
         update_option( 'sit_multilang_db_version', SIT_MULTILANG_VERSION );
         SIT_Languages::sync_default_option();

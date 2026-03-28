@@ -1,0 +1,53 @@
+/* SIT Multilang — dil keçidi (shortcode / widget) */
+
+.sit-lang-switcher {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.35rem 0.75rem;
+}
+
+.sit-lang-switcher--dropdown {
+	display: block;
+}
+
+.sit-lang-switcher__item {
+	margin: 0;
+	padding: 0;
+}
+
+.sit-lang-switcher__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.sit-lang-switcher__link:hover,
+.sit-lang-switcher__link:focus {
+	text-decoration: underline;
+}
+
+.sit-lang-switcher__link.is-current {
+	font-weight: 700;
+	pointer-events: none;
+	opacity: 0.85;
+}
+
+.sit-lang-switcher__flag {
+	font-size: 1.1em;
+	line-height: 1;
+}
+
+.sit-lang-switcher__select {
+	min-width: 10rem;
+	padding: 0.35rem 0.5rem;
+	border-radius: 6px;
+	border: 1px solid #e5e7eb;
+	background: #fff;
+	font-size: 0.9375rem;
+}

@@ -8,6 +8,7 @@ defined( 'ABSPATH' ) || exit;
 class SIT_Rewrite {
 
     public static function init(): void {
+        add_action( 'init', [ __CLASS__, 'capture_original_request_uri' ], -1 );
         add_action( 'init', [ __CLASS__, 'early_set_current_lang' ], 0 );
         add_filter( 'do_parse_request', [ __CLASS__, 'strip_lang_prefix' ], 1, 2 );
         add_filter( 'locale', [ __CLASS__, 'filter_locale' ], 10, 1 );
@@ -80,11 +81,9 @@ class SIT_Rewrite {
     }
 
     /**
-     * Home path-dən sonrakı path (subdir çıxarılmış), slashsız.
-     * Məs: /subdir/az/hello -> az/hello, / -> ''.
+     * Verilmiş URI üçün home path-dən sonrakı hissə (slashsız).
      */
-    public static function get_request_path_after_home(): string {
-        $uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/';
+    public static function get_path_after_home_from_uri( string $uri ): string {
         $path = (string) wp_parse_url( $uri, PHP_URL_PATH );
         $path = trim( $path, '/' );
         $home_path = trim( (string) wp_parse_url( home_url(), PHP_URL_PATH ), '/' );
@@ -98,6 +97,60 @@ class SIT_Rewrite {
             }
         }
         return trim( $path, '/' );
+    }
+
+    /**
+     * Home path-dən sonrakı path (subdir çıxarılmış), slashsız.
+     * Məs: /subdir/az/hello -> az/hello, / -> ''.
+     */
+    public static function get_request_path_after_home(): string {
+        $uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/';
+        return self::get_path_after_home_from_uri( $uri );
+    }
+
+    /**
+     * Dil keçidi üçün: cari səhifənin başqa dildə URL-i (sorğu sətri saxlanılır).
+     */
+    public static function get_localized_url_for_lang( string $lang_code ): string {
+        if ( ! SIT_Languages::is_valid_code( $lang_code ) ) {
+            return home_url( '/' );
+        }
+
+        $original = isset( $GLOBALS['sit_original_request_uri'] ) ? (string) $GLOBALS['sit_original_request_uri'] : '';
+        if ( '' === $original || self::should_bypass_routing() ) {
+            return self::build_url_with_lang( $lang_code, '' );
+        }
+
+        $after = self::get_path_after_home_from_uri( $original );
+        if ( $after === '' ) {
+            return self::build_url_with_lang( $lang_code, '' );
+        }
+
+        $segments = explode( '/', $after );
+        if ( ! empty( $segments[0] ) && SIT_Languages::is_valid_code( $segments[0] ) ) {
+            array_shift( $segments );
+        }
+        $tail = implode( '/', array_filter( $segments ) );
+
+        $url = self::build_url_with_lang( $lang_code, $tail );
+        $q   = wp_parse_url( $original, PHP_URL_QUERY );
+        if ( $q ) {
+            $url .= ( str_contains( $url, '?' ) ? '&' : '?' ) . $q;
+        }
+        return $url;
+    }
+
+    /**
+     * init:-1 — REQUEST_URI hələ dəyişməmişdən saxla (dil keçidi üçün).
+     */
+    public static function capture_original_request_uri(): void {
+        if ( self::should_bypass_routing() ) {
+            return;
+        }
+        if ( ! empty( $GLOBALS['sit_original_request_uri'] ) ) {
+            return;
+        }
+        $GLOBALS['sit_original_request_uri'] = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/';
     }
 
     /**

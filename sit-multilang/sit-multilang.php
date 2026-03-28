@@ -3,7 +3,7 @@
  * Plugin Name: SIT Multilang
  * Plugin URI:  https://studyinturkey.az
  * Description: Custom multilingual system for StudyInTurkey.az — 6 languages with RTL support.
- * Version:     1.3.0
+ * Version:     1.4.0
  * Author:      StudyInTurkey
  * Author URI:  https://studyinturkey.az
  * Text Domain: studyinturkey
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIT_MULTILANG_VERSION', '1.3.0' );
+define( 'SIT_MULTILANG_VERSION', '1.4.0' );
 define( 'SIT_MULTILANG_FILE', __FILE__ );
 define( 'SIT_MULTILANG_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SIT_MULTILANG_URL', plugin_dir_url( __FILE__ ) );
@@ -24,8 +24,10 @@ require_once SIT_MULTILANG_DIR . 'includes/class-sit-db.php';
 require_once SIT_MULTILANG_DIR . 'includes/class-sit-languages.php';
 require_once SIT_MULTILANG_DIR . 'includes/class-sit-translations.php';
 require_once SIT_MULTILANG_DIR . 'includes/class-sit-rewrite.php';
+require_once SIT_MULTILANG_DIR . 'includes/class-sit-strings.php';
 require_once SIT_MULTILANG_DIR . 'includes/class-sit-activator.php';
 require_once SIT_MULTILANG_DIR . 'includes/sit-multilang-functions.php';
+require_once SIT_MULTILANG_DIR . 'includes/class-sit-language-switcher.php';
 
 register_activation_hook( __FILE__, [ 'SIT_Activator', 'activate' ] );
 register_deactivation_hook( __FILE__, [ 'SIT_Activator', 'deactivate' ] );
@@ -52,6 +54,9 @@ final class SIT_Multilang {
         add_action( 'plugins_loaded', [ 'SIT_Rewrite', 'init' ], 3 );
         add_action( 'init', [ $this, 'load_textdomain' ] );
         add_action( 'init', [ $this, 'detect_language' ], 1 );
+        add_action( 'init', static function (): void {
+            SIT_Language_Switcher::init();
+        }, 5 );
         add_action( 'plugins_loaded', [ $this, 'check_db_version' ] );
         add_action(
             'plugins_loaded',
@@ -59,8 +64,10 @@ final class SIT_Multilang {
                 if ( is_admin() ) {
                     require_once SIT_MULTILANG_DIR . 'admin/class-sit-admin-languages.php';
                     require_once SIT_MULTILANG_DIR . 'admin/class-sit-admin-translations.php';
+                    require_once SIT_MULTILANG_DIR . 'admin/class-sit-admin-ui-strings.php';
                     SIT_Admin_Languages::init();
                     SIT_Admin_Translations::init();
+                    SIT_Admin_UI_Strings::init();
                 }
             },
             5

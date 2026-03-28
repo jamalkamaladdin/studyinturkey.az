@@ -28,6 +28,51 @@ function sit_get_current_lang(): string {
 }
 
 /**
+ * UI string — wp_sit_strings + cari dil. Boşdursa əsas dil, sonra $default.
+ *
+ * @param string $string_key Unikal açar (məs. nav.home).
+ * @param string $default    DB boşdursa bu mətn.
+ * @param string $context    İdarəetmədə qrup (məs. nav) — yalnız sənədləşmə; açar unikaldır.
+ */
+function sit__( string $string_key, string $default = '', string $context = 'general' ): string {
+    $lang = sit_get_current_lang();
+    $val  = SIT_Strings::get_value( $string_key, $lang );
+    if ( '' !== $val ) {
+        return apply_filters( 'sit__', $val, $string_key, $lang, $context );
+    }
+    $def_lang = SIT_Languages::get_default_language_code() ?: 'az';
+    if ( $lang !== $def_lang ) {
+        $val = SIT_Strings::get_value( $string_key, $def_lang );
+        if ( '' !== $val ) {
+            return apply_filters( 'sit__', $val, $string_key, $lang, $context );
+        }
+    }
+    $out = '' !== $default ? $default : $string_key;
+    return apply_filters( 'sit__', $out, $string_key, $lang, $context );
+}
+
+/**
+ * sit__() nəticəsini escape edilmiş çap edir.
+ */
+function sit_esc_html_e( string $string_key, string $default = '', string $context = 'general' ): void {
+    echo esc_html( sit__( $string_key, $default, $context ) );
+}
+
+/**
+ * sit__() echo.
+ */
+function sit_e( string $string_key, string $default = '', string $context = 'general' ): void {
+    echo sit__( $string_key, $default, $context );
+}
+
+/**
+ * Cari səhifə üçün göstərilən dilin URL-i (dil keçidi).
+ */
+function sit_get_page_url_in_language( string $lang_code ): string {
+    return SIT_Rewrite::get_localized_url_for_lang( $lang_code );
+}
+
+/**
  * Get translated field for a post or term.
  * Default dil üçün dəyər WordPress obyektindən oxunur; digər dillər üçün wp_sit_translations.
  *

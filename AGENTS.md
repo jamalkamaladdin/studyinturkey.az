@@ -110,10 +110,10 @@ Hər mərhələ aşağıdakı formatda icra olunur:
 - **Commit:** `[2.4] Multilang plugin: URL routing və rewrite rules`
 
 #### Mərhələ 2.5 — Language switcher və UI strings
-- [ ] Language switcher widget/shortcode
-- [ ] `sit__()` helper funksiyası (UI string tərcüməsi)
-- [ ] Admin: UI strings idarəetmə səhifəsi
-- [ ] Əsas UI stringlərin default tərcümələri
+- [x] Language switcher widget/shortcode
+- [x] `sit__()` helper funksiyası (UI string tərcüməsi)
+- [x] Admin: UI strings idarəetmə səhifəsi
+- [x] Əsas UI stringlərin default tərcümələri
 - **Commit:** `[2.5] Multilang plugin: Language switcher və UI strings`
 
 ---
