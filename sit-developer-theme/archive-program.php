@@ -39,7 +39,7 @@ $total_pages = (int) $wp_query->max_num_pages;
 		<div class="flex flex-col gap-10 lg:flex-row lg:items-start">
 			<?php get_template_part( 'template-parts/program/archive-filters' ); ?>
 
-			<div class="min-w-0 flex-1 lg:w-4/5">
+			<div class="min-w-0 flex-1">
 				<div class="relative" data-sit-prog-table-wrap>
 					<div class="pointer-events-none absolute inset-0 z-10 hidden items-center justify-center rounded-2xl bg-white/70 dark:bg-slate-900/70" data-sit-prog-loading aria-hidden="true">
 						<span class="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow dark:bg-slate-800 dark:text-slate-200"><?php esc_html_e( 'Yüklənir…', 'studyinturkey' ); ?></span>

@@ -1,4 +1,4 @@
-/* SIT Application form — theme-friendly, çoxsütunlu */
+/* SIT Application form — professional, brand-themed */
 .sit-app-form-wrapper {
 	width: 100%;
 	max-width: 42rem;
@@ -6,22 +6,28 @@
 }
 
 .sit-app-form-section {
-	margin-bottom: 1.5rem;
-	padding: 1rem 1.25rem 1.25rem;
-	border: 1px solid #e5e7eb;
-	border-radius: 10px;
-	background: #fafafa;
+	margin-bottom: 1.75rem;
+	padding: 1.25rem 1.5rem 1.5rem;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	background: #f8fafc;
 }
 
 .sit-app-form-section legend {
 	font-weight: 700;
-	padding: 0 0.35rem;
+	font-size: 1rem;
+	padding: 0 0.5rem;
+	color: #0f172a;
 }
 
 .sit-app-form-grid {
 	display: grid;
 	gap: 1rem;
 	grid-template-columns: 1fr;
+}
+
+.sit-app-form-grid--files {
+	gap: 0.75rem;
 }
 
 @media (min-width: 640px) {
@@ -35,9 +41,10 @@
 }
 
 .sit-app-form-notice {
-	padding: 0.75rem 1rem;
-	border-radius: 6px;
-	margin-bottom: 1rem;
+	padding: 0.875rem 1rem;
+	border-radius: 10px;
+	margin-bottom: 1.25rem;
+	font-size: 0.9rem;
 }
 
 .sit-app-form-notice--success {
@@ -62,17 +69,19 @@
 }
 
 .sit-app-form-field {
-	margin-bottom: 1rem;
+	margin-bottom: 0.25rem;
 }
 
 .sit-app-form-field label {
 	display: block;
 	font-weight: 600;
+	font-size: 0.875rem;
 	margin-bottom: 0.35rem;
+	color: #334155;
 }
 
 .sit-app-form-field .required {
-	color: #dc2626;
+	color: #ef4444;
 }
 
 .sit-app-form-field input[type="text"],
@@ -83,46 +92,104 @@
 	width: 100%;
 	max-width: 100%;
 	box-sizing: border-box;
-	padding: 0.5rem 0.65rem;
-	border: 1px solid #d1d5db;
-	border-radius: 4px;
+	padding: 0.625rem 0.75rem;
+	border: 1px solid #cbd5e1;
+	border-radius: 8px;
 	font: inherit;
+	font-size: 0.9375rem;
+	background: #fff;
+	color: #1e293b;
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.sit-app-form-field input:focus,
+.sit-app-form-field select:focus,
+.sit-app-form-field textarea:focus {
+	outline: none;
+	border-color: #11676a;
+	box-shadow: 0 0 0 3px rgba(17, 103, 106, 0.1);
+}
+
+.sit-app-form-field input[type="file"] {
+	padding: 0.5rem;
+	border: 2px dashed #cbd5e1;
+	border-radius: 8px;
+	background: #f8fafc;
+	cursor: pointer;
+	font-size: 0.875rem;
+	color: #64748b;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.sit-app-form-field input[type="file"]:hover {
+	border-color: #11676a;
+	background: #edf7f7;
 }
 
 .sit-app-form-files {
-	border: 1px solid #e5e7eb;
-	border-radius: 6px;
-	padding: 1rem 1rem 0;
-	margin: 1rem 0;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 1.25rem 1.25rem 0.75rem;
+	margin: 1.25rem 0;
+	background: #f8fafc;
 }
 
 .sit-app-form-files legend {
-	font-weight: 600;
-	padding: 0 0.35rem;
+	font-weight: 700;
+	font-size: 1rem;
+	padding: 0 0.5rem;
+	color: #0f172a;
 }
 
 .sit-app-form-hint {
-	font-size: 0.875rem;
-	color: #6b7280;
-	margin: 0 0 0.75rem;
+	font-size: 0.8125rem;
+	color: #64748b;
+	margin: 0.25rem 0 0.75rem;
+	line-height: 1.4;
 }
 
 .sit-app-form-submit {
-	margin-top: 1.25rem;
+	margin-top: 1.5rem;
+	text-align: center;
 }
 
 .sit-app-form-button {
-	display: inline-block;
-	padding: 0.6rem 1.25rem;
-	background: #1d4ed8;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 2.75rem;
+	padding: 0.75rem 2rem;
+	background: #11676a;
 	color: #fff;
 	border: none;
-	border-radius: 6px;
+	border-radius: 10px;
 	font: inherit;
-	font-weight: 600;
+	font-size: 1rem;
+	font-weight: 700;
 	cursor: pointer;
+	transition: background 0.15s, transform 0.1s;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+	width: 100%;
+	max-width: 20rem;
 }
 
 .sit-app-form-button:hover {
-	background: #1e40af;
+	background: #0e5255;
+	transform: translateY(-1px);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sit-app-form-button:active {
+	transform: translateY(0);
+}
+
+/* Degree-level conditional sections */
+.sit-app-form-section--levels {
+	animation: sit-form-fade-in 0.2s ease-out;
+}
+
+@keyframes sit-form-fade-in {
+	from { opacity: 0; transform: translateY(-4px); }
+	to { opacity: 1; transform: translateY(0); }
 }
