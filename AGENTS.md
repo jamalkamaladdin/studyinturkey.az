@@ -76,7 +76,9 @@ Hər mərhələ aşağıdakı formatda icra olunur:
 
 ---
 
-### FAZA 2: Çoxdillilik Plugin (`sit-multilang`)
+### FAZA 2: Çoxdillilik Plugin (`sit-multilang`) — **TAMAMLANDI** (2.1–2.5)
+
+> Növbəti iş: **FAZA 3** (`sit-developer`). Bu fazanı dəyişdirməyə ehtiyac varsa, aşağıdakı “Handoff” bölməsini oxuyun.
 
 #### Mərhələ 2.1 — DB cədvəlləri və plugin aktivasiyası
 - [x] Plugin əsas faylı: `sit-multilang/sit-multilang.php`
@@ -115,6 +117,50 @@ Hər mərhələ aşağıdakı formatda icra olunur:
 - [x] Admin: UI strings idarəetmə səhifəsi
 - [x] Əsas UI stringlərin default tərcümələri
 - **Commit:** `[2.5] Multilang plugin: Language switcher və UI strings`
+
+#### FAZA 2 — Növbəti agentlər üçün (vacib detallar)
+
+Bu bölmə **yalnız `sit-multilang`** üzərində davam edən və ya inteqrasiya yazan agentlər üçündür.
+
+**Versiya və yükləmə sırası**  
+- Plugin versiyası `SIT_MULTILANG_VERSION` (`sit-multilang.php`). `check_db_version()` köhnə versiyada `SIT_Activator::activate( true )` çağırır — **icazəsiz istifadəçi** kontekstində də DB/migration işləsin deyə.  
+- `require` sırası: `class-sit-db` → `languages` → `translations` → `rewrite` → `strings` → `activator` → `sit-multilang-functions` → `class-sit-language-switcher`.
+
+**Verilənlər bazası**  
+- `wp_sit_languages` — dillər (kod, locale, rtl/ltr, default, aktiv).  
+- `wp_sit_translations` — post/term sahə tərcümələri: `object_type` = `post` | `term`; sahələr: `title`, `content`, `excerpt`, `slug` (term-də excerpt yoxdur).  
+- `wp_sit_strings` — UI sətirləri: `string_key` + `lang_code` unikaldır; `context` admin qrupu üçündür.  
+- **Əsas dil** məzmunu: post üçün `wp_posts` (və term üçün `wp_terms` / taxonomy), qalan dillər cədvəldə.
+
+**URL routing (2.4)** — klassik `rewrite_rules_array` prefiksi **istifadə olunmur**.  
+- `init` **-1**: `$GLOBALS['sit_original_request_uri']` saxlanılır (dil keçidi eyni səhifənin başqa dil URL-i üçün).  
+- `init` **0**: `early_set_current_lang` — xam `REQUEST_URI`-dən ilk seqment dildirsə qlobal `$sit_current_lang` / `$current_lang`.  
+- `do_parse_request`: etibarlı dil prefiksi çıxarılıb `$_SERVER['REQUEST_URI']` yenilənir; dil olmayan ictimai path → **301** default dil prefiksi ilə.  
+- **Bypass** (routing tətbiq olunmur): `is_admin`, `wp_doing_ajax`, cron, `REST_REQUEST`, `XMLRPC_REQUEST`, `WP_CLI`, filter `sit_multilang_bypass_routing`.  
+- **Pretty permalinks** gözlənilir; deploy sonrası bəzən **Parametrlər → Daimi keçidlər → Yadda saxla** lazım ola bilər.
+
+**Publik API (theme / digər plugin)**  
+- `sit_get_current_lang()` — cari dil kodu; admində (ajax olmayanda) əsas dil.  
+- `SIT_CURRENT_LANG` — `init:1`-də `sit_get_current_lang()` ilə təyin (sabit yenidən təyin olunmur).  
+- `sit_get_translation( $id, $object_type, $lang, $field, $fallback )` — post/term tərcüməsi.  
+- `sit__( $key, $default, $context )`, `sit_e()`, `sit_esc_html_e()` — `wp_sit_strings`; filter `sit__`.  
+- `sit_get_page_url_in_language( $lang )` — cari səhifənin digər dil URL-i (`SIT_Rewrite::get_localized_url_for_lang`).  
+- `SIT_Rewrite::localize_url( $url, $lang )` — istənilən daxili URL-ə dil prefiksi.
+
+**Admin menyu**  
+- Üst səviyyə: **Dillər** (`sit-languages`).  
+- Alt səhifə: **UI sətirləri** (`sit-ui-strings`).
+
+**Frontend**  
+- Shortcode: `[sit_language_switcher]` (atributlar: `type`, `show_flags`, `show_names`, `class`).  
+- Widget: **SIT: Dil keçidi**.  
+- CSS: `assets/css/sit-switcher.css`.
+
+**Post/term tərcümə UI**  
+- Filter: `sit_multilang_supported_post_types`, `sit_multilang_supported_taxonomies` — hansı CPT/taxonomiyalarda meta box göstərilir.
+
+**Uninstall**  
+- `uninstall.php` bütün `wp_sit_*` cədvəllərini və `sit_*` option-larını silir.
 
 ---
 

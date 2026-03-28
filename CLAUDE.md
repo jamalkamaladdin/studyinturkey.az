@@ -93,6 +93,18 @@ wp_sit_languages      -- Dil siyahısı və parametrləri
 wp_sit_strings        -- UI string tərcümələri (düymələr, menyu, statik mətnlər)
 ```
 
+### sit-multilang (FAZA 2 — hazırdır)
+
+**Qovluq:** `sit-multilang/`. **Versiya:** `SIT_MULTILANG_VERSION` (`sit-multilang.php`).
+
+**URL:** Dil prefiksi `do_parse_request` içində `REQUEST_URI`-dən çıxarılır (bütün `rewrite_rules` kopyalanmır). Kökdən dil olmadan giriş → 301 `/{default}/`. Orijinal URI `init:-1`-də `sit_original_request_uri` qlobalında saxlanır (language switcher).
+
+**API:** `sit_get_current_lang()`, `sit_get_translation()`, `sit__()` / `sit_e()`, `sit_get_page_url_in_language()`, `SIT_Rewrite::localize_url()`. Əsas dil post/term üçün WP core sahələri; digər dillər `wp_sit_translations`.
+
+**Admin:** `sit-languages`, alt menyu `sit-ui-strings`. Shortcode `[sit_language_switcher]`, widget **SIT: Dil keçidi**.
+
+**İnteqrasiya (FAZA 3+):** CPT/taxonomiya dəstəyini `sit_multilang_supported_post_types` / `sit_multilang_supported_taxonomies` filterləri ilə genişləndirin. Frontda routing-dən çıxmaq üçün `sit_multilang_bypass_routing`.
+
 Bu cədvəllər `sit-developer-application` plugin tərəfindən yaradılır:
 
 ```sql
