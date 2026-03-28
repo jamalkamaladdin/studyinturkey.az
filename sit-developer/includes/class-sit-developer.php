@@ -20,6 +20,8 @@ final class SIT_Developer {
         add_action( 'init', [ $this, 'load_textdomain' ], 0 );
         add_action( 'init', [ 'SIT_University_CPT', 'register' ], 5 );
         add_action( 'init', [ 'SIT_University_Meta', 'register' ], 6 );
+        add_action( 'init', [ 'SIT_Program_CPT', 'register' ], 5 );
+        add_action( 'init', [ 'SIT_Program_Meta', 'register' ], 6 );
     }
 
     public function load_textdomain(): void {
