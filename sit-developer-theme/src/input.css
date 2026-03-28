@@ -94,8 +94,8 @@
 
 .custom-logo-link img,
 .custom-logo-link svg {
-	height: 2.25rem;
-	max-height: 2.25rem;
+	height: 2.875rem;
+	max-height: 2.875rem;
 	width: auto;
 	object-fit: contain;
 }

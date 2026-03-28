@@ -32,7 +32,7 @@ add_filter( 'get_custom_logo', function ( string $html ): string {
 	// img və ya svg elementinə style əlavə et.
 	return str_replace(
 		[ 'class="custom-logo"' ],
-		[ 'class="custom-logo" style="height:36px;width:auto;max-height:36px;"' ],
+		[ 'class="custom-logo" style="height:46px;width:auto;max-height:46px;"' ],
 		$html
 	);
 } );

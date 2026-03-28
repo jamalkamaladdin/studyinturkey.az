@@ -97,7 +97,8 @@ if ( function_exists( 'sit_theme_university_sub_url' ) ) {
 			<a href="#programs" class="rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-brand-500">
 				<?php esc_html_e( 'Proqramlar', 'studyinturkey' ); ?>
 			</a>
-			<button type="button" data-sit-consult-open class="rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-amber-400">
+			<button type="button" data-sit-consult-open class="inline-flex items-center gap-1.5 rounded-lg border-2 border-brand-600 bg-white px-5 py-2 text-sm font-bold text-brand-700 shadow-sm transition hover:bg-brand-50 dark:border-brand-400 dark:bg-slate-800 dark:text-brand-300 dark:hover:bg-slate-700">
+				<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></svg>
 				<?php esc_html_e( 'Konsultasiya al', 'studyinturkey' ); ?>
 			</button>
 			<a href="#admission-requirements" class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"><?php esc_html_e( 'Qəbul', 'studyinturkey' ); ?></a>
