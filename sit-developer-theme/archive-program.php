@@ -36,7 +36,7 @@ $total_pages = (int) $wp_query->max_num_pages;
 			</p>
 		</header>
 
-		<div class="flex flex-col gap-10 lg:flex-row lg:items-start">
+		<div class="flex flex-col gap-8 lg:flex-row lg:items-start">
 			<?php get_template_part( 'template-parts/program/archive-filters' ); ?>
 
 			<div class="min-w-0 flex-1">
@@ -45,15 +45,23 @@ $total_pages = (int) $wp_query->max_num_pages;
 						<span class="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow dark:bg-slate-800 dark:text-slate-200"><?php esc_html_e( 'Yüklənir…', 'studyinturkey' ); ?></span>
 					</div>
 					<div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
-						<table class="w-full min-w-[720px] border-collapse text-left text-sm">
+						<table class="w-full min-w-[720px] border-collapse text-left text-sm table-fixed">
+							<colgroup>
+								<col class="w-[22%]" />
+								<col class="w-[24%]" />
+								<col class="w-[14%]" />
+								<col class="w-[14%]" />
+								<col class="w-[12%]" />
+								<col class="w-[14%]" />
+							</colgroup>
 							<thead class="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-400">
 								<tr>
-									<th class="px-4 py-3 pe-6"><?php esc_html_e( 'Universitet', 'studyinturkey' ); ?></th>
-									<th class="px-4 py-3 pe-6"><?php esc_html_e( 'Proqram', 'studyinturkey' ); ?></th>
-									<th class="px-4 py-3 pe-6"><?php esc_html_e( 'Dərəcə', 'studyinturkey' ); ?></th>
-									<th class="px-4 py-3 pe-6"><?php esc_html_e( 'Ödəniş', 'studyinturkey' ); ?></th>
-									<th class="px-4 py-3 pe-6"><?php esc_html_e( 'Dillər', 'studyinturkey' ); ?></th>
-									<th class="px-4 py-3 text-end" aria-hidden="true"><span class="sr-only"><?php esc_html_e( 'Müraciət', 'studyinturkey' ); ?></span></th>
+									<th class="px-4 py-3"><?php esc_html_e( 'Universitet', 'studyinturkey' ); ?></th>
+									<th class="px-4 py-3"><?php esc_html_e( 'Proqram', 'studyinturkey' ); ?></th>
+									<th class="px-4 py-3"><?php esc_html_e( 'Dərəcə', 'studyinturkey' ); ?></th>
+									<th class="px-4 py-3"><?php esc_html_e( 'Ödəniş', 'studyinturkey' ); ?></th>
+									<th class="px-4 py-3"><?php esc_html_e( 'Dillər', 'studyinturkey' ); ?></th>
+									<th class="px-4 py-3 text-end"><?php esc_html_e( 'Müraciət', 'studyinturkey' ); ?></th>
 								</tr>
 							</thead>
 							<tbody data-sit-prog-list>

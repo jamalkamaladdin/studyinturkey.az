@@ -25,6 +25,7 @@ require_once SIT_DEVELOPER_DIR . 'includes/class-sit-university-cpt.php';
 require_once SIT_DEVELOPER_DIR . 'includes/class-sit-university-meta.php';
 require_once SIT_DEVELOPER_DIR . 'includes/class-sit-university-rewrites.php';
 require_once SIT_DEVELOPER_DIR . 'includes/class-sit-university-admission-meta.php';
+require_once SIT_DEVELOPER_DIR . 'includes/class-sit-university-about-meta.php';
 require_once SIT_DEVELOPER_DIR . 'includes/class-sit-program-cpt.php';
 require_once SIT_DEVELOPER_DIR . 'includes/class-sit-program-meta.php';
 require_once SIT_DEVELOPER_DIR . 'includes/class-sit-extra-cpts.php';

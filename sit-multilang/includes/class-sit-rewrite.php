@@ -12,6 +12,8 @@ class SIT_Rewrite {
         add_action( 'init', [ __CLASS__, 'early_set_current_lang' ], 0 );
         add_filter( 'do_parse_request', [ __CLASS__, 'strip_lang_prefix' ], 1, 2 );
         add_filter( 'locale', [ __CLASS__, 'filter_locale' ], 10, 1 );
+        add_filter( 'gettext', [ __CLASS__, 'filter_gettext' ], 10, 3 );
+        add_filter( 'ngettext', [ __CLASS__, 'filter_ngettext' ], 10, 5 );
         add_filter( 'language_attributes', [ __CLASS__, 'filter_language_attributes' ], 20, 1 );
         add_filter( 'body_class', [ __CLASS__, 'filter_body_class' ], 10, 1 );
 
@@ -285,6 +287,114 @@ class SIT_Rewrite {
             return $locale;
         }
         return SIT_Languages::get_locale_for_code( sit_get_current_lang() );
+    }
+
+    /** @var array<string,string>|null Reverse map: az_value => string_key (lazy-loaded). */
+    private static ?array $az_reverse_map = null;
+
+    /**
+     * Build reverse map: Azerbaijani string_value → string_key.
+     *
+     * @return array<string,string>
+     */
+    private static function get_az_reverse_map(): array {
+        if ( null !== self::$az_reverse_map ) {
+            return self::$az_reverse_map;
+        }
+        global $wpdb;
+        $table = SIT_DB::strings_table();
+        $def   = SIT_Languages::get_default_language_code() ?: 'az';
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT string_key, string_value FROM {$table} WHERE lang_code = %s",
+                $def
+            )
+        );
+        self::$az_reverse_map = [];
+        if ( $rows ) {
+            foreach ( $rows as $r ) {
+                self::$az_reverse_map[ (string) $r->string_value ] = (string) $r->string_key;
+            }
+        }
+        return self::$az_reverse_map;
+    }
+
+    /**
+     * Intercept WordPress gettext for 'studyinturkey' domain and use DB translations.
+     *
+     * @param string $translation Translated text.
+     * @param string $text        Original text.
+     * @param string $domain      Text domain.
+     */
+    public static function filter_gettext( string $translation, string $text, string $domain ): string {
+        if ( 'studyinturkey' !== $domain ) {
+            return $translation;
+        }
+        if ( self::should_bypass_routing() || is_admin() ) {
+            return $translation;
+        }
+        $lang = sit_get_current_lang();
+        $def  = SIT_Languages::get_default_language_code() ?: 'az';
+        if ( $lang === $def ) {
+            return $translation;
+        }
+
+        /* 1. Try direct key lookup (text itself as key). */
+        $db_val = SIT_Strings::get_value( $text, $lang );
+        if ( '' !== $db_val ) {
+            return $db_val;
+        }
+
+        /* 2. Reverse lookup: find key by matching Azerbaijani value. */
+        $map = self::get_az_reverse_map();
+        if ( isset( $map[ $text ] ) ) {
+            $db_val = SIT_Strings::get_value( $map[ $text ], $lang );
+            if ( '' !== $db_val ) {
+                return $db_val;
+            }
+        }
+
+        return $translation;
+    }
+
+    /**
+     * Intercept WordPress ngettext (plural) for 'studyinturkey' domain.
+     *
+     * @param string $translation Translated text.
+     * @param string $single      Singular text.
+     * @param string $plural      Plural text.
+     * @param int    $number      Number.
+     * @param string $domain      Text domain.
+     */
+    public static function filter_ngettext( string $translation, string $single, string $plural, int $number, string $domain ): string {
+        if ( 'studyinturkey' !== $domain ) {
+            return $translation;
+        }
+        if ( self::should_bypass_routing() || is_admin() ) {
+            return $translation;
+        }
+        $lang = sit_get_current_lang();
+        $def  = SIT_Languages::get_default_language_code() ?: 'az';
+        if ( $lang === $def ) {
+            return $translation;
+        }
+        $key = ( 1 === $number ) ? $single : $plural;
+
+        $db_val = SIT_Strings::get_value( $key, $lang );
+        if ( '' !== $db_val ) {
+            return $db_val;
+        }
+
+        $map = self::get_az_reverse_map();
+        if ( isset( $map[ $key ] ) ) {
+            $db_val = SIT_Strings::get_value( $map[ $key ], $lang );
+            if ( '' !== $db_val ) {
+                return $db_val;
+            }
+        }
+
+        return $translation;
     }
 
     public static function filter_language_attributes( string $output ): string {

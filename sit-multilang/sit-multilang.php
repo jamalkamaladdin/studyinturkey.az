@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIT_MULTILANG_VERSION', '1.4.2' );
+define( 'SIT_MULTILANG_VERSION', '1.5.0' );
 define( 'SIT_MULTILANG_FILE', __FILE__ );
 define( 'SIT_MULTILANG_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SIT_MULTILANG_URL', plugin_dir_url( __FILE__ ) );

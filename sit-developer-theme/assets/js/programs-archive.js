@@ -79,15 +79,15 @@
 			logoBlock =
 				'<a href="' +
 				esc(uniHref) +
-				'" class="h-12 w-12 shrink-0 overflow-hidden rounded-full border border-slate-100 bg-white p-0.5 dark:border-slate-600">' +
+				'" class="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-100 bg-white p-0.5 dark:border-slate-600">' +
 				'<img src="' +
 				esc(logoUrl) +
-				'" alt="" class="h-full w-full rounded-full object-contain" loading="lazy" width="48" height="48" />' +
+				'" alt="" class="h-full w-full rounded-full object-contain" loading="lazy" width="40" height="40" />' +
 				'</a>';
 		} else {
 			var letter = uniTitle ? String(uniTitle).charAt(0) : '★';
 			logoBlock =
-				'<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-50 text-sm font-bold text-brand-600 dark:bg-brand-950/80 dark:text-brand-300" aria-hidden="true">' +
+				'<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-50 text-xs font-bold text-brand-600 dark:bg-brand-950/80 dark:text-brand-300" aria-hidden="true">' +
 				esc(letter) +
 				'</div>';
 		}
@@ -96,13 +96,13 @@
 			it.university_link && it.university_title
 				? '<a href="' +
 				  esc(it.university_link) +
-				  '" class="block text-sm font-semibold text-slate-900 hover:text-brand-700 dark:text-white dark:hover:text-brand-300">' +
+				  '" class="block truncate text-sm font-semibold text-slate-900 hover:text-brand-700 dark:text-white dark:hover:text-brand-300">' +
 				  esc(it.university_title) +
 				  '</a>'
 				: '<span class="text-sm font-semibold text-slate-500">—</span>';
 
 		var fieldSub = fieldLine
-			? '<p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">' + esc(fieldLine) + '</p>'
+			? '<p class="mt-0.5 truncate text-xs text-slate-500 dark:text-slate-400">' + esc(fieldLine) + '</p>'
 			: '';
 
 		var degCell = deg
@@ -142,29 +142,29 @@
 
 		return (
 			'<tr class="border-b border-slate-200 bg-white transition-colors hover:bg-slate-50/80 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800/60">' +
-			'<td class="py-4 pe-4 align-top"><div class="flex gap-3">' +
+			'<td class="px-4 py-4 align-top"><div class="flex gap-3">' +
 			logoBlock +
 			'<div class="min-w-0">' +
 			uniName +
 			fieldSub +
 			'</div></div></td>' +
-			'<td class="py-4 pe-4 align-top"><a href="' +
+			'<td class="px-4 py-4 align-top"><a href="' +
 			esc(it.link) +
-			'" class="text-sm font-semibold text-slate-900 hover:text-brand-600 dark:text-white dark:hover:text-brand-400">' +
+			'" class="line-clamp-2 text-sm font-semibold text-slate-900 hover:text-brand-600 dark:text-white dark:hover:text-brand-400">' +
 			esc(it.title) +
 			'</a></td>' +
-			'<td class="py-4 pe-4 align-top text-sm text-slate-700 dark:text-slate-300">' +
+			'<td class="px-4 py-4 align-top text-sm text-slate-700 dark:text-slate-300">' +
 			degCell +
 			'</td>' +
-			'<td class="py-4 pe-4 align-top">' +
+			'<td class="px-4 py-4 align-top">' +
 			feeBlock +
 			'</td>' +
-			'<td class="py-4 pe-4 align-top text-sm text-slate-700 dark:text-slate-300">' +
+			'<td class="px-4 py-4 align-top text-sm text-slate-700 dark:text-slate-300">' +
 			langCell +
 			'</td>' +
-			'<td class="py-4 align-top text-end"><a href="' +
+			'<td class="px-4 py-4 align-top text-end"><a href="' +
 			esc(it.link) +
-			'" class="inline-flex min-h-[2.5rem] items-center justify-center rounded-lg bg-brand-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-brand-700 dark:hover:bg-brand-500">' +
+			'" class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm whitespace-nowrap hover:bg-brand-700 dark:hover:bg-brand-500">' +
 			esc(cfg.strings.apply) +
 			'</a></td></tr>'
 		);
