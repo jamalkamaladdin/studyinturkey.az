@@ -677,6 +677,38 @@ final class SIT_REST_API {
         $fee_raw = get_post_meta( $id, 'sit_tuition_fee', true );
         $fee     = ( '' !== $fee_raw && null !== $fee_raw && is_numeric( $fee_raw ) ) ? (float) $fee_raw : null;
 
+        $univ_id    = (int) get_post_meta( $id, 'sit_university_id', true );
+        $univ_title = '';
+        $univ_link  = '';
+        $univ_logo_url = '';
+        if ( $univ_id > 0 ) {
+            $univ_post = get_post( $univ_id );
+            if ( $univ_post instanceof WP_Post && SIT_University_CPT::POST_TYPE === $univ_post->post_type && 'publish' === $univ_post->post_status ) {
+                $univ_title = get_the_title( $univ_post );
+                if ( function_exists( 'sit_get_translation' ) && class_exists( 'SIT_Translations', false ) ) {
+                    $univ_title = sit_get_translation( $univ_id, SIT_Translations::OBJECT_POST, $lang, SIT_Translations::FIELD_TITLE, $univ_title );
+                }
+                $univ_link = get_permalink( $univ_post );
+                if ( class_exists( 'SIT_Rewrite', false ) ) {
+                    $univ_link = SIT_Rewrite::localize_url( $univ_link, $lang );
+                }
+                $ulid = (int) get_post_meta( $univ_id, 'sit_logo_id', true );
+                if ( $ulid ) {
+                    $univ_logo_url = (string) wp_get_attachment_image_url( $ulid, 'medium' );
+                }
+            }
+        }
+
+        $scholarship = (bool) get_post_meta( $id, 'sit_scholarship_available', true );
+        $fee_ref     = null;
+        if ( $scholarship && null !== $fee && $fee > 0 ) {
+            // PDF-də çox hallarda təxmini 50% təqaüd; nümunə sayt kimi iki qiymət göstərmək üçün.
+            $fee_ref = round( $fee * 2, -1 );
+            if ( $fee_ref <= $fee ) {
+                $fee_ref = null;
+            }
+        }
+
         $row = [
             'id'                    => $id,
             'title'                 => $title,
@@ -686,8 +718,12 @@ final class SIT_REST_API {
             'featured_media_id'     => (int) get_post_thumbnail_id( $post ),
             'tuition_fee'           => $fee,
             'duration'              => (string) get_post_meta( $id, 'sit_duration', true ),
-            'university_id'         => (int) get_post_meta( $id, 'sit_university_id', true ),
-            'scholarship_available' => (bool) get_post_meta( $id, 'sit_scholarship_available', true ),
+            'university_id'           => $univ_id,
+            'university_title'        => $univ_title,
+            'university_link'         => $univ_link,
+            'university_logo_url'     => $univ_logo_url,
+            'tuition_fee_reference'   => $fee_ref,
+            'scholarship_available'   => $scholarship,
             'degree_type'           => self::format_terms_for_post( $id, SIT_Program_CPT::TAX_DEGREE, $lang ),
             'program_language'      => self::format_terms_for_post( $id, SIT_Program_CPT::TAX_LANG, $lang ),
             'field_of_study'        => self::format_terms_for_post( $id, SIT_Program_CPT::TAX_FIELD, $lang ),

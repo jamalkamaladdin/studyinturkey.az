@@ -1,6 +1,6 @@
 <?php
 /**
- * Universitet kartı (arxiv döngüsü üçün).
+ * Universitet kartı — StudyLeo tipli (loqo + mətn + CTA).
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,78 +14,62 @@ $tuition = get_post_meta( $post_id, 'sit_tuition_fee_min', true );
 $logo_id = (int) get_post_meta( $post_id, 'sit_logo_id', true );
 $cities  = get_the_terms( $post_id, 'city' );
 $types   = get_the_terms( $post_id, 'university_type' );
+
+$logo_url = $logo_id ? wp_get_attachment_image_url( $logo_id, 'medium' ) : '';
 ?>
-<article <?php post_class( 'group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-brand-200 hover:shadow-md' ); ?>>
-	<a href="<?php echo esc_url( $link ); ?>" class="relative block aspect-[16/9] bg-slate-100">
-		<?php
-		$cover_id = (int) get_post_meta( $post_id, 'sit_cover_image_id', true );
-		if ( $cover_id ) {
-			echo wp_get_attachment_image( $cover_id, 'medium_large', false, [ 'class' => 'h-full w-full object-cover transition group-hover:scale-[1.02]' ] );
-		} elseif ( has_post_thumbnail( $post_id ) ) {
-			echo get_the_post_thumbnail( $post_id, 'medium_large', [ 'class' => 'h-full w-full object-cover transition group-hover:scale-[1.02]' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		} elseif ( $logo_id ) {
-			echo wp_get_attachment_image( $logo_id, 'medium', false, [ 'class' => 'h-full w-full object-contain p-8 bg-white' ] );
-		} else {
-			echo '<span class="flex h-full items-center justify-center text-4xl font-bold text-brand-200" aria-hidden="true">' . esc_html( function_exists( 'mb_substr' ) ? mb_substr( $title, 0, 1 ) : substr( $title, 0, 1 ) ) . '</span>';
-		}
-		?>
-		<?php if ( $rating > 0 ) : ?>
-			<span class="absolute end-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-amber-600 shadow-sm dark:bg-slate-900/95 dark:text-amber-400" aria-label="<?php esc_attr_e( 'Reytinq', 'studyinturkey' ); ?>">
-				<?php echo esc_html( number_format_i18n( $rating, 1 ) ); ?> ★
-			</span>
+<article <?php post_class( 'flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-brand-200 hover:shadow-md dark:border-slate-700 dark:bg-slate-900' ); ?>>
+	<div class="flex gap-4 p-4 sm:p-5">
+		<?php if ( $logo_url ) : ?>
+			<a href="<?php echo esc_url( $link ); ?>" class="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-white p-1 dark:border-slate-700 sm:h-20 sm:w-20">
+				<img src="<?php echo esc_url( $logo_url ); ?>" alt="" class="h-full w-full object-contain" loading="lazy" width="80" height="80" />
+			</a>
+		<?php else : ?>
+			<div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-xl font-bold text-brand-600 dark:bg-brand-950/80 dark:text-brand-300 sm:h-20 sm:w-20" aria-hidden="true">
+				<?php echo esc_html( function_exists( 'mb_substr' ) ? mb_substr( $title, 0, 1 ) : substr( $title, 0, 1 ) ); ?>
+			</div>
 		<?php endif; ?>
-	</a>
-	<div class="flex flex-1 flex-col p-5">
-		<div class="flex items-start gap-3">
-			<?php if ( $logo_id && ( $cover_id || has_post_thumbnail( $post_id ) ) ) : ?>
-				<div class="h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-slate-100 bg-white p-1">
-					<?php echo wp_get_attachment_image( $logo_id, 'thumbnail', false, [ 'class' => 'h-full w-full object-contain' ] ); ?>
+		<div class="min-w-0 flex-1">
+			<h2 class="text-lg font-semibold leading-snug text-slate-900 dark:text-white sm:text-xl">
+				<a href="<?php echo esc_url( $link ); ?>" class="text-inherit hover:text-brand-600 dark:hover:text-brand-400"><?php echo esc_html( $title ); ?></a>
+			</h2>
+			<?php if ( ! is_wp_error( $cities ) && is_array( $cities ) && $cities ) : ?>
+				<p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+					<?php
+					$names = array_map(
+						function ( $t ) {
+							return sit_theme_get_term_name( (int) $t->term_id, 'city' );
+						},
+						$cities
+					);
+					echo esc_html( implode( ', ', array_filter( $names ) ) );
+					?>
+				</p>
+			<?php endif; ?>
+			<?php if ( ! is_wp_error( $types ) && is_array( $types ) && $types ) : ?>
+				<div class="mt-2 flex flex-wrap gap-1.5">
+					<?php foreach ( $types as $t ) : ?>
+						<span class="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"><?php echo esc_html( sit_theme_get_term_name( (int) $t->term_id, 'university_type' ) ); ?></span>
+					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
-			<div class="min-w-0 flex-1">
-				<h2 class="text-lg font-semibold text-slate-900 leading-snug">
-					<a href="<?php echo esc_url( $link ); ?>" class="text-inherit hover:text-brand-700"><?php echo esc_html( $title ); ?></a>
-				</h2>
-				<?php if ( ! is_wp_error( $cities ) && is_array( $cities ) && $cities ) : ?>
-					<p class="mt-1 text-xs text-slate-500">
-						<?php
-						$names = array_map(
-							function ( $t ) {
-								return sit_theme_get_term_name( (int) $t->term_id, 'city' );
-							},
-							$cities
-						);
-						echo esc_html( implode( ', ', array_filter( $names ) ) );
-						?>
-					</p>
-				<?php endif; ?>
-			</div>
-		</div>
-		<?php if ( ! is_wp_error( $types ) && is_array( $types ) && $types ) : ?>
-			<div class="mt-3 flex flex-wrap gap-1.5">
-				<?php foreach ( $types as $t ) : ?>
-					<span class="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600"><?php echo esc_html( sit_theme_get_term_name( (int) $t->term_id, 'university_type' ) ); ?></span>
-				<?php endforeach; ?>
-			</div>
-		<?php endif; ?>
-		<?php if ( '' !== $excerpt ) : ?>
-			<p class="mt-3 line-clamp-3 flex-1 text-sm text-slate-600"><?php echo esc_html( $excerpt ); ?></p>
-		<?php endif; ?>
-		<div class="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4 text-sm">
-			<?php if ( is_numeric( $tuition ) && (float) $tuition > 0 ) : ?>
-				<span class="font-medium text-slate-700">
-					<?php
-					printf(
-						/* translators: %s: formatted tuition minimum */
-						esc_html__( 'Ən azı %s', 'studyinturkey' ),
-						esc_html( number_format_i18n( (float) $tuition, 0 ) )
-					);
-					?>
-				</span>
-			<?php else : ?>
-				<span></span>
+			<?php if ( $rating > 0 ) : ?>
+				<p class="mt-2 text-sm font-medium text-amber-600 dark:text-amber-400"><?php echo esc_html( number_format_i18n( $rating, 1 ) ); ?> ★</p>
 			<?php endif; ?>
-			<a href="<?php echo esc_url( $link ); ?>" class="font-semibold text-brand-700 hover:text-brand-600"><?php esc_html_e( 'Ətraflı', 'studyinturkey' ); ?> →</a>
 		</div>
+	</div>
+	<?php if ( '' !== $excerpt ) : ?>
+		<p class="line-clamp-2 border-t border-slate-100 px-4 pb-3 pt-2 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400 sm:px-5"><?php echo esc_html( $excerpt ); ?></p>
+	<?php endif; ?>
+	<div class="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-4 py-4 dark:border-slate-800 sm:px-5">
+		<?php if ( is_numeric( $tuition ) && (float) $tuition > 0 ) : ?>
+			<div class="text-sm font-semibold text-slate-900 dark:text-white">
+				<span class="text-slate-500 dark:text-slate-400"><?php esc_html_e( 'Ən azı', 'studyinturkey' ); ?></span>
+				<span class="ms-1 text-brand-600 dark:text-brand-400"><?php echo esc_html( number_format_i18n( (float) $tuition, 0 ) ); ?>$</span>
+				<span class="text-xs font-normal text-slate-500"><?php esc_html_e( '/ il', 'studyinturkey' ); ?></span>
+			</div>
+		<?php else : ?>
+			<span></span>
+		<?php endif; ?>
+		<a href="<?php echo esc_url( $link ); ?>" class="inline-flex min-h-[2.5rem] items-center justify-center rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 dark:hover:bg-brand-500"><?php esc_html_e( 'Ətraflı', 'studyinturkey' ); ?></a>
 	</div>
 </article>

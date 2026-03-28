@@ -3,7 +3,7 @@
  * Plugin Name: SIT Developer
  * Plugin URI:  https://studyinturkey.az
  * Description: Universitet, proqram və əlaqəli məzmun tipləri (StudyInTurkey.az).
- * Version:     0.4.0
+ * Version:     0.4.1
  * Author:      StudyInTurkey
  * Author URI:  https://studyinturkey.az
  * Text Domain: studyinturkey
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIT_DEVELOPER_VERSION', '0.4.0' );
+define( 'SIT_DEVELOPER_VERSION', '0.4.1' );
 define( 'SIT_DEVELOPER_FILE', __FILE__ );
 define( 'SIT_DEVELOPER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SIT_DEVELOPER_URL', plugin_dir_url( __FILE__ ) );

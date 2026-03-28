@@ -5,7 +5,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIT_THEME_VERSION', '1.1.0' );
+define( 'SIT_THEME_VERSION', '1.2.0' );
 define( 'SIT_THEME_DIR', get_template_directory() );
 define( 'SIT_THEME_URI', get_template_directory_uri() );
 
@@ -113,6 +113,12 @@ function sit_theme_program_archive_assets(): void {
 				'next'           => __( 'Növbəti', 'studyinturkey' ),
 				'pageOf'         => __( 'Səhifə %1$s / %2$s', 'studyinturkey' ),
 				'view'           => __( 'Bax', 'studyinturkey' ),
+				'apply'          => __( 'Müraciət et', 'studyinturkey' ),
+				'program'        => __( 'Proqram', 'studyinturkey' ),
+				'degree'         => __( 'Dərəcə', 'studyinturkey' ),
+				'duration'       => __( 'Müddət', 'studyinturkey' ),
+				'languages'      => __( 'Dillər', 'studyinturkey' ),
+				'perYear'        => __( '/ il', 'studyinturkey' ),
 				'scholarshipYes' => __( 'Bəli', 'studyinturkey' ),
 			],
 		]
