@@ -131,7 +131,14 @@ class SIT_Strings {
     }
 
     public static function sanitize_string_key( string $key ): string {
-        $key = strtolower( trim( $key ) );
+        $key = trim( $key );
+        // Gettext keys use full UTF-8 text; legacy keys are ASCII slug-style.
+        if ( preg_match( '/[^\x00-\x7F]/', $key ) || str_contains( $key, ' ' ) ) {
+            // UTF-8 key: keep as-is, just limit length.
+            return mb_substr( $key, 0, 255 );
+        }
+        // Legacy ASCII slug key.
+        $key = strtolower( $key );
         $key = preg_replace( '/[^a-z0-9._-]/', '', $key );
         return substr( (string) $key, 0, 255 );
     }
