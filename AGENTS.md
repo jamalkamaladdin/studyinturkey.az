@@ -79,18 +79,18 @@ Hər mərhələ aşağıdakı formatda icra olunur:
 ### FAZA 2: Çoxdillilik Plugin (`sit-multilang`)
 
 #### Mərhələ 2.1 — DB cədvəlləri və plugin aktivasiyası
-- [ ] Plugin əsas faylı: `sit-multilang/sit-multilang.php`
-- [ ] Aktivasiya hook: `wp_sit_translations`, `wp_sit_languages`, `wp_sit_strings` cədvəlləri yaratmaq
-- [ ] Default dilləri insert etmək (az, en, ru, fa, ar, kk)
-- [ ] Deaktivasiya hook
-- [ ] Uninstall hook
+- [x] Plugin əsas faylı: `sit-multilang/sit-multilang.php`
+- [x] Aktivasiya hook: `wp_sit_translations`, `wp_sit_languages`, `wp_sit_strings` cədvəlləri yaratmaq
+- [x] Default dilləri insert etmək (az, en, ru, fa, ar, kk)
+- [x] Deaktivasiya hook
+- [x] Uninstall hook
 - **Commit:** `[2.1] Multilang plugin: DB cədvəlləri və aktivasiya`
 
 #### Mərhələ 2.2 — Admin UI (dil idarəetməsi)
-- [ ] Admin menyu: "Dillər" səhifəsi
-- [ ] Dil əlavə/redaktə/silmə formu
-- [ ] Dil siyahısı cədvəli (WP_List_Table)
-- [ ] Dil aktivasiya/deaktivasiya toggle
+- [x] Admin menyu: "Dillər" səhifəsi
+- [x] Dil əlavə/redaktə/silmə formu
+- [x] Dil siyahısı cədvəli (WP_List_Table)
+- [x] Dil aktivasiya/deaktivasiya toggle
 - **Commit:** `[2.2] Multilang plugin: Admin dil idarəetmə UI`
 
 #### Mərhələ 2.3 — Tərcümə UI (post/term edit ekranlarında)

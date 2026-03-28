@@ -15,8 +15,11 @@ class SIT_Activator {
      * 3. Stores current DB version in options.
      * 4. Flushes rewrite rules so language prefixes work immediately.
      */
-    public static function activate(): void {
-        if ( ! current_user_can( 'activate_plugins' ) ) {
+    /**
+     * @param bool $internal_upgrade true when invoked from version check (no logged-in user).
+     */
+    public static function activate( bool $internal_upgrade = false ): void {
+        if ( ! $internal_upgrade && ! current_user_can( 'activate_plugins' ) ) {
             return;
         }
 
@@ -24,7 +27,7 @@ class SIT_Activator {
         SIT_Languages::seed_defaults();
 
         update_option( 'sit_multilang_db_version', SIT_MULTILANG_VERSION );
-        update_option( 'sit_default_language', 'az' );
+        SIT_Languages::sync_default_option();
 
         flush_rewrite_rules();
     }

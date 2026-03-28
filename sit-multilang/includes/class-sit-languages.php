@@ -153,6 +153,231 @@ class SIT_Languages {
     }
 
     /**
+     * Get a single language by row ID.
+     */
+    public static function get_language_by_id( int $id ): ?object {
+        global $wpdb;
+
+        $table = SIT_DB::languages_table();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        return $wpdb->get_row(
+            $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id )
+        );
+    }
+
+    /**
+     * Total number of language rows.
+     */
+    public static function count_languages(): int {
+        global $wpdb;
+
+        $table = SIT_DB::languages_table();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
+    }
+
+    /**
+     * Set is_default = 0 on all rows.
+     */
+    public static function unset_all_defaults(): void {
+        global $wpdb;
+
+        $table = SIT_DB::languages_table();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $wpdb->update( $table, [ 'is_default' => 0 ], [ 'is_default' => 1 ] );
+    }
+
+    /**
+     * Sync WordPress option with DB default language code.
+     */
+    public static function sync_default_option(): void {
+        $code = self::get_default_language_code();
+        if ( $code ) {
+            update_option( 'sit_default_language', $code );
+        }
+    }
+
+    /**
+     * Insert a new language row.
+     *
+     * @param array<string, mixed> $data Row data (keys match table columns except id).
+     * @return int|false New row ID or false on failure.
+     */
+    public static function insert_language( array $data ) {
+        global $wpdb;
+
+        $table = SIT_DB::languages_table();
+
+        if ( ! empty( $data['is_default'] ) ) {
+            self::unset_all_defaults();
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $ok = $wpdb->insert( $table, $data );
+
+        if ( ! $ok ) {
+            return false;
+        }
+
+        $new_id = (int) $wpdb->insert_id;
+
+        self::sync_default_option();
+
+        return $new_id;
+    }
+
+    /**
+     * Update an existing language row.
+     *
+     * @param array<string, mixed> $data Fields to update.
+     */
+    public static function update_language( int $id, array $data ): bool {
+        global $wpdb;
+
+        $table = SIT_DB::languages_table();
+
+        if ( ! self::get_language_by_id( $id ) ) {
+            return false;
+        }
+
+        if ( ! empty( $data['is_default'] ) ) {
+            self::unset_all_defaults();
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $ok = $wpdb->update( $table, $data, [ 'id' => $id ] );
+
+        self::sync_default_option();
+
+        return false !== $ok;
+    }
+
+    /**
+     * Set one language as default (others cleared).
+     */
+    public static function set_default_by_id( int $id ): bool {
+        $lang = self::get_language_by_id( $id );
+        if ( ! $lang ) {
+            return false;
+        }
+
+        self::unset_all_defaults();
+
+        global $wpdb;
+        $table = SIT_DB::languages_table();
+
+        // Default dil həmişə aktiv olmalıdır.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $wpdb->update(
+            $table,
+            [
+                'is_default' => 1,
+                'is_active'  => 1,
+            ],
+            [ 'id' => $id ]
+        );
+
+        update_option( 'sit_default_language', $lang->code );
+
+        return true;
+    }
+
+    /**
+     * Toggle active flag. Cannot deactivate the default language.
+     */
+    public static function set_language_active( int $id, bool $active ): bool|string {
+        $lang = self::get_language_by_id( $id );
+        if ( ! $lang ) {
+            return false;
+        }
+
+        if ( ! $active && (int) $lang->is_default === 1 ) {
+            return 'default_cannot_deactivate';
+        }
+
+        global $wpdb;
+        $table = SIT_DB::languages_table();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $wpdb->update( $table, [ 'is_active' => $active ? 1 : 0 ], [ 'id' => $id ] );
+
+        return true;
+    }
+
+    /**
+     * Delete a language. At least one must remain.
+     * If the deleted row was default, assigns default to another active row.
+     */
+    public static function delete_language( int $id ): bool|string {
+        if ( self::count_languages() <= 1 ) {
+            return 'last_language';
+        }
+
+        $lang = self::get_language_by_id( $id );
+        if ( ! $lang ) {
+            return false;
+        }
+
+        $was_default = (int) $lang->is_default === 1;
+
+        global $wpdb;
+        $table = SIT_DB::languages_table();
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $wpdb->delete( $table, [ 'id' => $id ] );
+
+        if ( $was_default ) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $next = $wpdb->get_row(
+                "SELECT id FROM {$table} WHERE is_active = 1 ORDER BY sort_order ASC, id ASC LIMIT 1"
+            );
+            if ( $next ) {
+                self::set_default_by_id( (int) $next->id );
+            } else {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                $any = $wpdb->get_row( "SELECT id FROM {$table} ORDER BY sort_order ASC, id ASC LIMIT 1" );
+                if ( $any ) {
+                    self::set_default_by_id( (int) $any->id );
+                }
+            }
+        }
+
+        self::sync_default_option();
+
+        return true;
+    }
+
+    /**
+     * Check if a language code exists (optionally exclude one ID for updates).
+     */
+    public static function code_exists( string $code, ?int $exclude_id = null ): bool {
+        global $wpdb;
+
+        $table = SIT_DB::languages_table();
+
+        if ( null !== $exclude_id ) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $found = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT id FROM {$table} WHERE code = %s AND id != %d LIMIT 1",
+                    $code,
+                    $exclude_id
+                )
+            );
+        } else {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $found = $wpdb->get_var(
+                $wpdb->prepare( "SELECT id FROM {$table} WHERE code = %s LIMIT 1", $code )
+            );
+        }
+
+        return (bool) $found;
+    }
+
+    /**
      * Get the default language code.
      */
     public static function get_default_language_code(): string {

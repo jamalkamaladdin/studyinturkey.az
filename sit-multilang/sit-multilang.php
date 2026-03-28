@@ -3,7 +3,7 @@
  * Plugin Name: SIT Multilang
  * Plugin URI:  https://studyinturkey.az
  * Description: Custom multilingual system for StudyInTurkey.az — 6 languages with RTL support.
- * Version:     1.0.0
+ * Version:     1.1.0
  * Author:      StudyInTurkey
  * Author URI:  https://studyinturkey.az
  * Text Domain: studyinturkey
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIT_MULTILANG_VERSION', '1.0.0' );
+define( 'SIT_MULTILANG_VERSION', '1.1.0' );
 define( 'SIT_MULTILANG_FILE', __FILE__ );
 define( 'SIT_MULTILANG_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SIT_MULTILANG_URL', plugin_dir_url( __FILE__ ) );
@@ -49,6 +49,16 @@ final class SIT_Multilang {
         add_action( 'init', [ $this, 'load_textdomain' ] );
         add_action( 'init', [ $this, 'detect_language' ], 1 );
         add_action( 'plugins_loaded', [ $this, 'check_db_version' ] );
+        add_action(
+            'plugins_loaded',
+            static function (): void {
+                if ( is_admin() ) {
+                    require_once SIT_MULTILANG_DIR . 'admin/class-sit-admin-languages.php';
+                    SIT_Admin_Languages::init();
+                }
+            },
+            5
+        );
     }
 
     public function load_textdomain(): void {
@@ -76,7 +86,7 @@ final class SIT_Multilang {
     public function check_db_version(): void {
         $stored = get_option( 'sit_multilang_db_version', '0' );
         if ( version_compare( $stored, SIT_MULTILANG_VERSION, '<' ) ) {
-            SIT_Activator::activate();
+            SIT_Activator::activate( true );
         }
     }
 }
