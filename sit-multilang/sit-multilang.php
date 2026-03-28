@@ -3,7 +3,7 @@
  * Plugin Name: SIT Multilang
  * Plugin URI:  https://studyinturkey.az
  * Description: Custom multilingual system for StudyInTurkey.az — 6 languages with RTL support.
- * Version:     1.4.0
+ * Version:     1.4.1
  * Author:      StudyInTurkey
  * Author URI:  https://studyinturkey.az
  * Text Domain: studyinturkey
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIT_MULTILANG_VERSION', '1.4.0' );
+define( 'SIT_MULTILANG_VERSION', '1.4.2' );
 define( 'SIT_MULTILANG_FILE', __FILE__ );
 define( 'SIT_MULTILANG_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SIT_MULTILANG_URL', plugin_dir_url( __FILE__ ) );

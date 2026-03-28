@@ -77,7 +77,24 @@ class SIT_Rewrite {
         if ( is_string( $segment ) && str_starts_with( $segment, 'wp-' ) ) {
             return true;
         }
+        /* Tema SEO: /sit-sitemap.xml və /sit-sitemap-{lang}.xml dil prefiksi olmadan */
+        if ( is_string( $segment ) && str_starts_with( strtolower( $segment ), 'sit-sitemap' ) ) {
+            return true;
+        }
         return (bool) apply_filters( 'sit_multilang_reserved_path_segment', false, $segment );
+    }
+
+    /**
+     * Path hesablaması üçün: `home_url()` istifadə etməyin — `filter_home_url` boş path-də dil prefiksi əlavə edir
+     * və `/az/` kimi sorğuları səhvən "boş" kimi qəbul etmə 301 döngüsünə səbəb olur.
+     */
+    private static function get_raw_home_url(): string {
+        $home = get_option( 'home' );
+        if ( is_string( $home ) && '' !== $home ) {
+            return $home;
+        }
+        $site = get_option( 'siteurl' );
+        return ( is_string( $site ) && '' !== $site ) ? $site : '';
     }
 
     /**
@@ -86,9 +103,14 @@ class SIT_Rewrite {
     public static function get_path_after_home_from_uri( string $uri ): string {
         $path = (string) wp_parse_url( $uri, PHP_URL_PATH );
         $path = trim( $path, '/' );
-        $home_path = trim( (string) wp_parse_url( home_url(), PHP_URL_PATH ), '/' );
+        $raw    = self::get_raw_home_url();
+        $home_path = $raw ? trim( (string) wp_parse_url( $raw, PHP_URL_PATH ), '/' ) : '';
         if ( $home_path !== '' ) {
             if ( $path === $home_path ) {
+                // Parametrlərdə səhvən /az kimi dil home-da qalıbsa, yenə də routing işləsin.
+                if ( SIT_Languages::is_valid_code( $home_path ) ) {
+                    return $path;
+                }
                 return '';
             }
             $prefix = $home_path . '/';
@@ -231,7 +253,8 @@ class SIT_Rewrite {
         $query = wp_parse_url( $uri, PHP_URL_QUERY );
 
         $new_rel   = implode( '/', array_filter( $segments ) );
-        $home_path = trim( (string) wp_parse_url( home_url(), PHP_URL_PATH ), '/' );
+        $raw       = self::get_raw_home_url();
+        $home_path = $raw ? trim( (string) wp_parse_url( $raw, PHP_URL_PATH ), '/' ) : '';
 
         if ( $home_path === '' ) {
             $new_path = '/' . $new_rel;
@@ -309,7 +332,8 @@ class SIT_Rewrite {
             return $url;
         }
 
-        $home_parsed = wp_parse_url( home_url() );
+        $raw         = self::get_raw_home_url();
+        $home_parsed = $raw ? wp_parse_url( $raw ) : false;
         if ( ! $home_parsed || empty( $home_parsed['host'] ) ) {
             return $url;
         }
@@ -451,7 +475,7 @@ class SIT_Rewrite {
         if ( self::should_bypass_routing() ) {
             return;
         }
-        if ( ! is_singular() && ! is_front_page() && ! is_home() && ! is_category() && ! is_tag() && ! is_tax() ) {
+        if ( ! is_singular() && ! is_front_page() && ! is_home() && ! is_category() && ! is_tag() && ! is_tax() && ! is_post_type_archive() ) {
             return;
         }
 
@@ -481,6 +505,21 @@ class SIT_Rewrite {
                 foreach ( SIT_Languages::get_active_languages() as $lang ) {
                     $urls[ $lang->code ] = self::localize_url( $link, $lang->code );
                 }
+            }
+        } elseif ( is_post_type_archive() ) {
+            $pt = get_query_var( 'post_type' );
+            if ( is_array( $pt ) ) {
+                $pt = reset( $pt );
+            }
+            if ( ! is_string( $pt ) || '' === $pt ) {
+                return;
+            }
+            $link = get_post_type_archive_link( $pt );
+            if ( ! $link ) {
+                return;
+            }
+            foreach ( SIT_Languages::get_active_languages() as $lang ) {
+                $urls[ $lang->code ] = self::localize_url( $link, $lang->code );
             }
         }
 
