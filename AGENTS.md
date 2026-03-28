@@ -78,7 +78,7 @@ Hər mərhələ aşağıdakı formatda icra olunur:
 
 ### FAZA 2: Çoxdillilik Plugin (`sit-multilang`) — **TAMAMLANDI** (2.1–2.5)
 
-> Növbəti iş: **FAZA 3** (`sit-developer`). Bu fazanı dəyişdirməyə ehtiyac varsa, aşağıdakı “Handoff” bölməsini oxuyun.
+> Növbəti iş: **FAZA 4** (`sit-developer-application`). `sit-multilang` üzərində dəyişiklik üçün aşağıdakı FAZA 2 “Handoff” bölməsini oxuyun.
 
 #### Mərhələ 2.1 — DB cədvəlləri və plugin aktivasiyası
 - [x] Plugin əsas faylı: `sit-multilang/sit-multilang.php`
@@ -164,41 +164,90 @@ Bu bölmə **yalnız `sit-multilang`** üzərində davam edən və ya inteqrasiy
 
 ---
 
-### FAZA 3: Universitet & Proqram Plugin (`sit-developer`)
+### FAZA 3: Universitet & Proqram Plugin (`sit-developer`) — **TAMAMLANDI** (3.1–3.4)
+
+> Növbəti iş: **FAZA 4** (`sit-developer-application`). Bu pluginə toxunacaq agentlər üçün aşağıdakı “Handoff” bölməsini oxuyun.
 
 #### Mərhələ 3.1 — University CPT
-- [ ] Plugin əsas faylı: `sit-developer/sit-developer.php`
-- [ ] CPT: `university` (admin UI, meta boxes)
-- [ ] Meta fields: tuition_fee_min, student_count, founded_year, global_ranking, rating, website_url, logo, cover_image
-- [ ] Taxonomy: `city` (İstanbul, Ankara, İzmir...)
-- [ ] Taxonomy: `university_type` (Dövlət, Özəl)
-- [ ] Multilang inteqrasiyası (başlıq, təsvir, slug tərcümələri)
+- [x] Plugin əsas faylı: `sit-developer/sit-developer.php`
+- [x] CPT: `university` (admin UI, meta boxes)
+- [x] Meta fields: tuition_fee_min, student_count, founded_year, global_ranking, rating, website_url, logo, cover_image
+- [x] Taxonomy: `city` (İstanbul, Ankara, İzmir...)
+- [x] Taxonomy: `university_type` (Dövlət, Özəl)
+- [x] Multilang inteqrasiyası (başlıq, təsvir, slug tərcümələri)
 - **Commit:** `[3.1] Developer plugin: University CPT və taxonomies`
 
 #### Mərhələ 3.2 — Program CPT
-- [ ] CPT: `program`
-- [ ] Meta fields: tuition_fee, duration, university_id (əlaqə), scholarship_available
-- [ ] Taxonomy: `degree_type` (Associate, Bachelor, Master, PhD)
-- [ ] Taxonomy: `program_language` (English, Turkish, Arabic...)
-- [ ] Taxonomy: `field_of_study` (Medicine, Engineering, Business...)
-- [ ] Multilang inteqrasiyası
+- [x] CPT: `program`
+- [x] Meta fields: tuition_fee, duration, university_id (əlaqə), scholarship_available
+- [x] Taxonomy: `degree_type` (Associate, Bachelor, Master, PhD)
+- [x] Taxonomy: `program_language` (English, Turkish, Arabic...)
+- [x] Taxonomy: `field_of_study` (Medicine, Engineering, Business...)
+- [x] Multilang inteqrasiyası
 - **Commit:** `[3.2] Developer plugin: Program CPT və taxonomies`
 
 #### Mərhələ 3.3 — Filtrasiya sistemi (REST API)
-- [ ] REST endpoint: `/wp-json/sit/v1/programs` (filter parametrləri ilə)
-- [ ] REST endpoint: `/wp-json/sit/v1/universities`
-- [ ] Filter parametrləri: degree, language, city, field, price_min, price_max, sort
-- [ ] Pagination dəstəyi
-- [ ] Cache layer (transient/Redis)
+- [x] REST endpoint: `/wp-json/sit/v1/programs` (filter parametrləri ilə)
+- [x] REST endpoint: `/wp-json/sit/v1/universities`
+- [x] Filter parametrləri: degree, language, city, field, price_min, price_max, sort
+- [x] Pagination dəstəyi
+- [x] Cache layer (transient/Redis)
 - **Commit:** `[3.3] Developer plugin: REST API filtrasiya sistemi`
 
 #### Mərhələ 3.4 — Əlavə data tipləri
-- [ ] CPT: `dormitory` (meta: university_id, price, distance, facilities)
-- [ ] CPT: `campus` (meta: university_id, address, lat/lng)
-- [ ] CPT: `scholarship` (meta: university_id, percentage, eligibility)
-- [ ] CPT: `faq` (meta: university_id, sort_order)
-- [ ] CPT: `review` (meta: university_id, rating, student_name, student_country)
+- [x] CPT: `dormitory` (meta: university_id, price, distance, facilities)
+- [x] CPT: `campus` (meta: university_id, address, lat/lng)
+- [x] CPT: `scholarship` (meta: university_id, percentage, eligibility)
+- [x] CPT: `faq` (meta: university_id, sort_order)
+- [x] CPT: `review` (meta: university_id, rating, student_name, student_country)
 - **Commit:** `[3.4] Developer plugin: Dormitory, Campus, Scholarship, FAQ, Review CPT-ləri`
+
+#### FAZA 3 — Növbəti agentlər üçün (vacib detallar)
+
+Bu bölmə **`sit-developer`** üzərində davam edən, REST/theme ilə inteqrasiya yazan və ya yeni CPT/meta əlavə edən agentlər üçündür.
+
+**Versiya və fayl yükləmə sırası**  
+- Plugin versiyası `SIT_DEVELOPER_VERSION` (`sit-developer.php`).  
+- `require` sırası: `class-sit-developer-activator` → `class-sit-university-cpt` → `class-sit-university-meta` → `class-sit-program-cpt` → `class-sit-program-meta` → `class-sit-extra-cpts` → `class-sit-extra-meta` → `class-sit-rest-api` → `class-sit-developer`.  
+- `SIT_Developer::__construct`: əvvəlcə `SIT_REST_API::register()`; sonra `init:0` textdomain; `init:5` — `SIT_University_CPT`, `SIT_Program_CPT`, `SIT_Extra_Cpts` (bu ardıcıllıqla universitet CPT-si əvvəl qeydiyyatdan keçir ki, əlavə CPT-lərin alt menyusu işləsin); `init:6` — üç meta sinfi.
+
+**Siniflər və CPT sabitləri**  
+- `SIT_University_CPT`: `POST_TYPE` = `university`, `TAX_CITY` = `city`, `TAX_TYPE` = `university_type`.  
+- `SIT_Program_CPT`: `POST_TYPE` = `program`, `TAX_DEGREE` = `degree_type`, `TAX_LANG` = `program_language`, `TAX_FIELD` = `field_of_study`.  
+- `SIT_Extra_Cpts`: `DORMITORY`, `CAMPUS`, `SCHOLARSHIP`, `FAQ`, `REVIEW` + `all()` bütün siyahını qaytarır. Bu beş CPT admin-də **`Universitetlər` alt menyusunda** (`show_in_menu` → `edit.php?post_type=university`).
+
+**Post meta açarları** (`register_post_meta` + `show_in_rest` — əsasən `wp_postmeta`)  
+- **Universitet:** `sit_tuition_fee_min`, `sit_student_count`, `sit_founded_year`, `sit_global_ranking`, `sit_rating`, `sit_website_url`, `sit_logo_id`, `sit_cover_image_id`.  
+- **Proqram:** `sit_tuition_fee`, `sit_duration`, `sit_university_id`, `sit_scholarship_available` (boolean).  
+- **Yataqxana:** `sit_university_id`, `sit_price`, `sit_distance`, `sit_facilities`.  
+- **Kampus:** `sit_university_id`, `sit_address`, `sit_latitude`, `sit_longitude`.  
+- **Təqaüd:** `sit_university_id`, `sit_percentage`, `sit_eligibility`.  
+- **FAQ:** `sit_university_id`, `sit_sort_order`.  
+- **Rəy:** `sit_university_id`, `sit_rating`, `sit_student_name`, `sit_student_country`.  
+
+**Qeyd:** `review` CPT-də `sit_rating` universitetdəki `sit_rating` ilə eyni **meta açarıdır**, lakin fərqli `post_type` üçün qeydiyyat olunub — qarışıqlıq yaratmır.
+
+**Rewrite slug-ları (qısa)**  
+- CPT arxiv/tək: `universitetler`, `proqramlar`, `yataqxana`, `kampus`, `teqaud`, `faq`, `rey` (əlavə CPT-lərdə `has_archive` = false).  
+- Taxonomiya: `seher`, `universitet-novu`, `derece-novu`, `proqram-dili`, `ixtisas-sahesi`.
+
+**Aktivasiya** (`SIT_Developer_Activator`)  
+- `SIT_University_CPT::register()`, `SIT_Program_CPT::register()`, `SIT_Extra_Cpts::register()`, sonra default terminlər (şəhər, universitet növü, dərəcə, proqram dili, ixtisas), `flush_rewrite_rules()`, `sit_developer_version` option.
+
+**Çoxdillilik (`sit-multilang`)**  
+- Bütün bu CPT və taxonomiyalar `show_ui` = true olduğu üçün tərcümə tab-ları **əlavə filter tələb etmədən** göstərilir (multilang default olaraq `show_ui` olan bütün post/tax tiplərini götürür). Yalnız UI-dan gizlədilmiş yeni CPT əlavə etsəniz və tərcümə istəsəniz `sit_multilang_supported_post_types` / `sit_multilang_supported_taxonomies` filterlərindən istifadə edin.
+
+**REST API (`SIT_REST_API`, namespace `sit/v1`)**  
+- Siyahı: `GET /wp-json/sit/v1/programs`, `GET /wp-json/sit/v1/universities` — sorğu parametrləri, cavab strukturu və `lang` davranışı üçün mövcud kodu `class-sit-rest-api.php`-də baxın.  
+- Tək yazı: `GET .../programs/{id}`, `GET .../universities/{id}`.  
+- **Keş:** transient açarları `sit_cache_prog_*`, `sit_cache_univ_*` + `sit_rest_cache_ver` (versiya dəyişəndə bütün siyahı keşləri etibarını itirir). Defolt TTL filterləri: `sit_rest_programs_cache_ttl`, `sit_rest_universities_cache_ttl` (defolt ~5 dəq).  
+- **Keş sıfırlama:** `program`, `university` və `SIT_Extra_Cpts::all()` üzrə `save_post`; həmçinin `city`, `university_type`, `degree_type`, `program_language`, `field_of_study` üçün `set_object_terms`.
+
+**Admin aktivlər**  
+- Universitet loqo/örtük: `assets/js/sit-university-meta-admin.js` (yalnız `university` post ekranında yüklənir).
+
+**Deploy / yeniləmə**  
+- CPT əlavə və ya rewrite dəyişikliyindən sonra production-da **Parametrlər → Daimi keçidlər → Yadda saxla** tövsiyə olunur.
 
 ---
 

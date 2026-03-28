@@ -103,7 +103,19 @@ wp_sit_strings        -- UI string tərcümələri (düymələr, menyu, statik m
 
 **Admin:** `sit-languages`, alt menyu `sit-ui-strings`. Shortcode `[sit_language_switcher]`, widget **SIT: Dil keçidi**.
 
-**İnteqrasiya (FAZA 3+):** CPT/taxonomiya dəstəyini `sit_multilang_supported_post_types` / `sit_multilang_supported_taxonomies` filterləri ilə genişləndirin. Frontda routing-dən çıxmaq üçün `sit_multilang_bypass_routing`.
+**İnteqrasiya:** `sit-developer` CPT-ləri `show_ui` ilə gəldiyi üçün tərcümə UI adətən avtomatikdir. Yalnız xüsusi CPT/tax gizlədilib tərcümə lazımdırsa `sit_multilang_supported_post_types` / `sit_multilang_supported_taxonomies` filterləri; frontda routing-dən çıxmaq üçün `sit_multilang_bypass_routing`.
+
+### sit-developer (FAZA 3 — hazırdır)
+
+**Qovluq:** `sit-developer/`. **Versiya:** `SIT_DEVELOPER_VERSION` (`sit-developer.php`).
+
+**CPT:** `university`, `program`, `dormitory`, `campus`, `scholarship`, `faq`, `review`. Əlavə beş CPT admin-də **Universitetlər** alt menyusundadır.
+
+**Taxonomiyalar (yalnız university/program):** `city`, `university_type` (universitet); `degree_type`, `program_language`, `field_of_study` (proqram).
+
+**REST:** `sit/v1` — `programs`, `programs/{id}`, `universities`, `universities/{id}`; filtr, səhifələmə, `lang`, transient keş (`sit_cache_*`, `sit_rest_cache_ver`). Ətraflı cədvəl və meta açarları üçün repo-dakı `AGENTS.md` FAZA 3 “Handoff” bölməsinə baxın.
+
+**Əsas fayllar:** `class-sit-university-cpt.php`, `class-sit-university-meta.php`, `class-sit-program-cpt.php`, `class-sit-program-meta.php`, `class-sit-extra-cpts.php`, `class-sit-extra-meta.php`, `class-sit-rest-api.php`, `class-sit-developer.php`, `class-sit-developer-activator.php`.
 
 Bu cədvəllər `sit-developer-application` plugin tərəfindən yaradılır:
 
