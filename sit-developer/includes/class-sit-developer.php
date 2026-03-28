@@ -1,0 +1,32 @@
+<?php
+/**
+ * Əsas plugin sinfi.
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+final class SIT_Developer {
+
+    private static ?self $instance = null;
+
+    public static function instance(): self {
+        if ( null === self::$instance ) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    private function __construct() {
+        add_action( 'init', [ $this, 'load_textdomain' ], 0 );
+        add_action( 'init', [ 'SIT_University_CPT', 'register' ], 5 );
+        add_action( 'init', [ 'SIT_University_Meta', 'register' ], 6 );
+    }
+
+    public function load_textdomain(): void {
+        load_plugin_textdomain(
+            'studyinturkey',
+            false,
+            dirname( SIT_DEVELOPER_BASENAME ) . '/languages'
+        );
+    }
+}
