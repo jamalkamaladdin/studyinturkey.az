@@ -1,0 +1,33 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (Tailwind build)
+node_modules/
+package-lock.json
+
+# Build output
+dist/
+build/
+
+# WordPress
+*.log
+wp-config.php
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Uploads
+uploads/
+
+# Cache
+*.cache
