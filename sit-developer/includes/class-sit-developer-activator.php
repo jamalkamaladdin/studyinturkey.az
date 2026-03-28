@@ -10,6 +10,7 @@ final class SIT_Developer_Activator {
     public static function activate( bool $network_wide = false ): void {
         SIT_University_CPT::register();
         SIT_Program_CPT::register();
+        SIT_Extra_Cpts::register();
         self::seed_default_terms();
         flush_rewrite_rules();
         update_option( 'sit_developer_version', SIT_DEVELOPER_VERSION );

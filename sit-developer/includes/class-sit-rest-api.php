@@ -29,7 +29,11 @@ final class SIT_REST_API {
         if ( wp_is_post_revision( $post_id ) ) {
             return;
         }
-        if ( in_array( $post->post_type, [ SIT_Program_CPT::POST_TYPE, SIT_University_CPT::POST_TYPE ], true ) ) {
+        $bump_types = array_merge(
+            [ SIT_Program_CPT::POST_TYPE, SIT_University_CPT::POST_TYPE ],
+            SIT_Extra_Cpts::all()
+        );
+        if ( in_array( $post->post_type, $bump_types, true ) ) {
             self::bump_cache();
         }
     }
