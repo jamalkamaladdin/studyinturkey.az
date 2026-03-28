@@ -3,7 +3,7 @@
  * Plugin Name: SIT Multilang
  * Plugin URI:  https://studyinturkey.az
  * Description: Custom multilingual system for StudyInTurkey.az — 6 languages with RTL support.
- * Version:     1.1.0
+ * Version:     1.2.0
  * Author:      StudyInTurkey
  * Author URI:  https://studyinturkey.az
  * Text Domain: studyinturkey
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SIT_MULTILANG_VERSION', '1.1.0' );
+define( 'SIT_MULTILANG_VERSION', '1.2.0' );
 define( 'SIT_MULTILANG_FILE', __FILE__ );
 define( 'SIT_MULTILANG_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SIT_MULTILANG_URL', plugin_dir_url( __FILE__ ) );
@@ -22,7 +22,9 @@ define( 'SIT_MULTILANG_BASENAME', plugin_basename( __FILE__ ) );
 
 require_once SIT_MULTILANG_DIR . 'includes/class-sit-db.php';
 require_once SIT_MULTILANG_DIR . 'includes/class-sit-languages.php';
+require_once SIT_MULTILANG_DIR . 'includes/class-sit-translations.php';
 require_once SIT_MULTILANG_DIR . 'includes/class-sit-activator.php';
+require_once SIT_MULTILANG_DIR . 'includes/sit-multilang-functions.php';
 
 register_activation_hook( __FILE__, [ 'SIT_Activator', 'activate' ] );
 register_deactivation_hook( __FILE__, [ 'SIT_Activator', 'deactivate' ] );
@@ -54,7 +56,9 @@ final class SIT_Multilang {
             static function (): void {
                 if ( is_admin() ) {
                     require_once SIT_MULTILANG_DIR . 'admin/class-sit-admin-languages.php';
+                    require_once SIT_MULTILANG_DIR . 'admin/class-sit-admin-translations.php';
                     SIT_Admin_Languages::init();
+                    SIT_Admin_Translations::init();
                 }
             },
             5

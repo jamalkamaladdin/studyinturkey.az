@@ -94,10 +94,10 @@ Hər mərhələ aşağıdakı formatda icra olunur:
 - **Commit:** `[2.2] Multilang plugin: Admin dil idarəetmə UI`
 
 #### Mərhələ 2.3 — Tərcümə UI (post/term edit ekranlarında)
-- [ ] Post edit ekranında dil tab-ları (az, en, ru, fa, ar, kk)
-- [ ] Hər tab-da: başlıq, təsvir, slug sahələri
-- [ ] Tərcümə save/update mexanizmi
-- [ ] Taxonomy term edit ekranında dil tab-ları
+- [x] Post edit ekranında dil tab-ları (az, en, ru, fa, ar, kk)
+- [x] Hər tab-da: başlıq, təsvir, slug sahələri
+- [x] Tərcümə save/update mexanizmi
+- [x] Taxonomy term edit ekranında dil tab-ları
 - **Commit:** `[2.3] Multilang plugin: Tərcümə UI tab sistemi`
 
 #### Mərhələ 2.4 — URL routing
