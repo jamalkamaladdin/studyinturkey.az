@@ -78,7 +78,7 @@ Hər mərhələ aşağıdakı formatda icra olunur:
 
 ### FAZA 2: Çoxdillilik Plugin (`sit-multilang`) — **TAMAMLANDI** (2.1–2.5)
 
-> Növbəti iş: **FAZA 4** (`sit-developer-application`). `sit-multilang` üzərində dəyişiklik üçün aşağıdakı FAZA 2 “Handoff” bölməsini oxuyun.
+> Ümumi növbəti iş: **FAZA 5** (`sit-developer-theme`). `sit-multilang` üzərində dəyişiklik üçün aşağıdakı FAZA 2 “Handoff” bölməsini oxuyun.
 
 #### Mərhələ 2.1 — DB cədvəlləri və plugin aktivasiyası
 - [x] Plugin əsas faylı: `sit-multilang/sit-multilang.php`
@@ -166,7 +166,7 @@ Bu bölmə **yalnız `sit-multilang`** üzərində davam edən və ya inteqrasiy
 
 ### FAZA 3: Universitet & Proqram Plugin (`sit-developer`) — **TAMAMLANDI** (3.1–3.4)
 
-> Növbəti iş: **FAZA 4** (`sit-developer-application`). Bu pluginə toxunacaq agentlər üçün aşağıdakı “Handoff” bölməsini oxuyun.
+> Növbəti iş: **FAZA 5** (`sit-developer-theme`). Müraciət plugininə (`sit-developer-application`) toxunacaq və ya REST/theme ilə birləşdirəcək agentlər üçün `AGENTS.md` FAZA 4 “Handoff” bölməsini oxuyun.
 
 #### Mərhələ 3.1 — University CPT
 - [x] Plugin əsas faylı: `sit-developer/sit-developer.php`
@@ -251,30 +251,90 @@ Bu bölmə **`sit-developer`** üzərində davam edən, REST/theme ilə inteqras
 
 ---
 
-### FAZA 4: Müraciət Sistemi Plugin (`sit-developer-application`)
+### FAZA 4: Müraciət Sistemi Plugin (`sit-developer-application`) — **TAMAMLANDI** (4.1–4.3)
+
+> Növbəti iş: **FAZA 5** (`sit-developer-theme`). Bu pluginə genişləndirmə (REST, blok editor, əlavə sahələr) yazan agentlər üçün aşağıdakı “Handoff” bölməsini oxuyun.
 
 #### Mərhələ 4.1 — Müraciət formu və fayl yükləmə
-- [ ] Plugin əsas faylı
-- [ ] Custom DB table: `wp_sit_applications`
-- [ ] Custom DB table: `wp_sit_application_documents`
-- [ ] Frontend müraciət formu (shortcode/block)
-- [ ] Fayl yükləmə (pasport, transkript, şəkil)
-- [ ] Form validation
+- [x] Plugin əsas faylı
+- [x] Custom DB table: `wp_sit_applications`
+- [x] Custom DB table: `wp_sit_application_documents`
+- [x] Frontend müraciət formu (shortcode/block)
+- [x] Fayl yükləmə (pasport, transkript, şəkil)
+- [x] Form validation
 - **Commit:** `[4.1] Application plugin: Müraciət formu və fayl yükləmə`
 
 #### Mərhələ 4.2 — İstifadəçi dashboard
-- [ ] İstifadəçi qeydiyyatı (telefon, email, ad)
-- [ ] Login/Register səhifələri
-- [ ] Dashboard: müraciət siyahısı, status
-- [ ] Müraciət detalları səhifəsi
+- [x] İstifadəçi qeydiyyatı (telefon, email, ad)
+- [x] Login/Register səhifələri
+- [x] Dashboard: müraciət siyahısı, status
+- [x] Müraciət detalları səhifəsi
 - **Commit:** `[4.2] Application plugin: İstifadəçi dashboard`
 
 #### Mərhələ 4.3 — Admin idarəetmə və bildirişlər
-- [ ] Admin: müraciət siyahısı (WP_List_Table)
-- [ ] Admin: müraciət detalları və status dəyişmə
-- [ ] Email bildirişlər (yeni müraciət, status dəyişikliyi)
-- [ ] WhatsApp inteqrasiyası (link)
+- [x] Admin: müraciət siyahısı (WP_List_Table)
+- [x] Admin: müraciət detalları və status dəyişmə
+- [x] Email bildirişlər (yeni müraciət, status dəyişikliyi)
+- [x] WhatsApp inteqrasiyası (link)
 - **Commit:** `[4.3] Application plugin: Admin idarəetmə və email bildirişlər`
+
+#### FAZA 4 — Növbəti agentlər üçün (vacib detallar)
+
+Bu bölmə **`sit-developer-application`** üzərində davam edən, **theme** (`sit-developer-theme`) ilə səhifə/shortcode inteqrasiyası yazan və ya **REST / blok** əlavə edən agentlər üçündür.
+
+**Versiya və `require` sırası**  
+- Plugin versiyası `SIT_APPLICATION_VERSION` (`sit-developer-application.php`). DB versiyası `sit_application_db_version` — `SIT_Developer_Application::maybe_upgrade_db()` `dbDelta` çağırır.  
+- Fayl yükləmə sırası: `class-sit-application-db` → `class-sit-application-activator` → `class-sit-application-queries` → `class-sit-application-account` → `class-sit-application-notifications` → `class-sit-application-handler` → `class-sit-application-form` → `class-sit-application-admin` → `class-sit-developer-application`.  
+- **`class-sit-application-list-table.php`** yalnız admin siyahısı renderində `require` olunur (frontend-də `WP_List_Table` yüklənmir).
+
+**Verilənlər bazası**  
+- `wp_sit_applications`: `applicant_name`, `applicant_email`, `applicant_phone`, `program_id` (WP `program` CPT), `status` (məs. `pending`, `under_review`, `processing`, `approved`, `rejected`), `applicant_message`, `user_id` (NULL ola bilər — qonaq müraciəti), `ip_address`, `created_at`, `updated_at`. İndekslər: `program_id`, `status`, `applicant_email`, `user_id`, `created_at`.  
+- `wp_sit_application_documents`: `application_id`, `document_type` (`passport` | `transcript` | `photo`), `file_path` (**uploads `basedir`-ə nisbətən** nisbi yol), `file_name`, `mime_type`, `file_size`, `created_at`.
+
+**Fayl saxlama**  
+- Yükləmə qovluğu: `uploads/sit-applications/Y/m/` (`SIT_Application_Handler::filter_upload_dir`). Maksimum ölçü filter: `sit_application_max_upload_bytes` (defolt 5 MB). MIME alt dəstəyi: `sit_application_handle_upload_mimes`.
+
+**Shortcode-lar (theme üçün)**  
+- `[sit_application_form]` — atribut: `program_id` (əvvəlcədən seçilmiş proqram). Giriş edən üçün ad/e-poçt/telefon user meta ilə doldurulur (`sit_applicant_phone`).  
+- `[sit_auth_register]` — `login_url`, `portal_url`. Qeydiyyatdan sonra uğurlu yönləndirmə `sit_reg_portal` ilə (adətən portal səhifəsi).  
+- `[sit_auth_login]` — `register_url`, `portal_url`, `redirect_to` (boşdursa portal).  
+- `[sit_applicant_portal]` — `login_url`, `register_url`. Detal: eyni səhifədə `?sit_my_app={id}` (yalnız `user_id` uyğun gələn müraciətlər portalda görünür; qonaq müraciətləri bağlanmır).
+
+**İstifadəçi**  
+- Rol: `subscriber`. `user_login` = `sanitize_user( $email, false )` (adətən tam e-poçt). Telefon: user meta açarı `sit_applicant_phone` (`SIT_Application_Account::META_PHONE`).
+
+**Admin**  
+- Menyu: **Müraciətlər** (`sit-applications`), alt: **Siyahı**, **Parametrlər** (`sit-applications-settings`). İcazə: `manage_options`.  
+- Siyahı: axtarış, sıralama, ekran seçimi `sit_applications_per_page`.  
+- Detal: status yeniləmə, sənəd **Yüklə** (nonce `sit_app_download_doc`, yol yalnız `uploads` altında).  
+- WhatsApp: parametrlərdə ofis nömrəsi (rəqəmlər); detalda `wa.me` linki + hazır mətn (API yox, yalnız link).
+
+**Options (aktivasiyada default, uninstall-da silinir)**  
+- `sit_application_notify_admin_new`, `sit_application_notify_applicant_status` (`1`/`0`).  
+- `sit_application_notify_extra_emails` (vergüllə əlavə admin ünvanları; əsas `admin_email` həmişə daxildir).  
+- `sit_application_whatsapp_number` (yalnız rəqəmlər saxlanılır).
+
+**Hook və filterlər**  
+- `do_action( 'sit_application_created', $application_id )` — müraciət + bütün sənədlər uğurla yazılandan sonra.  
+- `do_action( 'sit_application_status_changed', $application_id, $old_status, $new_status, $old_row )` — admin status saxlanandan sonra.  
+- `sit_application_account_urls` — `login` / `register` / `portal` default URL-ləri (theme `sit_multilang` ilə `SIT_Rewrite::localize_url()` birləşdirmək olar).  
+- `sit_application_allowed_statuses` — icazə verilən status siyahısı (admin + etiketlər).  
+- `sit_application_status_labels` — status etiketi (namizəd UI və e-poçt üçün).  
+- Bildiriş: `sit_application_admin_notification_recipients`, `sit_application_email_admin_new_subject` / `_body`, `sit_application_email_status_subject` / `_body`, `sit_application_mail_headers`.
+
+**Təhlükəsizlik**  
+- Müraciət formu: nonce, `admin-post.php`, proqram yoxlaması (`publish` + `program` CPT).  
+- Redirect: `wp_validate_redirect`.  
+- Admin sənəd yükləməsi: yalnız `manage_options`, path traversal mühafizəsi.
+
+**REST**  
+- Hazırda müraciət cədvəlləri üçün **REST endpoint yoxdur** — lazım olsa yeni namespace (`sit/v1` ilə uyğunlaşdırılmış) və icazə modeli əlavə edin.
+
+**Uninstall**  
+- `uninstall.php`: hər iki cədvəl + `sit_application_db_version` və bildiriş/WhatsApp option-ları.
+
+**Əsas fayllar**  
+- `sit-developer-application.php`, `uninstall.php`, `includes/class-sit-developer-application.php`, `class-sit-application-db.php`, `class-sit-application-activator.php`, `class-sit-application-queries.php`, `class-sit-application-handler.php`, `class-sit-application-account.php`, `class-sit-application-form.php`, `class-sit-application-notifications.php`, `class-sit-application-admin.php`, `class-sit-application-list-table.php`, `assets/css/sit-application-form.css`, `assets/css/sit-application-account.css`.
 
 ---
 

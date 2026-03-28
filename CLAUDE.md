@@ -124,6 +124,16 @@ wp_sit_applications          -- Müraciətlər
 wp_sit_application_documents -- Yüklənmiş sənədlər
 ```
 
+### sit-developer-application (FAZA 4 — hazırdır)
+
+**Qovluq:** `sit-developer-application/`. **Versiya:** `SIT_APPLICATION_VERSION` (`sit-developer-application.php`).
+
+**Qısa funksionallıq:** shortcode müraciət formu (pasport/transkript/şəkil), namizəd qeydiyyat/giriş/portal (`?sit_my_app=id`), admin **Müraciətlər** menyusu (siyahı, detal, status, sənəd yükləmə), e-poçt bildirişləri, parametrlərdə WhatsApp (`wa.me`) linki.
+
+**Shortcode-lar:** `[sit_application_form]`, `[sit_auth_register]`, `[sit_auth_login]`, `[sit_applicant_portal]`.
+
+**Ətraflı:** cədvəl sahələri, hook/filterlər, option-lar, təhlükəsizlik və theme inteqrasiyası üçün repo-dakı **`AGENTS.md` FAZA 4 “Handoff”** bölməsi.
+
 ## Naming Conventions
 
 | Nə | Format | Nümunə |
