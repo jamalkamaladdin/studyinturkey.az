@@ -6,8 +6,6 @@
 defined( 'ABSPATH' ) || exit;
 
 $account = sit_theme_account_urls();
-$login   = sit_theme_localize_url( $account['login'] );
-$reg     = sit_theme_localize_url( $account['register'] );
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -74,9 +72,6 @@ $reg     = sit_theme_localize_url( $account['register'] );
 				<a class="hidden rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 sm:inline-block dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800" href="<?php echo esc_url( sit_theme_localize_url( $account['portal'] ) ); ?>">
 					<?php esc_html_e( 'Kabinet', 'studyinturkey' ); ?>
 				</a>
-			<?php else : ?>
-				<a class="hidden rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 sm:inline-block dark:text-slate-300 dark:hover:text-white" href="<?php echo esc_url( $login ); ?>"><?php esc_html_e( 'Giriş', 'studyinturkey' ); ?></a>
-				<a class="rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 dark:bg-brand-600 dark:hover:bg-brand-500" href="<?php echo esc_url( $reg ); ?>"><?php esc_html_e( 'Qeydiyyat', 'studyinturkey' ); ?></a>
 			<?php endif; ?>
 		</div>
 	</div>

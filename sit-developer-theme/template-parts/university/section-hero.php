@@ -87,12 +87,12 @@ $programs_a  = sit_theme_programs_archive_url();
 					</p>
 				<?php endif; ?>
 				<nav class="mt-6 flex flex-wrap gap-2 text-sm" aria-label="<?php esc_attr_e( 'Səhifə bölmələri', 'studyinturkey' ); ?>">
-					<a href="#programs" class="rounded-full bg-white/10 px-3 py-1.5 font-medium hover:bg-white/20"><?php esc_html_e( 'Proqramlar', 'studyinturkey' ); ?></a>
-					<a href="#admission-requirements" class="rounded-full bg-white/10 px-3 py-1.5 font-medium hover:bg-white/20"><?php esc_html_e( 'Qəbul', 'studyinturkey' ); ?></a>
-					<a href="<?php echo esc_url( $dorms_sub ); ?>" class="rounded-full bg-white/10 px-3 py-1.5 font-medium hover:bg-white/20"><?php esc_html_e( 'Yataqxanalar', 'studyinturkey' ); ?></a>
-					<a href="#campus" class="rounded-full bg-white/10 px-3 py-1.5 font-medium hover:bg-white/20"><?php esc_html_e( 'Kampus', 'studyinturkey' ); ?></a>
-					<a href="<?php echo esc_url( $programs_a ); ?>" class="rounded-full bg-brand-500/90 px-3 py-1.5 font-semibold text-white hover:bg-brand-400"><?php esc_html_e( 'Müraciət et', 'studyinturkey' ); ?></a>
-					<a href="<?php echo esc_url( $admit_sub ); ?>" class="rounded-full bg-white/10 px-3 py-1.5 font-medium hover:bg-white/20"><?php esc_html_e( 'Qəbul tələbləri (tam)', 'studyinturkey' ); ?></a>
+					<a href="#programs" class="rounded-full border border-white/30 bg-white/20 px-3.5 py-1.5 font-medium backdrop-blur-sm hover:bg-white/30"><?php esc_html_e( 'Proqramlar', 'studyinturkey' ); ?></a>
+					<a href="#admission-requirements" class="rounded-full border border-white/30 bg-white/20 px-3.5 py-1.5 font-medium backdrop-blur-sm hover:bg-white/30"><?php esc_html_e( 'Qəbul', 'studyinturkey' ); ?></a>
+					<a href="<?php echo esc_url( $dorms_sub ); ?>" class="rounded-full border border-white/30 bg-white/20 px-3.5 py-1.5 font-medium backdrop-blur-sm hover:bg-white/30"><?php esc_html_e( 'Yataqxanalar', 'studyinturkey' ); ?></a>
+					<a href="#campus" class="rounded-full border border-white/30 bg-white/20 px-3.5 py-1.5 font-medium backdrop-blur-sm hover:bg-white/30"><?php esc_html_e( 'Kampus', 'studyinturkey' ); ?></a>
+					<a href="<?php echo esc_url( $programs_a ); ?>" class="rounded-full bg-brand-500 px-4 py-2 font-semibold text-white shadow-lg ring-1 ring-brand-400/50 hover:bg-brand-400"><?php esc_html_e( 'Müraciət et', 'studyinturkey' ); ?></a>
+					<a href="<?php echo esc_url( $admit_sub ); ?>" class="rounded-full border border-white/30 bg-white/20 px-3.5 py-1.5 font-medium backdrop-blur-sm hover:bg-white/30"><?php esc_html_e( 'Qəbul tələbləri (tam)', 'studyinturkey' ); ?></a>
 				</nav>
 			</div>
 			<dl class="grid grid-cols-2 gap-4 rounded-2xl bg-white/10 p-4 text-sm backdrop-blur sm:grid-cols-4 lg:max-w-xl lg:grid-cols-2">

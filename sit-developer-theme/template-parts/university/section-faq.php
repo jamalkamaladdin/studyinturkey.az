@@ -1,6 +1,6 @@
 <?php
 /**
- * FAQ.
+ * FAQ — accordion format.
  *
  * @var int $university_id
  */
@@ -18,24 +18,29 @@ if ( ! $q->have_posts() ) {
 }
 ?>
 <section class="scroll-mt-24" id="faq" aria-labelledby="sit-faq-title">
-	<h2 id="sit-faq-title" class="text-2xl font-bold text-slate-900"><?php esc_html_e( 'Tez-tez verilən suallar', 'studyinturkey' ); ?></h2>
-	<dl class="mt-6 space-y-3">
+	<h2 id="sit-faq-title" class="text-2xl font-bold text-slate-900 dark:text-white"><?php esc_html_e( 'Tez-tez verilən suallar', 'studyinturkey' ); ?></h2>
+	<div class="mt-6 space-y-3">
 		<?php
+		$first = true;
 		while ( $q->have_posts() ) :
 			$q->the_post();
 			$pid   = get_the_ID();
 			$qtext = sit_theme_get_post_title( $pid );
 			$ans   = sit_theme_get_post_content_filtered( $pid );
 			?>
-			<div class="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
-				<dt class="font-semibold text-slate-900"><?php echo esc_html( $qtext ); ?></dt>
-				<dd class="sit-entry-content mt-2 text-sm text-slate-600">
+			<details class="group rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900" <?php echo $first ? 'open' : ''; ?>>
+				<summary class="flex cursor-pointer items-center justify-between px-5 py-4 text-base font-semibold text-slate-900 dark:text-white">
+					<?php echo esc_html( $qtext ); ?>
+					<svg class="h-5 w-5 shrink-0 text-slate-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+				</summary>
+				<div class="sit-entry-content border-t border-slate-200 px-5 py-4 text-sm text-slate-600 leading-relaxed dark:border-slate-700 dark:text-slate-400">
 					<?php echo $ans; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				</dd>
-			</div>
+				</div>
+			</details>
 			<?php
+			$first = false;
 		endwhile;
 		wp_reset_postdata();
 		?>
-	</dl>
+	</div>
 </section>

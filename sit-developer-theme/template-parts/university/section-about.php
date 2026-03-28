@@ -68,14 +68,50 @@ if ( $has_student ) {
 
 	<div class="mt-6 grid gap-8 <?php echo ! empty( $gallery_ids ) ? 'lg:grid-cols-2 lg:items-start' : ''; ?>">
 		<?php if ( ! empty( $gallery_ids ) ) : ?>
-			<div class="sit-uni-slider flex snap-x snap-mandatory gap-3 overflow-x-auto rounded-2xl pb-2" style="scroll-padding:0;">
-				<?php foreach ( $gallery_ids as $aid ) :
-					$img_url = wp_get_attachment_image_url( $aid, 'large' );
-					if ( ! $img_url ) { continue; }
-					?>
-					<img src="<?php echo esc_url( $img_url ); ?>" alt="" class="h-64 w-auto max-w-[80%] shrink-0 snap-start rounded-xl object-cover lg:h-72" loading="lazy" />
-				<?php endforeach; ?>
+			<div class="relative overflow-hidden rounded-2xl" data-sit-about-slider>
+				<div class="flex transition-transform duration-300" data-sit-about-track>
+					<?php foreach ( $gallery_ids as $aid ) :
+						$img_url = wp_get_attachment_image_url( $aid, 'large' );
+						if ( ! $img_url ) { continue; }
+						?>
+						<img src="<?php echo esc_url( $img_url ); ?>" alt="" class="h-72 w-full shrink-0 object-cover lg:h-80" loading="lazy" />
+					<?php endforeach; ?>
+				</div>
+				<?php if ( count( $gallery_ids ) > 1 ) : ?>
+					<button type="button" class="absolute start-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md hover:bg-white" data-sit-about-prev aria-label="<?php esc_attr_e( 'Əvvəlki', 'studyinturkey' ); ?>">
+						<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
+					</button>
+					<button type="button" class="absolute end-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md hover:bg-white" data-sit-about-next aria-label="<?php esc_attr_e( 'Növbəti', 'studyinturkey' ); ?>">
+						<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
+					</button>
+					<div class="absolute bottom-3 start-0 end-0 flex justify-center gap-1.5" data-sit-about-dots>
+						<?php for ( $di = 0; $di < count( $gallery_ids ); $di++ ) : ?>
+							<button type="button" class="h-2 w-2 rounded-full <?php echo 0 === $di ? 'bg-white' : 'bg-white/50'; ?>" data-sit-about-dot="<?php echo $di; ?>"></button>
+						<?php endfor; ?>
+					</div>
+				<?php endif; ?>
 			</div>
+			<script>
+			(function(){
+				var s = document.querySelector('[data-sit-about-slider]');
+				if (!s) return;
+				var track = s.querySelector('[data-sit-about-track]');
+				var imgs = track.querySelectorAll('img');
+				var dots = s.querySelectorAll('[data-sit-about-dot]');
+				var cur = 0, total = imgs.length;
+				if (total < 2) return;
+				function go(i) {
+					cur = (i + total) % total;
+					track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+					dots.forEach(function(d, j) { d.className = d.className.replace(/bg-white(\/50)?/g, '') + (j === cur ? ' bg-white' : ' bg-white/50'); });
+				}
+				var prev = s.querySelector('[data-sit-about-prev]');
+				var next = s.querySelector('[data-sit-about-next]');
+				if (prev) prev.addEventListener('click', function() { go(cur - 1); });
+				if (next) next.addEventListener('click', function() { go(cur + 1); });
+				dots.forEach(function(d) { d.addEventListener('click', function() { go(parseInt(d.getAttribute('data-sit-about-dot'), 10)); }); });
+			})();
+			</script>
 		<?php endif; ?>
 
 		<div class="space-y-3 <?php echo ! empty( $gallery_ids ) ? '' : 'lg:col-span-2'; ?>">

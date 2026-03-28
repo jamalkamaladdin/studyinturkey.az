@@ -16,7 +16,7 @@ while ( have_posts() ) :
 		get_template_part( 'template-parts/university/section', 'hero', [ 'university_id' => $university_id ] );
 		?>
 		<div class="sit-container py-10 lg:py-14">
-			<div class="mx-auto max-w-5xl space-y-14">
+			<div class="space-y-14">
 				<?php
 				get_template_part( 'template-parts/university/section', 'why-choose', [ 'university_id' => $university_id ] );
 				get_template_part( 'template-parts/university/section', 'about', [ 'university_id' => $university_id ] );
