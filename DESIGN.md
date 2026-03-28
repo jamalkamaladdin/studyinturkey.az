@@ -5,7 +5,7 @@ Bu fayl saytın vizual dizayn qaydalarını təsvir edir. Bütün AI agentlər v
 ## Dizayn Fəlsəfəsi
 
 - **Minimalist və təmiz** — StudyLeo.com kimi sadə, light tonlarda
-- **Rəngli backgroundlar YOXDUR** — ağ/açıq boz fon, rəng yalnız mətn, düymə və aksentlərdə
+- **Rəngli backgroundlar YOXDUR** — çox açıq boz fon (`#f7f7f7`), rəng yalnız mətn, düymə və aksentlərdə
 - **Çoxlu whitespace** — elementlər arasında geniş boşluq
 - **Professional görünüş** — təhsil sektoru üçün etibarlı, ciddi
 
@@ -61,9 +61,10 @@ secondary-100: #ffecec  ← demək olar ağ
 ### Neytral Rənglər
 
 ```
-white:       #ffffff    ← əsas fon
-gray-50:     #f9fafb    ← alternativ section fonu
-gray-100:    #f3f4f6    ← card fonu, input fonu
+white:       #ffffff    ← kartlar, header, modal, dropdown fonu
+page-bg:     #f7f7f7    ← SAYT ARXA FONU (body background) — ağla bozun arası, ~10% boz
+gray-50:     #f9fafb    ← alternativ section fonu (page-bg ilə demək olar eyni)
+gray-100:    #f3f4f6    ← input fonu, hover state
 gray-200:    #e5e7eb    ← borderlər, divider
 gray-300:    #d1d5db    ← disabled state
 gray-400:    #9ca3af    ← placeholder text
@@ -195,9 +196,11 @@ Disabled:
 
 ### Kartlar (Universitet/Proqram)
 
+Arxa fon açıq boz (`#f7f7f7`) olduğu üçün kartlar ağ (`#ffffff`) olacaq — bu kontrast kartları vizual olaraq ayırır.
+
 ```
 Card:
-  background: white
+  background: #ffffff (white — page-bg-dən fərqlənir)
   border: 1px solid #e5e7eb (gray-200)
   border-radius: 12px
   padding: 24px
@@ -427,6 +430,7 @@ module.exports = {
           800: '#cc2626',
           900: '#991d1d',
         },
+        'page-bg': '#f7f7f7',
       },
       fontFamily: {
         heading: ['Inter', 'Segoe UI', 'sans-serif'],
@@ -445,4 +449,4 @@ module.exports = {
 
 - **Dizayn ilhamı:** https://studyleo.com/ (minimalist, light, professional)
 - **Fərqlər:** Bizim rəng sxemimiz yaşıl/qırmızı, StudyLeo mavi/ağ
-- **Əsas prinsip:** Rəngli backgroundlar yoxdur, ağ fon üzərində təmiz tipografiya və minimal aksentlər
+- **Əsas prinsip:** Rəngli backgroundlar yoxdur, açıq boz fon (#f7f7f7) üzərində ağ kartlar, təmiz tipografiya və minimal aksentlər
