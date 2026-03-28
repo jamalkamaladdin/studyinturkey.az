@@ -107,6 +107,11 @@ final class SIT_Application_Handler {
             self::redirect_with_error( $redirect, [ $upload_result->get_error_message() ] );
         }
 
+        // Müraciət uğurla yaradıldı (sənədlər daxil).
+        do_action( 'sit_application_created', $application_id );
+
+        SIT_Application_Notifications::maybe_notify_admin_new( $application_id );
+
         self::redirect_with_success( $redirect );
     }
 

@@ -22,6 +22,7 @@ final class SIT_Developer_Application {
         add_action( 'init', [ 'SIT_Application_Handler', 'register' ], 9 );
         add_action( 'init', [ 'SIT_Application_Account', 'register' ], 10 );
         add_action( 'init', [ 'SIT_Application_Form', 'register' ], 11 );
+        add_action( 'admin_init', [ 'SIT_Application_Admin', 'register' ], 1 );
     }
 
     public function load_textdomain(): void {
