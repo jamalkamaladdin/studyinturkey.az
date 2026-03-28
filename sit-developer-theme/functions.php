@@ -26,6 +26,16 @@ require_once SIT_THEME_DIR . '/inc/template-functions.php';
 require_once SIT_THEME_DIR . '/inc/university-subpages.php';
 require_once SIT_THEME_DIR . '/inc/query-filters.php';
 require_once SIT_THEME_DIR . '/inc/contact-form.php';
+
+/* Logo SVG-yə height/width əlavə et ki, header-dən kənara çıxmasın */
+add_filter( 'get_custom_logo', function ( string $html ): string {
+	// img və ya svg elementinə style əlavə et.
+	return str_replace(
+		[ 'class="custom-logo"' ],
+		[ 'class="custom-logo" style="height:36px;width:auto;max-height:36px;"' ],
+		$html
+	);
+} );
 require_once SIT_THEME_DIR . '/inc/seo-sitemap.php';
 require_once SIT_THEME_DIR . '/inc/seo.php';
 require_once SIT_THEME_DIR . '/inc/performance.php';

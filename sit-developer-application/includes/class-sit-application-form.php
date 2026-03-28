@@ -143,29 +143,7 @@ final class SIT_Application_Form {
                                 <label for="sit_app_phone"><?php esc_html_e( 'Telefon (WhatsApp mümkünsə)', 'studyinturkey' ); ?> <span class="required">*</span></label>
                                 <span class="sit-app-phone-wrap">
                                     <select name="sit_app_phone_code" class="sit-app-phone-code">
-                                        <option value="+994">🇦🇿 +994</option>
-                                        <option value="+90">🇹🇷 +90</option>
-                                        <option value="+7">🇷🇺 +7</option>
-                                        <option value="+98">🇮🇷 +98</option>
-                                        <option value="+966">🇸🇦 +966</option>
-                                        <option value="+971">🇦🇪 +971</option>
-                                        <option value="+962">🇯🇴 +962</option>
-                                        <option value="+964">🇮🇶 +964</option>
-                                        <option value="+993">🇹🇲 +993</option>
-                                        <option value="+996">🇰🇬 +996</option>
-                                        <option value="+998">🇺🇿 +998</option>
-                                        <option value="+992">🇹🇯 +992</option>
-                                        <option value="+995">🇬🇪 +995</option>
-                                        <option value="+380">🇺🇦 +380</option>
-                                        <option value="+49">🇩🇪 +49</option>
-                                        <option value="+44">🇬🇧 +44</option>
-                                        <option value="+1">🇺🇸 +1</option>
-                                        <option value="+33">🇫🇷 +33</option>
-                                        <option value="+92">🇵🇰 +92</option>
-                                        <option value="+20">🇪🇬 +20</option>
-                                        <option value="+212">🇲🇦 +212</option>
-                                        <option value="+213">🇩🇿 +213</option>
-                                        <option value="+234">🇳🇬 +234</option>
+                                        <?php if ( function_exists( 'sit_theme_phone_code_options' ) ) { sit_theme_phone_code_options(); } else { echo '<option value="+994">🇦🇿 +994</option><option value="+90">🇹🇷 +90</option>'; } ?>
                                     </select>
                                     <input type="tel" id="sit_app_phone" name="sit_app_phone" required maxlength="20" autocomplete="tel" placeholder="50 123 45 67"
                                         value="<?php echo esc_attr( $ov( 'sit_app_phone' ) ); ?>" />

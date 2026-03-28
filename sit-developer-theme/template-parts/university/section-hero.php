@@ -115,9 +115,9 @@ if ( function_exists( 'sit_theme_university_sub_url' ) ) {
 </section>
 
 <!-- Konsultasiya popup -->
-<div id="sit-consult-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="sit-consult-title">
+<div id="sit-consult-modal" style="display:none;" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="sit-consult-title">
 	<div class="relative mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl sm:p-8 dark:bg-slate-900">
-		<button type="button" data-sit-consult-close class="absolute end-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200" aria-label="<?php esc_attr_e( 'Bağla', 'studyinturkey' ); ?>">
+		<button type="button" data-sit-consult-close class="absolute end-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200" aria-label="Bağla">
 			<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
 		</button>
 
@@ -138,30 +138,8 @@ if ( function_exists( 'sit_theme_university_sub_url' ) ) {
 			<div>
 				<label for="sit_consult_phone" class="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300"><?php esc_html_e( 'Telefon', 'studyinturkey' ); ?> <span class="text-red-500">*</span></label>
 				<div class="flex gap-2">
-					<select id="sit_consult_phone_code" name="sit_consult_phone_code" class="w-28 shrink-0 rounded-lg border border-slate-300 bg-white px-2 py-2.5 text-sm text-slate-700 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white">
-						<option value="+994">🇦🇿 +994</option>
-						<option value="+90">🇹🇷 +90</option>
-						<option value="+7">🇷🇺 +7</option>
-						<option value="+98">🇮🇷 +98</option>
-						<option value="+966">🇸🇦 +966</option>
-						<option value="+971">🇦🇪 +971</option>
-						<option value="+962">🇯🇴 +962</option>
-						<option value="+964">🇮🇶 +964</option>
-						<option value="+993">🇹🇲 +993</option>
-						<option value="+996">🇰🇬 +996</option>
-						<option value="+998">🇺🇿 +998</option>
-						<option value="+992">🇹🇯 +992</option>
-						<option value="+995">🇬🇪 +995</option>
-						<option value="+380">🇺🇦 +380</option>
-						<option value="+49">🇩🇪 +49</option>
-						<option value="+44">🇬🇧 +44</option>
-						<option value="+1">🇺🇸 +1</option>
-						<option value="+33">🇫🇷 +33</option>
-						<option value="+92">🇵🇰 +92</option>
-						<option value="+20">🇪🇬 +20</option>
-						<option value="+212">🇲🇦 +212</option>
-						<option value="+213">🇩🇿 +213</option>
-						<option value="+234">🇳🇬 +234</option>
+					<select id="sit_consult_phone_code" name="sit_consult_phone_code" class="w-32 shrink-0 rounded-lg border border-slate-300 bg-white px-2 py-2.5 text-sm text-slate-700 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white">
+						<?php sit_theme_phone_code_options(); ?>
 					</select>
 					<input type="tel" id="sit_consult_phone" name="sit_consult_phone" required maxlength="20" autocomplete="tel" placeholder="50 123 45 67"
 						class="w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white" />
@@ -178,7 +156,7 @@ if ( function_exists( 'sit_theme_university_sub_url' ) ) {
 				<?php esc_html_e( 'Göndər', 'studyinturkey' ); ?>
 			</button>
 
-			<div id="sit-consult-result" class="hidden rounded-lg p-3 text-center text-sm font-medium"></div>
+			<div id="sit-consult-result" style="display:none;" class="rounded-lg p-3 text-center text-sm font-medium"></div>
 		</form>
 	</div>
 </div>
@@ -186,12 +164,12 @@ if ( function_exists( 'sit_theme_university_sub_url' ) ) {
 (function(){
 	var modal=document.getElementById('sit-consult-modal');
 	if(!modal)return;
-	function open(){modal.classList.remove('hidden');modal.classList.add('flex');document.body.style.overflow='hidden';}
-	function close(){modal.classList.add('hidden');modal.classList.remove('flex');document.body.style.overflow='';}
+	function open(){modal.style.display='flex';document.body.style.overflow='hidden';}
+	function close(){modal.style.display='none';document.body.style.overflow='';}
 	document.querySelectorAll('[data-sit-consult-open]').forEach(function(b){b.addEventListener('click',open);});
 	document.querySelectorAll('[data-sit-consult-close]').forEach(function(b){b.addEventListener('click',close);});
 	modal.addEventListener('click',function(e){if(e.target===modal)close();});
-	document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.classList.contains('hidden'))close();});
+	document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.style.display!=='none')close();});
 
 	var form=document.getElementById('sit-consult-form');
 	var result=document.getElementById('sit-consult-result');
@@ -200,13 +178,13 @@ if ( function_exists( 'sit_theme_university_sub_url' ) ) {
 		e.preventDefault();
 		var btn=form.querySelector('button[type="submit"]');
 		btn.disabled=true;
-		result.className='hidden';
+		result.style.display='none';
 		var fd=new FormData(form);
 		fd.set('sit_consult_phone',fd.get('sit_consult_phone_code')+' '+fd.get('sit_consult_phone'));
 		fetch('<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',{method:'POST',body:fd,credentials:'same-origin'})
 		.then(function(r){return r.json();})
 		.then(function(d){
-			result.classList.remove('hidden');
+			result.style.display='block';
 			if(d.success){
 				result.className='rounded-lg bg-emerald-50 p-3 text-center text-sm font-medium text-emerald-700';
 				result.textContent=d.data||'OK';
@@ -218,7 +196,7 @@ if ( function_exists( 'sit_theme_university_sub_url' ) ) {
 			btn.disabled=false;
 		})
 		.catch(function(){
-			result.classList.remove('hidden');
+			result.style.display='block';
 			result.className='rounded-lg bg-red-50 p-3 text-center text-sm font-medium text-red-700';
 			result.textContent='Xəta baş verdi.';
 			btn.disabled=false;
