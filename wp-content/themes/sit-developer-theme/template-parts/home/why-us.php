@@ -20,8 +20,8 @@ if ( empty( $cards ) ) return;
 <section class="border-t border-slate-200 bg-gradient-to-b from-white to-slate-100 py-20 lg:py-24 dark:border-slate-800 dark:from-slate-950 dark:to-slate-900">
 	<div class="sit-container">
 		<div class="mb-16 text-center">
-			<h2 class="mb-6 text-4xl font-extrabold text-slate-800 md:text-5xl dark:text-white"><?php esc_html_e( 'Why Choose Us', 'studyinturkey' ); ?></h2>
-			<p class="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-400"><?php esc_html_e( 'Experience unmatched support and exclusive benefits designed to make your educational journey seamless and affordable.', 'studyinturkey' ); ?></p>
+			<h2 class="mb-6 text-4xl font-extrabold text-slate-800 md:text-5xl dark:text-white"><?php esc_html_e( 'Niyə Biz?', 'studyinturkey' ); ?></h2>
+			<p class="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-400"><?php esc_html_e( 'Təhsil yolunuzu rahat və əlçatan etmək üçün nəzərdə tutulmuş misilsiz dəstək və eksklüziv imkanlar.', 'studyinturkey' ); ?></p>
 		</div>
 
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -26,7 +26,7 @@ $action = sit_theme_universities_archive_url();
 					<div class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5">
 						<?php echo sit_theme_icon_svg( 'Building', 'h-[18px] w-[18px] text-white/70' ); ?>
 					</div>
-					<span class="text-[13px] font-semibold uppercase tracking-[0.2em] text-white/40"><?php esc_html_e( 'Explore', 'studyinturkey' ); ?></span>
+					<span class="text-[13px] font-semibold uppercase tracking-[0.2em] text-white/40"><?php esc_html_e( 'Kəşf edin', 'studyinturkey' ); ?></span>
 				</div>
 				<h1 class="mb-4 text-[42px] tracking-[-0.03em] text-white md:text-[56px]" style="line-height:1.1"><?php esc_html_e( 'Universitetlər', 'studyinturkey' ); ?></h1>
 				<p class="max-w-lg text-[17px] leading-relaxed text-white/40"><?php esc_html_e( 'Türkiyədəki universitetləri şəhər və növə görə araşdırın, müqayisə edin.', 'studyinturkey' ); ?></p>
@@ -39,7 +39,7 @@ $action = sit_theme_universities_archive_url();
 						<svg class="mr-3 h-4 w-4 shrink-0 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
 						<input type="text" name="sit_q" value="<?php echo esc_attr( $_GET['sit_q'] ?? '' ); ?>" placeholder="<?php esc_attr_e( 'Universitet axtar...', 'studyinturkey' ); ?>" class="w-full border-none bg-transparent py-3 text-[14px] text-white outline-none placeholder:text-white/25" />
 					</div>
-					<button type="submit" class="shrink-0 rounded-xl bg-[#ff3131] px-6 text-[13px] font-semibold text-white transition-all hover:bg-[#e02020]"><?php esc_html_e( 'Search', 'studyinturkey' ); ?></button>
+					<button type="submit" class="shrink-0 rounded-xl bg-[#ff3131] px-6 text-[13px] font-semibold text-white transition-all hover:bg-[#e02020]"><?php esc_html_e( 'Axtar', 'studyinturkey' ); ?></button>
 				</div>
 			</form>
 		</div>
@@ -59,7 +59,7 @@ $action = sit_theme_universities_archive_url();
 							</a>
 						<?php endforeach; ?>
 					</div>
-					<span class="text-[13px] font-medium text-gray-400"><?php echo esc_html( $total ); ?>+ <?php esc_html_e( 'results', 'studyinturkey' ); ?></span>
+					<span class="text-[13px] font-medium text-gray-400"><?php echo esc_html( $total ); ?>+ <?php esc_html_e( 'nəticə', 'studyinturkey' ); ?></span>
 				</div>
 			</div>
 

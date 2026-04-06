@@ -115,13 +115,13 @@
 				results.innerHTML = '<p class="py-8 text-center text-sm text-slate-400">' + esc(strings.placeholder || '') + '</p>';
 				return;
 			}
-			results.innerHTML = '<p class="py-8 text-center text-sm text-slate-400">' + esc(strings.loading || 'Loading...') + '</p>';
+			results.innerHTML = '<p class="py-8 text-center text-sm text-slate-400">' + esc(strings.loading || 'Yüklənir...') + '</p>';
 
 			var langParam = lang ? '&lang=' + lang : '';
 			var endpoints = [
-				{ url: restBase + '/university?search=' + encodeURIComponent(q) + '&per_page=5' + langParam, label: strings.universities || 'Universities' },
-				{ url: restBase + '/program?search=' + encodeURIComponent(q) + '&per_page=5' + langParam, label: strings.programs || 'Programs' },
-				{ url: restBase + '/posts?search=' + encodeURIComponent(q) + '&per_page=5', label: strings.blog || 'Blog' },
+				{ url: restBase + '/university?search=' + encodeURIComponent(q) + '&per_page=5' + langParam, label: strings.universities || 'Universitetlər' },
+				{ url: restBase + '/program?search=' + encodeURIComponent(q) + '&per_page=5' + langParam, label: strings.programs || 'Proqramlar' },
+				{ url: restBase + '/posts?search=' + encodeURIComponent(q) + '&per_page=5', label: strings.blog || 'Bloq' },
 			];
 
 			Promise.all(endpoints.map(function (ep) {
@@ -139,7 +139,7 @@
 					});
 					html += renderGroup(endpoints[idx].label, items);
 				});
-				if (!html) html = '<p class="py-8 text-center text-sm text-slate-400">' + esc(strings.noResults || 'No results.') + '</p>';
+				if (!html) html = '<p class="py-8 text-center text-sm text-slate-400">' + esc(strings.noResults || 'Nəticə tapılmadı.') + '</p>';
 				results.innerHTML = html;
 			});
 		}

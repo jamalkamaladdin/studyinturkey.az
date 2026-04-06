@@ -92,13 +92,13 @@ while ( have_posts() ) :
 						<div>
 							<div class="mb-2 flex items-center gap-2">
 								<span class="text-amber-400">✨</span>
-								<h3 class="text-[18px] font-bold"><?php esc_html_e( 'Exclusive Scholarship Pricing', 'studyinturkey' ); ?></h3>
+								<h3 class="text-[18px] font-bold"><?php esc_html_e( 'Eksklüziv Təqaüd Qiyməti', 'studyinturkey' ); ?></h3>
 							</div>
-							<p class="text-[13px] font-medium text-white/40"><?php esc_html_e( 'Apply through us to secure this discounted tuition fee.', 'studyinturkey' ); ?></p>
+							<p class="text-[13px] font-medium text-white/40"><?php esc_html_e( 'Bu endirimli tələbə haqqını təmin etmək üçün bizimlə müraciət edin.', 'studyinturkey' ); ?></p>
 						</div>
 						<div class="w-full rounded-xl border border-white/[0.08] bg-white/[0.06] p-5 backdrop-blur-sm md:w-auto">
 							<?php if ( $fee_ref ) : ?>
-								<span class="mb-1 block text-[12px] font-medium text-white/30 line-through"><?php esc_html_e( 'Official Fee:', 'studyinturkey' ); ?> $<?php echo esc_html( number_format_i18n( $fee_ref, 0 ) ); ?> / <?php esc_html_e( 'il', 'studyinturkey' ); ?></span>
+								<span class="mb-1 block text-[12px] font-medium text-white/30 line-through"><?php esc_html_e( 'Rəsmi Ödəniş:', 'studyinturkey' ); ?> $<?php echo esc_html( number_format_i18n( $fee_ref, 0 ) ); ?> / <?php esc_html_e( 'il', 'studyinturkey' ); ?></span>
 							<?php endif; ?>
 							<span class="text-[28px] font-extrabold tracking-tight text-white">$<?php echo esc_html( number_format_i18n( $fee_num, 0 ) ); ?> <span class="text-[12px] font-medium text-white/40">/ <?php esc_html_e( 'il', 'studyinturkey' ); ?></span></span>
 						</div>
@@ -109,7 +109,7 @@ while ( have_posts() ) :
 			<!-- Content -->
 			<?php if ( $content ) : ?>
 				<div class="mt-5 rounded-2xl border border-gray-200/60 bg-white p-6 md:p-8">
-					<h2 class="mb-4 border-b border-gray-100 pb-4 text-[20px] font-bold text-[#0a1a1b]"><?php esc_html_e( 'Program Overview', 'studyinturkey' ); ?></h2>
+					<h2 class="mb-4 border-b border-gray-100 pb-4 text-[20px] font-bold text-[#0a1a1b]"><?php esc_html_e( 'Proqrama Ümumi Baxış', 'studyinturkey' ); ?></h2>
 					<div class="sit-entry-content text-[15px] leading-relaxed text-gray-500"><?php echo $content; // phpcs:ignore ?></div>
 				</div>
 			<?php endif; ?>

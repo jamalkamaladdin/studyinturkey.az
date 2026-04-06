@@ -21,16 +21,16 @@ add_action( 'customize_register', function ( WP_Customize_Manager $wp_customize 
 	$hero = [
 		['sit_hero_bg_type',    'select', 'gradient', __('Arxa fon növü','studyinturkey'), ['gradient'=>'Gradient','image'=>'Şəkil','video'=>'Video']],
 		['sit_hero_overlay_opacity', 'number', '60', __('Overlay qaranlıq (%)','studyinturkey')],
-		['sit_hero_heading',    'text', 'Unlock Your Potential', __('Başlıq (sətir 1)','studyinturkey')],
-		['sit_hero_heading2',   'text', 'Study in Turkey', __('Başlıq (sətir 2, rəngli)','studyinturkey')],
-		['sit_hero_description','textarea', 'We help ambitious students secure admissions at top-ranked Turkish universities.', __('Təsvir','studyinturkey')],
+		['sit_hero_heading',    'text', 'Potensialınızı Açın', __('Başlıq (sətir 1)','studyinturkey')],
+		['sit_hero_heading2',   'text', 'Türkiyədə Oxuyun', __('Başlıq (sətir 2, rəngli)','studyinturkey')],
+		['sit_hero_description','textarea', 'Ambisiyalı tələbələrə Türkiyənin ən yaxşı universitetlərindən qəbul almağa kömək edirik.', __('Təsvir','studyinturkey')],
 		['sit_hero_stat1_num',  'text', '100%', __('Statistika 1 — Rəqəm','studyinturkey')],
-		['sit_hero_stat1_text', 'text', 'Admission Rate', __('Statistika 1 — Mətn','studyinturkey')],
+		['sit_hero_stat1_text', 'text', 'Qəbul dərəcəsi', __('Statistika 1 — Mətn','studyinturkey')],
 		['sit_hero_stat2_num',  'text', '5000+', __('Statistika 2 — Rəqəm','studyinturkey')],
-		['sit_hero_stat2_text', 'text', 'Students', __('Statistika 2 — Mətn','studyinturkey')],
+		['sit_hero_stat2_text', 'text', 'Tələbə', __('Statistika 2 — Mətn','studyinturkey')],
 		['sit_hero_stat3_num',  'text', '150+', __('Statistika 3 — Rəqəm','studyinturkey')],
-		['sit_hero_stat3_text', 'text', 'Universities', __('Statistika 3 — Mətn','studyinturkey')],
-		['sit_hero_search_placeholder', 'text', 'What do you want to study?', __('Axtarış placeholder','studyinturkey')],
+		['sit_hero_stat3_text', 'text', 'Universitet', __('Statistika 3 — Mətn','studyinturkey')],
+		['sit_hero_search_placeholder', 'text', 'Nə oxumaq istəyirsiniz?', __('Axtarış placeholder','studyinturkey')],
 	];
 	foreach ($hero as $h) {
 		$san = $h[1]==='textarea' ? 'sanitize_textarea_field' : ($h[1]==='number' ? 'absint' : 'sanitize_text_field');
@@ -46,11 +46,11 @@ add_action( 'customize_register', function ( WP_Customize_Manager $wp_customize 
 	$wp_customize->add_control(new WP_Customize_Upload_Control($wp_customize,'sit_hero_bg_video',['section'=>'sit_hero','label'=>__('Arxa fon video (mp4)','studyinturkey'),'mime_type'=>'video']));
 
 	// ═══ WHY TURKEY (3 kart) ═══
-	$wp_customize->add_section('sit_why_turkey', ['title'=>__('Why Choose Turkey?','studyinturkey'),'panel'=>'sit_homepage']);
+	$wp_customize->add_section('sit_why_turkey', ['title'=>__('Niyə Türkiyə?','studyinturkey'),'panel'=>'sit_homepage']);
 	$wt_def = [
-		1 => ['Quality Education','Degrees recognized globally. Modern campuses with cutting-edge laboratories.','BookOpen','blue'],
-		2 => ['Cultural Bridge','A unique blend of Eastern and Western cultures, rich history.','MapPin','red'],
-		3 => ['Affordable Living','Compared to Europe and the US, significantly lower tuition and living costs.','Briefcase','emerald'],
+		1 => ['Keyfiyyətli Təhsil','Beynəlxalq səviyyədə tanınan diplomlar. Müasir kampuslar və qabaqcıl laboratoriyalar.','BookOpen','blue'],
+		2 => ['Mədəni Körpü','Şərq və Qərb mədəniyyətlərinin unikal qovuşması, zəngin tarix.','MapPin','red'],
+		3 => ['Əlçatan Qiymətlər','Avropa və ABŞ ilə müqayisədə əhəmiyyətli dərəcədə aşağı tələbə haqqı və yaşayış xərcləri.','Briefcase','emerald'],
 	];
 	for ($i=1;$i<=3;$i++) {
 		foreach ([
@@ -79,13 +79,13 @@ add_action( 'customize_register', function ( WP_Customize_Manager $wp_customize 
 	}
 
 	// ═══ WHY CHOOSE US (Bento — 5 kart) ═══
-	$wp_customize->add_section('sit_why_us', ['title'=>__('Why Choose Us (Bento)','studyinturkey'),'panel'=>'sit_homepage']);
+	$wp_customize->add_section('sit_why_us', ['title'=>__('Niyə Biz? (Bento)','studyinturkey'),'panel'=>'sit_homepage']);
 	$wu_def = [
-		1 => ['Scholarships up to 100%','We represent over 150 prestigious universities, offering exclusive scholarships.','Award','large'],
-		2 => ['Free Application','Complete the free application form by uploading your documents.','Briefcase','normal'],
-		3 => ['Cheapest Fees','Through our exclusive agreements, we guarantee the lowest tuition fees.','MapPin','normal'],
-		4 => ['150+ Universities','Proudly partnered with over 150 top-tier universities across Turkey.','Building','accent'],
-		5 => ['100% Acceptance','With our vast network, we guarantee acceptance into your chosen department.','Users','dark'],
+		1 => ['100%-ə qədər Təqaüd','150-dən çox nüfuzlu universiteti təmsil edirik və eksklüziv təqaüdlər təklif edirik.','Award','large'],
+		2 => ['Pulsuz Müraciət','Sənədlərinizi yükləyərək pulsuz müraciət formasını doldurun.','Briefcase','normal'],
+		3 => ['Ən Aşağı Qiymətlər','Eksklüziv müqavilələrimiz sayəsində ən aşağı tələbə haqqını zəmanət veririk.','MapPin','normal'],
+		4 => ['150+ Universitet','Türkiyənin 150-dən çox aparıcı universiteti ilə qürurla əməkdaşlıq edirik.','Building','accent'],
+		5 => ['100% Qəbul','Geniş şəbəkəmiz sayəsində seçdiyiniz ixtisasa qəbul zəmanəti veririk.','Users','dark'],
 	];
 	for ($i=1;$i<=5;$i++) {
 		foreach ([

@@ -38,7 +38,7 @@ $accent_styles = ['from-brand-600 to-teal-600','from-brand-700 to-teal-500','fro
 			<div class="max-w-2xl">
 				<div class="mb-6 flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 w-fit">
 					<svg class="h-[13px] w-[13px] text-amber-300" fill="currentColor" viewBox="0 0 24 24"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/></svg>
-					<span class="text-[12px] font-semibold text-white/60"><?php echo esc_html( $total ); ?>+ <?php esc_html_e( 'programs available', 'studyinturkey' ); ?></span>
+					<span class="text-[12px] font-semibold text-white/60"><?php echo esc_html( $total ); ?>+ <?php esc_html_e( 'proqram mövcuddur', 'studyinturkey' ); ?></span>
 				</div>
 				<h1 class="mb-4 text-[42px] tracking-[-0.03em] text-white md:text-[56px]" style="line-height:1.1"><?php esc_html_e( 'Proqramlar', 'studyinturkey' ); ?></h1>
 				<p class="max-w-lg text-[17px] leading-relaxed text-white/40"><?php esc_html_e( 'İngilis və türk dillərində proqramları kəşf edin, eksklüziv təqaüdlərdən faydalanın.', 'studyinturkey' ); ?></p>
@@ -98,8 +98,8 @@ $accent_styles = ['from-brand-600 to-teal-600','from-brand-700 to-teal-500','fro
 						<div class="mb-6">
 							<h3 class="mb-3 text-[12px] font-semibold uppercase tracking-[0.1em] text-[#0a1a1b]"><?php esc_html_e( 'Qiymət aralığı', 'studyinturkey' ); ?></h3>
 							<div class="flex gap-2">
-								<input type="number" name="sit_price_min" value="<?php echo esc_attr( $cur_pmin ); ?>" placeholder="Min" class="w-1/2 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-[12px] text-gray-600 outline-none" />
-								<input type="number" name="sit_price_max" value="<?php echo esc_attr( $cur_pmax ); ?>" placeholder="Max" class="w-1/2 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-[12px] text-gray-600 outline-none" />
+								<input type="number" name="sit_price_min" value="<?php echo esc_attr( $cur_pmin ); ?>" placeholder="<?php esc_attr_e( 'Min', 'studyinturkey' ); ?>" class="w-1/2 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-[12px] text-gray-600 outline-none" />
+								<input type="number" name="sit_price_max" value="<?php echo esc_attr( $cur_pmax ); ?>" placeholder="<?php esc_attr_e( 'Maks', 'studyinturkey' ); ?>" class="w-1/2 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-[12px] text-gray-600 outline-none" />
 							</div>
 						</div>
 						<div class="mb-6">

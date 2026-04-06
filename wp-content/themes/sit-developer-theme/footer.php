@@ -14,11 +14,11 @@ $lang_codes = [ 'AZ', 'EN', 'RU', 'FA', 'AR', 'KK' ];
 	<div class="border-b border-white/10 bg-[#0a3d3f]">
 		<div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-4 py-12 sm:px-6 md:flex-row">
 			<div>
-				<h3 class="mb-1 text-2xl font-extrabold" style="line-height:1.3"><?php esc_html_e( 'Ready to start your journey?', 'studyinturkey' ); ?></h3>
-				<p class="text-[15px] text-white/70"><?php esc_html_e( 'Get free consultation from our education experts.', 'studyinturkey' ); ?></p>
+				<h3 class="mb-1 text-2xl font-extrabold" style="line-height:1.3"><?php esc_html_e( 'Türkiyədə təhsilə başlamağa hazırsınız?', 'studyinturkey' ); ?></h3>
+				<p class="text-[15px] text-white/70"><?php esc_html_e( 'Təhsil mütəxəssislərimizdən pulsuz məsləhət alın.', 'studyinturkey' ); ?></p>
 			</div>
 			<a href="<?php echo esc_url( $contact ); ?>" class="flex items-center gap-2 whitespace-nowrap rounded-xl bg-[#ff3131] px-8 py-3.5 text-[15px] font-bold text-white shadow-lg shadow-red-900/30 transition-all hover:bg-[#e02020]">
-				<?php esc_html_e( 'Get Started', 'studyinturkey' ); ?>
+				<?php esc_html_e( 'Başlayın', 'studyinturkey' ); ?>
 				<svg class="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
 			</a>
 		</div>
@@ -72,10 +72,10 @@ $lang_codes = [ 'AZ', 'EN', 'RU', 'FA', 'AR', 'KK' ];
 
 		<!-- Bottom -->
 		<div class="flex flex-col items-center justify-between gap-4 text-[13px] text-white/60 md:flex-row">
-			<p>&copy; <?php echo esc_html( $year . ' ' . get_bloginfo( 'name', 'display' ) ); ?>. <?php esc_html_e( 'All rights reserved.', 'studyinturkey' ); ?></p>
+			<p>&copy; <?php echo esc_html( $year . ' ' . get_bloginfo( 'name', 'display' ) ); ?>. <?php esc_html_e( 'Bütün hüquqlar qorunur.', 'studyinturkey' ); ?></p>
 			<div class="flex gap-6">
-				<a href="#" class="transition hover:text-white"><?php esc_html_e( 'Privacy Policy', 'studyinturkey' ); ?></a>
-				<a href="#" class="transition hover:text-white"><?php esc_html_e( 'Terms of Service', 'studyinturkey' ); ?></a>
+				<a href="#" class="transition hover:text-white"><?php esc_html_e( 'Gizlilik Siyasəti', 'studyinturkey' ); ?></a>
+				<a href="#" class="transition hover:text-white"><?php esc_html_e( 'İstifadə Şərtləri', 'studyinturkey' ); ?></a>
 			</div>
 		</div>
 	</div>
