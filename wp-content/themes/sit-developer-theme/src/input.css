@@ -1,0 +1,279 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html {
+		@apply scroll-smooth;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	body {
+		@apply min-h-[100dvh] antialiased text-slate-800 bg-white pb-[env(safe-area-inset-bottom,0)] dark:bg-slate-950 dark:text-slate-100;
+	}
+
+	a {
+		@apply text-teal-700 transition-colors hover:text-teal-600 dark:text-teal-400 dark:hover:text-teal-300;
+	}
+
+	/* RTL: sit-multilang html[dir="rtl"] */
+	[dir='rtl'] .sit-uni-slider {
+		direction: rtl;
+	}
+}
+
+@layer components {
+	.sit-container {
+		@apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+	}
+
+	.sit-header-lang .sit-lang-switcher {
+		@apply flex flex-wrap items-center gap-1 text-sm;
+	}
+
+	.sit-header-lang .sit-lang-switcher a {
+		@apply rounded-md px-2 py-1 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white;
+	}
+
+	.sit-header-lang .sit-lang-switcher__select {
+		@apply max-w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-700 shadow-sm dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200;
+	}
+
+	/* custom-logo styles moved outside @layer — see below */
+
+	.sit-uni-slider {
+		scroll-snap-type: x mandatory;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.sit-uni-slider > * {
+		scroll-snap-align: start;
+	}
+
+	.sit-entry-content > * + * {
+		margin-top: 1rem;
+	}
+
+	.sit-entry-content h2 {
+		@apply mb-3 mt-8 text-2xl font-semibold text-slate-900 dark:text-slate-100;
+	}
+
+	.sit-entry-content h3 {
+		@apply mb-2 mt-6 text-xl font-semibold text-slate-900 dark:text-slate-100;
+	}
+
+	.sit-entry-content ul {
+		@apply list-disc ps-6;
+	}
+
+	.sit-entry-content ol {
+		@apply list-decimal ps-6;
+	}
+
+	.sit-entry-content a {
+		@apply text-brand-700 underline-offset-2 hover:underline dark:text-brand-400 dark:hover:text-brand-300;
+	}
+
+	.sit-entry-content img {
+		@apply h-auto max-w-full rounded-xl;
+	}
+
+	/* pagination styles moved outside @layer to prevent Tailwind purge — see below */
+
+	/* Form input default (əlaqə, axtarış) */
+	.sit-form-input {
+		@apply rounded-lg border border-slate-200 bg-white text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500;
+	}
+}
+
+/* ── Custom logo (outside @layer to prevent Tailwind purge) ── */
+.custom-logo-link {
+	display: flex;
+	align-items: center;
+}
+
+.custom-logo-link img,
+.custom-logo-link svg {
+	height: 2.875rem;
+	max-height: 2.875rem;
+	width: auto;
+	object-fit: contain;
+}
+
+/* ── Pagination (outside @layer to prevent Tailwind purge) ── */
+ul.page-numbers {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+ul.page-numbers > li {
+	display: inline-flex;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+ul.page-numbers a,
+ul.page-numbers span {
+	display: inline-flex;
+	min-height: 2.75rem;
+	min-width: 2.75rem;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.5rem;
+	border: 1px solid #e2e8f0;
+	background-color: #fff;
+	padding: 0.375rem 0.75rem;
+	font-size: 0.875rem;
+	color: #334155;
+	text-decoration: none;
+}
+
+ul.page-numbers span.current {
+	border-color: #0d9488;
+	background-color: #0d9488;
+	color: #fff;
+}
+
+ul.page-numbers a:hover {
+	background-color: #f8fafc;
+}
+
+ul.page-numbers .dots {
+	border-color: transparent;
+	background: none;
+	color: #94a3b8;
+	min-width: auto;
+	padding: 0.375rem 0.25rem;
+}
+
+/* Dark mode pagination */
+:is(.dark) ul.page-numbers a,
+:is(.dark) ul.page-numbers span {
+	border-color: #334155;
+	background-color: #1e293b;
+	color: #cbd5e1;
+}
+
+:is(.dark) ul.page-numbers span.current {
+	border-color: #14b8a6;
+	background-color: #0d9488;
+	color: #fff;
+}
+
+:is(.dark) ul.page-numbers a:hover {
+	background-color: #334155;
+}
+
+:is(.dark) ul.page-numbers .dots {
+	background: none;
+	border-color: transparent;
+	color: #64748b;
+}
+
+/* ── Custom logo fix ── */
+.custom-logo-link {
+	display: inline-flex;
+	align-items: center;
+	line-height: 1;
+	padding: 0;
+	margin: 0;
+}
+.custom-logo-link img {
+	height: 38px;
+	width: auto;
+	max-height: 38px;
+	object-fit: contain;
+	display: block;
+}
+
+/* ── WP Admin Bar fix for fixed header ── */
+.admin-bar header.admin-bar\:top-8 {
+	top: 32px;
+}
+@media screen and (max-width: 782px) {
+	.admin-bar header.admin-bar\:top-8 {
+		top: 46px;
+	}
+}
+
+/* ── Navigation menu styling ── */
+.sit-nav-menu li {
+	list-style: none;
+}
+.sit-nav-menu > li > a {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.5rem 1rem;
+	border-radius: 0.5rem;
+	white-space: nowrap;
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	color: #3d4f5f;
+	transition: color 0.2s, background-color 0.2s;
+}
+.sit-nav-menu > li > a:hover {
+	color: #11676a;
+	background-color: #f8fafc;
+}
+.sit-nav-menu > li.current-menu-item > a,
+.sit-nav-menu > li.current_page_item > a {
+	color: #11676a;
+	background-color: #e6f2f2;
+}
+:is(.dark) .sit-nav-menu > li > a {
+	color: #cbd5e1;
+}
+:is(.dark) .sit-nav-menu > li > a:hover {
+	color: #5eead4;
+	background-color: #1e293b;
+}
+:is(.dark) .sit-nav-menu > li.current-menu-item > a {
+	color: #5eead4;
+	background-color: rgba(17,103,106,0.15);
+}
+
+/* Mobile nav menu */
+.sit-nav-menu-mobile li { list-style: none; }
+.sit-nav-menu-mobile > li > a {
+	display: block;
+	padding: 0.875rem 1rem;
+	border-radius: 0.75rem;
+	font-size: 15px;
+	font-weight: 600;
+	color: #11676a;
+	transition: all 0.2s;
+}
+.sit-nav-menu-mobile > li > a:hover {
+	background-color: #f8fafc;
+}
+.sit-nav-menu-mobile > li.current-menu-item > a {
+	color: #11676a;
+	background-color: #e6f2f2;
+}
+
+/* ── Footer nav ── */
+footer nav li {
+	list-style: none;
+}
+footer nav li a {
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: #cbd5e1;
+	transition: color 0.15s;
+}
+footer nav li a:hover {
+	color: #fff;
+}
+@media (min-width: 1024px) {
+	footer nav li a {
+		font-size: 1rem;
+	}
+}

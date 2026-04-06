@@ -28,6 +28,12 @@ wp-config.php
 
 # Uploads
 uploads/
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
 
 # Cache
 *.cache
+
+# htaccess
+.htaccess

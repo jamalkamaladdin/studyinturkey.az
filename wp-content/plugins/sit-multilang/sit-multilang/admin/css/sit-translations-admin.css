@@ -1,0 +1,82 @@
+/* SIT Multilang — post/term translation meta UI */
+
+.sit-ml-translations {
+	margin-top: 12px;
+}
+
+.sit-ml-translations .sit-ml-tabs {
+	margin: 0 0 12px;
+	padding-top: 0;
+	border-bottom: 1px solid #c3c4c7;
+}
+
+.sit-ml-translations .sit-ml-tabs .nav-tab {
+	cursor: pointer;
+}
+
+.sit-ml-translations .sit-ml-tabs .nav-tab.nav-tab-active {
+	border-bottom: 1px solid #f0f0f1;
+	margin-bottom: -1px;
+}
+
+.sit-ml-translations .sit-ml-panel {
+	display: none;
+	padding: 12px 0;
+}
+
+.sit-ml-translations .sit-ml-panel.is-active {
+	display: block;
+}
+
+.sit-ml-translations .sit-ml-field {
+	margin-bottom: 14px;
+}
+
+.sit-ml-translations .sit-ml-field label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 4px;
+}
+
+.sit-ml-translations .sit-ml-field input[type="text"],
+.sit-ml-translations .sit-ml-field textarea {
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.sit-ml-translations .sit-ml-field textarea {
+	min-height: 80px;
+}
+
+.sit-ml-translations .sit-ml-field textarea.sit-ml-content {
+	min-height: 200px;
+	font-family: Consolas, Monaco, monospace;
+	font-size: 13px;
+}
+
+.sit-ml-translations .sit-ml-notice {
+	background: #f0f6fc;
+	border-left: 4px solid #72aee6;
+	padding: 8px 12px;
+	margin: 0 0 12px;
+}
+
+.sit-ml-translations .sit-ml-preview {
+	opacity: 0.85;
+}
+
+.sit-ml-translations .sit-ml-preview input[readonly],
+.sit-ml-translations .sit-ml-preview textarea[readonly] {
+	background: #f6f7f7;
+}
+
+/* Term edit: table row */
+tr.sit-ml-term-translations td,
+tr.sit-ml-term-translations th {
+	padding-bottom: 0;
+}
+
+tr.sit-ml-term-translations .sit-ml-translations {
+	padding: 8px 0 16px;
+}
