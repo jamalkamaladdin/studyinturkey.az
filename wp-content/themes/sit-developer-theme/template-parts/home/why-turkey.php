@@ -30,8 +30,8 @@ $color_map = [
 <section class="bg-white py-20 lg:py-24 dark:bg-slate-950">
 	<div class="sit-container">
 		<div class="mx-auto mb-16 max-w-3xl text-center">
-			<h2 class="mb-4 text-3xl font-bold text-slate-800 md:text-4xl dark:text-white"><?php esc_html_e( 'Niyə Türkiyə?', 'studyinturkey' ); ?></h2>
-			<p class="text-lg text-slate-600 dark:text-slate-400"><?php esc_html_e( 'Türkiyə beynəlxalq tələbələr üçün ən populyar təyinat yerlərindən birinə çevrilib — əlçatan qiymətlərlə yüksək keyfiyyətli təhsil təklif edir.', 'studyinturkey' ); ?></p>
+			<h2 class="mb-4 text-3xl font-bold text-slate-800 md:text-4xl dark:text-white"><?php sit_esc_html_e( 'why_turkey.heading', 'Niyə Türkiyə?' ); ?></h2>
+			<p class="text-lg text-slate-600 dark:text-slate-400"><?php sit_esc_html_e( 'why_turkey.desc', 'Türkiyə beynəlxalq tələbələr üçün ən populyar təyinat yerlərindən birinə çevrilib — əlçatan qiymətlərlə yüksək keyfiyyətli təhsil təklif edir.' ); ?></p>
 		</div>
 		<div class="grid gap-10 md:grid-cols-3">
 			<?php foreach ( $cards as $c ) :

@@ -19,10 +19,10 @@ $img = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entrop
 					<div class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5">
 						<svg class="h-[18px] w-[18px] text-[#ff3131]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.27 2 8.5 2 5.41 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.41 22 8.5c0 3.77-3.4 6.86-8.55 11.53L12 21.35z"/></svg>
 					</div>
-					<span class="text-[13px] font-semibold uppercase tracking-[0.2em] text-white/40"><?php esc_html_e( 'Hekayəmiz', 'studyinturkey' ); ?></span>
+					<span class="text-[13px] font-semibold uppercase tracking-[0.2em] text-white/40"><?php sit_esc_html_e( 'about.badge', 'Hekayəmiz' ); ?></span>
 				</div>
 				<h1 class="mb-4 text-[42px] tracking-[-0.03em] text-white md:text-[56px]" style="line-height:1.1"><?php the_title(); ?></h1>
-				<p class="max-w-lg text-[17px] leading-relaxed text-white/40"><?php esc_html_e( 'Türkiyədə dünya səviyyəli təhsilə etibarlı körpünüz. Tələbələri akademik və peşəkar arzularına çatmaqda gücləndiririk.', 'studyinturkey' ); ?></p>
+				<p class="max-w-lg text-[17px] leading-relaxed text-white/40"><?php sit_esc_html_e( 'about.hero.desc', 'Türkiyədə dünya səviyyəli təhsilə etibarlı körpünüz. Tələbələri akademik və peşəkar arzularına çatmaqda gücləndiririk.' ); ?></p>
 			</div>
 		</div>
 	</div>
@@ -33,16 +33,16 @@ $img = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entrop
 			<!-- Who We Are -->
 			<div class="mb-24 grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
 				<div>
-					<span class="mb-4 block text-[12px] font-bold uppercase tracking-[0.15em] text-brand-600"><?php esc_html_e( 'Biz Kimik', 'studyinturkey' ); ?></span>
-					<h2 class="mb-6 text-[32px] text-[#0a1a1b] tracking-[-0.02em] md:text-[40px]" style="line-height:1.15"><?php esc_html_e( 'Tələbələri xəyal universitetlərinə çatdırırıq', 'studyinturkey' ); ?></h2>
-					<p class="mb-5 text-[15px] leading-relaxed text-gray-500"><?php esc_html_e( 'StudyInTurkey, beynəlxalq tələbələri Türkiyənin aparıcı universitetləri ilə birləşdirməyə həsr olunmuş elit təhsil məsləhət agentliyidir. Ehtiraslı müəllimlər tərəfindən qurulan şirkətimiz, xaricdə təhsilin çətinliklərini yaxşı başa düşür.', 'studyinturkey' ); ?></p>
-					<p class="mb-8 text-[15px] leading-relaxed text-gray-500"><?php esc_html_e( 'İllərin təcrübəsi və 150-dən çox universitetlə eksklüziv əməkdaşlıq sayəsində universitet seçimindən müraciətə, viza prosesindən yaşayış dəstəyinə qədər tam xidmət təklif edirik.', 'studyinturkey' ); ?></p>
+					<span class="mb-4 block text-[12px] font-bold uppercase tracking-[0.15em] text-brand-600"><?php sit_esc_html_e( 'about.who.label', 'Biz Kimik' ); ?></span>
+					<h2 class="mb-6 text-[32px] text-[#0a1a1b] tracking-[-0.02em] md:text-[40px]" style="line-height:1.15"><?php sit_esc_html_e( 'about.who.heading', 'Tələbələri xəyal universitetlərinə çatdırırıq' ); ?></h2>
+					<p class="mb-5 text-[15px] leading-relaxed text-gray-500"><?php sit_esc_html_e( 'about.who.p1', 'StudyInTurkey, beynəlxalq tələbələri Türkiyənin aparıcı universitetləri ilə birləşdirməyə həsr olunmuş elit təhsil məsləhət agentliyidir. Ehtiraslı müəllimlər tərəfindən qurulan şirkətimiz, xaricdə təhsilin çətinliklərini yaxşı başa düşür.' ); ?></p>
+					<p class="mb-8 text-[15px] leading-relaxed text-gray-500"><?php sit_esc_html_e( 'about.who.p2', 'İllərin təcrübəsi və 150-dən çox universitetlə eksklüziv əməkdaşlıq sayəsində universitet seçimindən müraciətə, viza prosesindən yaşayış dəstəyinə qədər tam xidmət təklif edirik.' ); ?></p>
 					<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 						<?php foreach ( [
-							__( '100% Qəbul Zəmanəti', 'studyinturkey' ),
-							__( 'Eksklüziv Təqaüd İmkanları', 'studyinturkey' ),
-							__( 'Tam Viza Dəstəyi', 'studyinturkey' ),
-							__( 'Gəldikdən Sonra Dəstək', 'studyinturkey' ),
+							sit__( 'about.feature.1', '100% Qəbul Zəmanəti' ),
+							sit__( 'about.feature.2', 'Eksklüziv Təqaüd İmkanları' ),
+							sit__( 'about.feature.3', 'Tam Viza Dəstəyi' ),
+							sit__( 'about.feature.4', 'Gəldikdən Sonra Dəstək' ),
 						] as $item ) : ?>
 							<div class="flex items-center gap-2.5 rounded-xl border border-gray-200/60 bg-white p-3.5">
 								<svg class="h-[18px] w-[18px] shrink-0 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -57,8 +57,8 @@ $img = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entrop
 						<img src="<?php echo esc_url( $img ); ?>" alt="" class="h-full w-full object-cover" />
 						<div class="absolute inset-0 bg-gradient-to-t from-[#0a1a1b]/80 to-transparent"></div>
 						<div class="absolute bottom-8 left-8 text-white">
-							<p class="text-[44px] font-extrabold tracking-tight text-[#ff3131]">10+ <?php esc_html_e( 'İl', 'studyinturkey' ); ?></p>
-							<p class="text-[16px] font-medium text-white/70"><?php esc_html_e( 'Təhsildə Mükəmməllik', 'studyinturkey' ); ?></p>
+							<p class="text-[44px] font-extrabold tracking-tight text-[#ff3131]">10+ <?php sit_esc_html_e( 'about.years', 'İl' ); ?></p>
+							<p class="text-[16px] font-medium text-white/70"><?php sit_esc_html_e( 'about.excellence', 'Təhsildə Mükəmməllik' ); ?></p>
 						</div>
 					</div>
 				</div>
@@ -68,10 +68,10 @@ $img = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entrop
 			<div class="grid grid-cols-2 gap-4 md:grid-cols-4">
 				<?php
 				$stats = [
-					['150+', __('Tərəfdaş Universitet','studyinturkey'), 'text-brand-600', 'bg-[#e6f2f2]', 'border-brand-600/15'],
-					['5,000+', __('Uğurlu Tələbə','studyinturkey'), 'text-[#ff3131]', 'bg-red-50', 'border-red-100'],
-					['$2M+', __('Verilmiş Təqaüd','studyinturkey'), 'text-brand-600', 'bg-[#e6f2f2]', 'border-brand-600/15'],
-					['99%', __('Məmnuniyyət Dərəcəsi','studyinturkey'), 'text-[#ff3131]', 'bg-red-50', 'border-red-100'],
+					['150+', sit__('about.stat.universities','Tərəfdaş Universitet'), 'text-brand-600', 'bg-[#e6f2f2]', 'border-brand-600/15'],
+					['5,000+', sit__('about.stat.students','Uğurlu Tələbə'), 'text-[#ff3131]', 'bg-red-50', 'border-red-100'],
+					['$2M+', sit__('about.stat.scholarships','Verilmiş Təqaüd'), 'text-brand-600', 'bg-[#e6f2f2]', 'border-brand-600/15'],
+					['99%', sit__('about.stat.satisfaction','Məmnuniyyət Dərəcəsi'), 'text-[#ff3131]', 'bg-red-50', 'border-red-100'],
 				];
 				foreach ( $stats as $s ) : ?>
 					<div class="rounded-2xl border <?php echo esc_attr( $s[4] ); ?> bg-white p-7 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">

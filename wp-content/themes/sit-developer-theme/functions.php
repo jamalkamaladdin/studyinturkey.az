@@ -70,12 +70,12 @@ function sit_theme_assets(): void {
 		'restUrl' => esc_url_raw( rest_url( 'wp/v2' ) ),
 		'lang'    => sanitize_key( $lang ),
 		'strings' => [
-			'placeholder'  => __( 'Axtarış sözü yazın...', 'studyinturkey' ),
-			'loading'      => __( 'Axtarılır...', 'studyinturkey' ),
-			'noResults'    => __( 'Nəticə tapılmadı.', 'studyinturkey' ),
-			'universities' => __( 'Universitetlər', 'studyinturkey' ),
-			'programs'     => __( 'Proqramlar', 'studyinturkey' ),
-			'blog'         => __( 'Bloq', 'studyinturkey' ),
+			'placeholder'  => function_exists( 'sit__' ) ? sit__( 'search.placeholder', 'Axtarış sözü yazın...' ) : 'Axtarış sözü yazın...',
+			'loading'      => function_exists( 'sit__' ) ? sit__( 'search.loading', 'Axtarılır...' ) : 'Axtarılır...',
+			'noResults'    => function_exists( 'sit__' ) ? sit__( 'search.no_results', 'Nəticə tapılmadı.' ) : 'Nəticə tapılmadı.',
+			'universities' => function_exists( 'sit__' ) ? sit__( 'search.label.universities', 'Universitetlər' ) : 'Universitetlər',
+			'programs'     => function_exists( 'sit__' ) ? sit__( 'search.label.programs', 'Proqramlar' ) : 'Proqramlar',
+			'blog'         => function_exists( 'sit__' ) ? sit__( 'search.label.blog', 'Bloq' ) : 'Bloq',
 		],
 	] );
 }

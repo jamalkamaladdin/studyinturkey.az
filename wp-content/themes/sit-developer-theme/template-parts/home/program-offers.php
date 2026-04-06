@@ -18,11 +18,11 @@ if ( ! $q->have_posts() ) return;
 
 $prog_url = sit_theme_programs_archive_url();
 $tags     = [
-	__( 'Xüsusi Qiymət', 'studyinturkey' ),
-	__( 'Məhdud Yer', 'studyinturkey' ),
-	__( 'Erkən Qeydiyyat', 'studyinturkey' ),
-	__( 'Ən Sərfəli', 'studyinturkey' ),
-	__( 'Məşhur', 'studyinturkey' ),
+	sit__( 'offer.tag.special_price', 'Xüsusi Qiymət' ),
+	sit__( 'offer.tag.limited_seats', 'Məhdud Yer' ),
+	sit__( 'offer.tag.early_bird', 'Erkən Qeydiyyat' ),
+	sit__( 'offer.tag.best_value', 'Ən Sərfəli' ),
+	sit__( 'offer.tag.popular', 'Məşhur' ),
 ];
 $tag_styles = [
 	'bg-blue-50 text-blue-600',
@@ -36,8 +36,8 @@ $idx = 0;
 <section class="border-t border-slate-100 bg-white py-20 lg:py-24 dark:border-slate-800 dark:bg-slate-950">
 	<div class="mx-auto max-w-4xl px-4 sm:px-6">
 		<div class="mb-12 text-center">
-			<span class="mb-4 inline-block rounded-full bg-red-50 px-3 py-1 text-sm font-bold uppercase tracking-wider text-red-600 dark:bg-red-900/30 dark:text-red-400"><?php esc_html_e( 'Məhdud Müddət', 'studyinturkey' ); ?></span>
-			<h2 class="text-3xl font-bold text-slate-800 md:text-4xl dark:text-white"><?php esc_html_e( 'Günün Proqram Təklifləri', 'studyinturkey' ); ?></h2>
+			<span class="mb-4 inline-block rounded-full bg-red-50 px-3 py-1 text-sm font-bold uppercase tracking-wider text-red-600 dark:bg-red-900/30 dark:text-red-400"><?php sit_esc_html_e( 'offers.badge', 'Məhdud Müddət' ); ?></span>
+			<h2 class="text-3xl font-bold text-slate-800 md:text-4xl dark:text-white"><?php sit_esc_html_e( 'offers.heading', 'Günün Proqram Təklifləri' ); ?></h2>
 		</div>
 
 		<div class="flex flex-col gap-4">
@@ -94,7 +94,7 @@ $idx = 0;
 							</span>
 						</div>
 						<a href="<?php echo esc_url( $link ); ?>" class="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-700 px-6 py-2.5 font-semibold text-white transition-colors hover:bg-brand-800 md:w-auto">
-							<?php esc_html_e( 'İndi Müraciət Et', 'studyinturkey' ); ?>
+							<?php sit_esc_html_e( 'btn.apply_now', 'İndi Müraciət Et' ); ?>
 							<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
 						</a>
 					</div>
@@ -104,7 +104,7 @@ $idx = 0;
 
 		<div class="mt-10 text-center">
 			<a href="<?php echo esc_url( $prog_url ); ?>" class="inline-flex items-center gap-2 font-bold text-brand-700 hover:underline dark:text-brand-400">
-				<?php esc_html_e( 'Bütün Təkliflərə Bax', 'studyinturkey' ); ?>
+				<?php sit_esc_html_e( 'offers.view_all', 'Bütün Təkliflərə Bax' ); ?>
 				<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
 			</a>
 		</div>

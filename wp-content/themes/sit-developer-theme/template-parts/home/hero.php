@@ -39,7 +39,7 @@ for ( $i = 1; $i <= 3; $i++ ) {
 			<!-- Badge -->
 			<div class="mb-8 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.06] px-4 py-1.5 text-[13px] font-medium text-white/70 backdrop-blur-md">
 				<span class="h-1.5 w-1.5 animate-pulse rounded-full bg-brand-600"></span>
-				<?php esc_html_e( '2026 Payız semestri üçün qəbul açıqdır', 'studyinturkey' ); ?>
+				<?php sit_esc_html_e( 'hero.badge', '2026 Payız semestri üçün qəbul açıqdır' ); ?>
 			</div>
 
 			<h1 class="mb-6 text-[40px] font-extrabold tracking-[-0.02em] text-white md:text-[56px] lg:text-[64px]" style="line-height:1.1">
@@ -59,14 +59,14 @@ for ( $i = 1; $i <= 3; $i++ ) {
 				<div class="flex flex-1 items-center rounded-xl border border-transparent bg-gray-50 px-4 py-3.5 transition focus-within:border-brand-600/30 focus-within:bg-white">
 					<svg class="mr-3 h-[18px] w-[18px] shrink-0 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
 					<select name="sit_degree" class="w-full cursor-pointer appearance-none border-none bg-transparent text-[14px] text-gray-700 outline-none">
-						<option value=""><?php esc_html_e( 'Təhsil dərəcəsi', 'studyinturkey' ); ?></option>
+						<option value=""><?php sit_esc_html_e( 'hero.degree.label', 'Təhsil dərəcəsi' ); ?></option>
 						<option value="bachelor"><?php esc_html_e( 'Bakalavr', 'studyinturkey' ); ?></option>
 						<option value="master"><?php esc_html_e( 'Magistr', 'studyinturkey' ); ?></option>
 						<option value="phd"><?php esc_html_e( 'Doktorantura', 'studyinturkey' ); ?></option>
 					</select>
 				</div>
 				<button type="submit" class="flex items-center justify-center whitespace-nowrap rounded-xl bg-[#ff3131] px-8 py-3.5 text-[14px] font-semibold text-white shadow-sm transition-all hover:bg-[#e02020]">
-					<?php esc_html_e( 'Axtar', 'studyinturkey' ); ?>
+					<?php sit_esc_html_e( 'btn.search', 'Axtar' ); ?>
 				</button>
 			</form>
 
